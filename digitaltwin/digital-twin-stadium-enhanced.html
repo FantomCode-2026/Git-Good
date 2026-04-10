@@ -282,7 +282,7 @@
                 </div>
                 <div class="button-group">
                     <button onclick="clearAll()">Clear Crowd</button>
-                
+                    <button id="btn-stampede" onclick="triggerStampede()">Stampede</button>
                 </div>
             </div>
 
@@ -296,7 +296,14 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./three.min.js"
+  }
+}
+</script>
+<script src="./three.min.js"></script>
 
     <script>
     // ==================== SceneManager.js ====================
@@ -1057,7 +1064,22 @@
             const speedMap = { idle: 0.015, circular: 0.055, entering: 0.05, toStand: 0.06, seated: 0.005 };
             const speed = (speedMap[behaviour] || 0.02) + (Math.random() - 0.5) * 0.01;
 
-            const col = this.palette[Math.floor(Math.random() * this.palette.length)].clone();
+            let col = new THREE.Color(0xffffff);
+            let femaleRatio = 0.49;
+            let maleRatio = 0.48;
+            if (window.__TEMPLE_SIMULATION_STATE__ && window.__TEMPLE_SIMULATION_STATE__.demographics) {
+                const d = window.__TEMPLE_SIMULATION_STATE__.demographics;
+                const total = (d.male || 0) + (d.female || 0);
+                if (total > 0) {
+                    maleRatio = d.male / total;
+                    femaleRatio = d.female / total;
+                }
+            }
+            const genderRoll = Math.random();
+            if (genderRoll < femaleRatio) col = new THREE.Color(0xf472b6); // Pink for female
+            else if (genderRoll < femaleRatio + maleRatio) col = new THREE.Color(0x60a5fa); // Blue for male
+            else col = new THREE.Color(0xa78bfa); // Purple for other
+            
             col.offsetHSL(Math.random() * 0.06 - 0.03, Math.random() * 0.15 - 0.075, Math.random() * 0.15 - 0.075);
 
             const person = {
@@ -1444,7 +1466,7 @@
 
         startLiveMode() {
             this.isRunning = true;
-            this.intervalId = setInterval(() => this.fetchMockData(), this.updateInterval);
+            this.intervalId = setInterval(() => this.fetchRealData(), this.updateInterval);
         }
 
         startDemoMode() {
@@ -1455,6 +1477,43 @@
         stop() {
             this.isRunning = false;
             if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
+        }
+
+        fetchRealData() {
+            // Read from the AI Python Pipeline state file if available!
+            const state = window.__TEMPLE_SIMULATION_STATE__;
+            if (!state) {
+                this.fetchMockData();
+                return;
+            }
+            
+            // Map the Python backend's 5 simple zones into the Stadium's 16 complex zones
+            const counts = state.zoneCounts || {};
+            // Distribute the entry/queue across the 8 gates
+            const gateCount = Math.floor((counts.entry || 0) + (counts.queue || 0)) / 8;
+            // Distribute courtyard across the 4 corridors
+            const corrCount = Math.floor(counts.courtyard || 0) / 4;
+            // Distribute temple destination across the 4 stands
+            const standCount = Math.floor(counts.temple || 0) / 4;
+
+            const realMappedData = {
+                timestamp: Date.now(),
+                zones: [
+                    { id: 'GateA', people: gateCount }, { id: 'GateB', people: gateCount },
+                    { id: 'GateC', people: gateCount }, { id: 'GateD', people: gateCount },
+                    { id: 'GateE', people: gateCount }, { id: 'GateF', people: gateCount },
+                    { id: 'GateG', people: gateCount }, { id: 'GateH', people: gateCount },
+                    { id: 'Corridor1', people: corrCount }, { id: 'Corridor2', people: corrCount },
+                    { id: 'Corridor3', people: corrCount }, { id: 'Corridor4', people: corrCount },
+                    { id: 'Pavilion', people: standCount }, { id: 'AStand', people: standCount },
+                    { id: 'BStand', people: standCount }, { id: 'CStand', people: standCount },
+                ],
+                metadata: { source: 'Python-AI-Backend', confidence: 0.99 },
+                demographics: state.demographics,
+                stampede: state.stampede,
+                fusedRisk: state.scenario?.fusedRisk || 0
+            };
+            this.onDataReceived(realMappedData);
         }
 
         fetchMockData() {
@@ -1601,12 +1660,32 @@
 
             const zoneList = document.getElementById('zone-list');
             let html = '';
+
+            // Add the AI Real-World Demographics and Stampede Panel Injection
+            if (window.__TEMPLE_SIMULATION_STATE__) {
+                 const st = window.__TEMPLE_SIMULATION_STATE__;
+                 const stampede = st.stampede || {};
+                 const d = st.demographics || {};
+                 html += `<div style="background: rgba(255,40,40,0.1); padding: 8px; border: 1px solid rgba(255,40,40,0.3); border-radius: 4px; margin-bottom: 15px;">
+                     <h3 style="color:#ff6666; font-size:12px; margin-bottom:5px;">🚨 REAL WORLD AI ALERTS</h3>
+                     <p style="color:#ddd; font-size:11px; margin-bottom:3px;">Male: ${d.male || 0} | Female: ${d.female || 0}</p>
+                     <p style="color:#ddd; font-size:11px;">Active Stampede: <b style="color:${stampede.active ? '#ff3333' : '#66cc66'}">${stampede.active ? 'YES' : 'NO'}</b> (${stampede.latestFallenCount || 0} fallen)</p>
+                 </div>`;
+                 
+                 // Auto-trigger the 3D panic mode if stampede is active!
+                 if (stampede.active && !window._stampedeActive) {
+                     triggerStampede();
+                 } else if (!stampede.active && window._stampedeActive) {
+                     triggerStampede();
+                 }
+            }
+
             for (const [zoneId, stat] of this.stats.zoneStats) {
                 if (stat.population > 0) {
                     const dc = stat.density > 0.7 ? '#ef4444' : stat.density > 0.4 ? '#f59e0b' : '#22c55e';
                     html += `<div class="zone-item">
                         <span class="zone-label">${zoneId}</span>
-                        <span class="zone-count">${stat.population}</span>
+                        <span class="zone-count">${Math.round(stat.population)}</span>
                         <span class="zone-density" style="background:${dc}22;color:${dc}">${stat.densityPercent}%</span>
                     </div>`;
                 }
@@ -1631,7 +1710,8 @@
         app.reset();
         if (window._stampedeActive) {
             window._stampedeActive = false;
-            document.getElementById('btn-stampede').classList.remove('active');
+            const stampedeBtn = document.getElementById('btn-stampede');
+            if (stampedeBtn) stampedeBtn.classList.remove('active');
             clearInterval(window._stampedeInterval);
         }
     }
@@ -1663,7 +1743,7 @@
         const btn = document.getElementById('btn-stampede');
 
         if (!window._stampedeActive) {
-            btn.classList.remove('active');
+            if (btn) btn.classList.remove('active');
             clearInterval(window._stampedeInterval);
             app.crowdManager.people.forEach(p => {
                 if (p._stampedeMode) {
@@ -1675,7 +1755,7 @@
             return;
         }
 
-        btn.classList.add('active');
+        if (btn) btn.classList.add('active');
         _doStampedeInject(app);
 
         app.crowdManager.people.forEach(p => {
@@ -1714,7 +1794,12 @@
     window.addEventListener('DOMContentLoaded', () => {
         const app = new StadiumSimulation();
         window.simulationApp = app;
+        
+        // Auto-start the live AI integration feed
+        app.setMode('live');
+        app.start();
     });
     </script>
+    <script src="./temple_prediction_state.js"></script>
 </body>
 </html>

@@ -1,37 +1,47 @@
 window.__TEMPLE_SIMULATION_STATE__ = {
   "source": "prediction_layer",
-  "generatedAt": "2026-04-11T00:40:36.502154",
+  "generatedAt": "2026-04-11T02:17:35.839112",
   "scenario": {
     "level": "normal",
     "title": "OPPOSING_FLOW monitored flow",
     "problem": "OPPOSING_FLOW",
     "flowStatus": "chaotic",
-    "fusedRisk": 46.92,
-    "futureRisk": 18.54,
-    "trendRisk": 62.8,
-    "avgDensity": 0.4441,
-    "avgPeopleCount": 30.11,
-    "avgFusedRisk": 49.76,
-    "peakFusedRisk": 72.37,
-    "currentPeopleCount": 28.0,
-    "currentDensity": 0.4333,
-    "agentTarget": 46,
+    "fusedRisk": 47.71,
+    "futureRisk": 19.99,
+    "trendRisk": 63.67,
+    "avgDensity": 0.487,
+    "avgPeopleCount": 33.0,
+    "avgFusedRisk": 54.76,
+    "peakFusedRisk": 72.58,
+    "currentPeopleCount": 29.0,
+    "currentDensity": 0.4194,
+    "agentTarget": 47,
     "rushMode": false,
     "alertText": "No active alerts"
   },
   "crowdTuning": {
-    "globalSpeedScale": 0.839557398149554,
-    "pauseScale": 1.2606393137839775,
-    "pressureScale": 1.1845753824055798,
-    "queueBias": 1.3466538065843623,
-    "templeBias": 1.180442601850446
+    "globalSpeedScale": 0.8364914631010941,
+    "pauseScale": 1.265067886631753,
+    "pressureScale": 1.1885610979685777,
+    "queueBias": 1.3354809670781893,
+    "templeBias": 1.183508536898906
   },
   "zoneCounts": {
-    "entry": 6,
+    "entry": 7,
     "queue": 16,
     "courtyard": 11,
     "temple": 8,
     "exit": 5
   },
-  "recentAlerts": []
+  "recentAlerts": [],
+  "demographics": {
+    "male": 26,
+    "female": 3,
+    "unknown": 0
+  },
+  "stampede": {
+    "totalEvents": 0,
+    "latestFallenCount": 0,
+    "active": false
+  }
 };

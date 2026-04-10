@@ -8,7 +8,12 @@ from typing import Dict, List
 import numpy as np
 
 
-def build_temple_simulation_state(summary: Dict, metrics_history: List[Dict], alerts_history: List[Dict]) -> Dict:
+def build_temple_simulation_state(
+    summary: Dict,
+    metrics_history: List[Dict],
+    alerts_history: List[Dict],
+    demographic_summary: Dict | None = None,
+) -> Dict:
     latest_metrics = metrics_history[-1] if metrics_history else {}
 
     latest_fused_risk = float(summary.get("prediction_layer", {}).get("latest_fused_risk", 0.0))
@@ -48,7 +53,18 @@ def build_temple_simulation_state(summary: Dict, metrics_history: List[Dict], al
     _rebalance_counts(zone_counts, agent_target)
 
     latest_alerts = alerts_history[-5:] if alerts_history else []
-    latest_alert_text = latest_alerts[-1]["description"] if latest_alerts else "No active alerts"
+    latest_alert_text = latest_alerts[-1].get("description", "No active alerts") if latest_alerts else "No active alerts"
+
+    # Stampede stats from alerts
+    stampede_events = sum(1 for a in alerts_history if a.get("type") == "stampede_active")
+    latest_fallen = 0
+    for a in reversed(alerts_history):
+        if a.get("type") == "stampede_active":
+            latest_fallen = a.get("fallen_count", 0)
+            break
+
+    # Demographics
+    demo = demographic_summary or summary.get("demographic_distribution", {})
 
     return {
         "source": "prediction_layer",
@@ -80,6 +96,16 @@ def build_temple_simulation_state(summary: Dict, metrics_history: List[Dict], al
         },
         "zoneCounts": zone_counts,
         "recentAlerts": latest_alerts,
+        "demographics": {
+            "male": demo.get("male", 0),
+            "female": demo.get("female", 0),
+            "unknown": demo.get("unknown", 0),
+        },
+        "stampede": {
+            "totalEvents": stampede_events,
+            "latestFallenCount": latest_fallen,
+            "active": latest_fallen > 0,
+        },
     }
 
 
@@ -88,9 +114,12 @@ def export_temple_simulation_state(
     summary: Dict,
     metrics_history: List[Dict],
     alerts_history: List[Dict],
+    demographic_summary: Dict | None = None,
 ) -> Dict:
     output_dir.mkdir(parents=True, exist_ok=True)
-    state = build_temple_simulation_state(summary, metrics_history, alerts_history)
+    state = build_temple_simulation_state(
+        summary, metrics_history, alerts_history, demographic_summary
+    )
 
     json_path = output_dir / "temple_prediction_state.json"
     js_path = output_dir / "temple_prediction_state.js"

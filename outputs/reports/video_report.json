@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-11T00:40:36.453751",
+  "timestamp": "2026-04-11T02:17:35.802903",
   "config": {
     "model": {
       "yolo_model_name": "yolov8n.pt",
@@ -38,20 +38,20 @@
       "feature_batch_size": 64
     },
     "paths": {
-      "base_dir": "/Users/chaitanya/projects/hackathon thing idk",
-      "data_dir": "/Users/chaitanya/projects/hackathon thing idk/data",
-      "sample_videos_dir": "/Users/chaitanya/projects/hackathon thing idk/data/sample_videos",
-      "output_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs",
-      "logs_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/logs",
-      "videos_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/videos",
-      "reports_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/reports",
+      "base_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good",
+      "data_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\data",
+      "sample_videos_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\data\\sample_videos",
+      "output_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs",
+      "logs_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\logs",
+      "videos_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\videos",
+      "reports_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\reports",
       "yolo_weights": null,
       "resnet_weights": null,
       "transformer_weights": null,
-      "pose_landmarker_task": "/Users/chaitanya/projects/hackathon thing idk/pose_landmarker.task"
+      "pose_landmarker_task": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\pose_landmarker.task"
     },
     "visualization": {
-      "show_display": true,
+      "show_display": false,
       "save_output_video": true,
       "save_annotated_frames": false,
       "bbox_color_normal": [
@@ -103,40 +103,80 @@
       "crowd_density_threshold": 0.5,
       "hybrid_fall_heuristic_weight": 0.75,
       "hybrid_fall_model_weight": 0.25,
-      "fall_probability_smoothing": 0.65,
+      "fall_probability_smoothing": 0.3,
       "hybrid_fall_pose_weight": 0.35,
       "hybrid_fall_motion_weight": 0.65,
       "prediction_alert_threshold": 75.0,
       "prediction_watch_threshold": 55.0,
       "prediction_trend_weight": 0.35
+    },
+    "stampede": {
+      "propagation_radius": 120.0,
+      "propagation_factor": 0.35,
+      "density_fall_boost": 0.25,
+      "cascade_decay": 0.7,
+      "max_cascade_hops": 3,
+      "fallen_threshold": 0.85,
+      "high_density_threshold": 0.55,
+      "pressure_speed_threshold": 15.0
+    },
+    "demographics": {
+      "enabled": true,
+      "gender_method": "heuristic",
+      "male_ratio": 0.5,
+      "age_estimation_enabled": false,
+      "male_speed_multiplier": 1.0,
+      "male_reaction_factor": 1.0,
+      "male_space_radius": 1.0,
+      "male_fall_susceptibility": 1.0,
+      "male_panic_spread": 1.0,
+      "male_crowd_tolerance": 1.0,
+      "female_speed_multiplier": 0.88,
+      "female_reaction_factor": 0.92,
+      "female_space_radius": 1.15,
+      "female_fall_susceptibility": 1.12,
+      "female_panic_spread": 1.1,
+      "female_crowd_tolerance": 0.85,
+      "elderly_speed_multiplier": 0.68,
+      "elderly_reaction_factor": 1.35,
+      "elderly_space_radius": 1.1,
+      "elderly_fall_susceptibility": 1.6,
+      "elderly_panic_spread": 0.9,
+      "elderly_crowd_tolerance": 0.7
     }
   },
   "summary": {
-    "total_frames": 114,
-    "avg_people_count": 30.105263157894736,
+    "total_frames": 50,
+    "avg_people_count": 33.0,
     "max_people_count": 37,
-    "avg_density": 0.4441122115506101,
-    "max_density": 0.5685956790123456,
+    "avg_density": 0.48695003858024694,
+    "max_density": 0.5713236239711934,
     "avg_anomaly_score": 0.0,
-    "avg_predicted_future_risk": 26.83143794875396,
-    "max_predicted_future_risk": 60.70670509338379,
-    "avg_fused_risk": 49.760495519471135,
-    "max_fused_risk": 72.3708955285357,
+    "avg_predicted_future_risk": 35.08966831970215,
+    "max_predicted_future_risk": 61.84206573486328,
+    "avg_fused_risk": 54.76441732546238,
+    "max_fused_risk": 72.58322254825845,
     "total_alerts": 0,
     "alerts_by_type": {},
-    "processed_frames": 114,
-    "source_frames_read": 341,
+    "processed_frames": 50,
+    "source_frames_read": 150,
     "frame_stride": 3,
-    "total_processing_time": 92.01511287689209,
-    "avg_fps": 1.2389269157613456,
+    "total_processing_time": 155.96971797943115,
+    "avg_fps": 0.3205750491040438,
     "prediction_layer": {
-      "latest_future_risk": 18.537298603057863,
-      "latest_fused_risk": 46.91507648111596,
+      "latest_future_risk": 19.988843574523926,
+      "latest_fused_risk": 47.71221959371554,
       "latest_problem": "OPPOSING_FLOW",
       "latest_flow_status": "chaotic",
       "model_loaded": true
-    }
+    },
+    "demographic_distribution": {
+      "male": 26,
+      "female": 3,
+      "unknown": 0
+    },
+    "stampede_events": 0
   },
   "alerts": [],
-  "device": "mps"
+  "device": "cpu"
 }

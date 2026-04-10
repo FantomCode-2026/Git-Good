@@ -3318,3 +3318,92 @@ NotImplementedError: The operator 'aten::_nested_tensor_from_mask_left_aligned' 
 2026-04-11 00:40:38.679 | INFO     | __main__:main:836 - Average FPS: 1.24
 2026-04-11 00:40:38.679 | INFO     | __main__:main:837 - Total alerts: 0
 2026-04-11 00:40:38.681 | INFO     | __main__:main:838 - ==================================================
+2026-04-11 02:14:39.957 | INFO     | __main__:main:894 - Starting Crowd Behavior Analysis System
+2026-04-11 02:14:39.959 | INFO     | __main__:__init__:66 - Using CPU
+2026-04-11 02:14:39.959 | INFO     | __main__:_initialize_components:109 - Initializing pipeline components...
+2026-04-11 02:14:40.145 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-11 02:14:40.146 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 02:14:40.783 | INFO     | __main__:main:894 - Starting Crowd Behavior Analysis System
+2026-04-11 02:14:40.783 | INFO     | __main__:__init__:66 - Using CPU
+2026-04-11 02:14:40.783 | INFO     | __main__:_initialize_components:109 - Initializing pipeline components...
+2026-04-11 02:14:40.865 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-11 02:14:40.866 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 02:14:44.715 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 02:14:44.719 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-11 02:14:44.905 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task
+2026-04-11 02:14:44.905 | INFO     | __main__:_initialize_components:145 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task.
+2026-04-11 02:14:44.906 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 02:14:45.120 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 02:14:45.126 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 02:14:45.129 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on cpu
+2026-04-11 02:14:45.130 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-11 02:14:45.131 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on cpu
+2026-04-11 02:14:45.132 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on cpu
+2026-04-11 02:14:45.132 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 02:14:45.132 | INFO     | __main__:_initialize_components:170 - All pipeline components initialized
+2026-04-11 02:14:45.132 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 02:14:45.132 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 02:14:45.631 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 02:14:45.632 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-11 02:14:45.845 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task
+2026-04-11 02:14:45.846 | INFO     | __main__:_initialize_components:145 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task.
+2026-04-11 02:14:45.846 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 02:14:45.956 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 02:14:45.960 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 02:14:45.962 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on cpu
+2026-04-11 02:14:45.963 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-11 02:14:45.963 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on cpu
+2026-04-11 02:14:45.964 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on cpu
+2026-04-11 02:14:45.964 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 02:14:45.964 | INFO     | __main__:_initialize_components:170 - All pipeline components initialized
+2026-04-11 02:14:45.964 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 02:14:45.964 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 02:14:47.416 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 02:14:47.416 | INFO     | __main__:__init__:88 - CrowdBehaviorSystem initialized successfully
+2026-04-11 02:14:47.593 | INFO     | __main__:process_video:635 - Processing video: data\sample_videos\video.mp4
+2026-04-11 02:14:47.594 | INFO     | __main__:process_video:636 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 02:14:47.612 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to C:\Users\Admin\Downloads\crowdsense\Git-Good\outputs\videos\video_annotated.mp4
+2026-04-11 02:14:47.722 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 02:14:47.722 | INFO     | __main__:__init__:88 - CrowdBehaviorSystem initialized successfully
+2026-04-11 02:14:47.763 | INFO     | __main__:process_video:635 - Processing video: data\sample_videos\video.mp4
+2026-04-11 02:14:47.763 | INFO     | __main__:process_video:636 - Resolution: 1920x1080, FPS: 25, Total frames: 150, Frame stride: 3
+2026-04-11 02:14:47.769 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to outputs\videos\output_video.mp4
+2026-04-11 02:16:00.338 | INFO     | __main__:main:894 - Starting Crowd Behavior Analysis System
+2026-04-11 02:16:00.339 | INFO     | __main__:__init__:66 - Using CPU
+2026-04-11 02:16:00.340 | INFO     | __main__:_initialize_components:109 - Initializing pipeline components...
+2026-04-11 02:16:00.483 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-11 02:16:00.484 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 02:16:00.773 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 02:16:00.775 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-11 02:16:00.989 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task
+2026-04-11 02:16:00.990 | INFO     | __main__:_initialize_components:145 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task.
+2026-04-11 02:16:00.990 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 02:16:01.091 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 02:16:01.095 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 02:16:01.098 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on cpu
+2026-04-11 02:16:01.099 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-11 02:16:01.100 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on cpu
+2026-04-11 02:16:01.100 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on cpu
+2026-04-11 02:16:01.101 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 02:16:01.101 | INFO     | __main__:_initialize_components:170 - All pipeline components initialized
+2026-04-11 02:16:01.101 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 02:16:01.101 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 02:16:03.587 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 02:16:03.587 | INFO     | __main__:__init__:88 - CrowdBehaviorSystem initialized successfully
+2026-04-11 02:16:03.638 | INFO     | __main__:process_video:635 - Processing video: data\sample_videos\video.mp4
+2026-04-11 02:16:03.640 | INFO     | __main__:process_video:636 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 02:16:03.645 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to C:\Users\Admin\Downloads\crowdsense\Git-Good\outputs\videos\video_annotated.mp4
+2026-04-11 02:17:35.797 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to outputs\videos\output_video.mp4
+2026-04-11 02:17:35.801 | INFO     | __main__:process_video:723 - Video processing completed. Summary: {'total_frames': 50, 'avg_people_count': np.float64(33.0), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.48695003858024694), 'max_density': np.float64(0.5713236239711934), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(35.08966831970215), 'max_predicted_future_risk': np.float64(61.84206573486328), 'avg_fused_risk': np.float64(54.76441732546238), 'max_fused_risk': np.float64(72.58322254825845), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 50, 'source_frames_read': 150, 'frame_stride': 3, 'total_processing_time': 155.96971797943115, 'avg_fps': 0.3205750491040438, 'prediction_layer': {'latest_future_risk': 19.988843574523926, 'latest_fused_risk': 47.71221959371554, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 26, 'female': 3, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 02:17:35.806 | INFO     | __main__:save_report:763 - Report saved to C:\Users\Admin\Downloads\crowdsense\Git-Good\outputs\reports\video_report.json
+2026-04-11 02:17:35.837 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to C:\Users\Admin\Downloads\crowdsense\Git-Good\outputs\reports\video_report_metrics.csv
+2026-04-11 02:17:35.840 | INFO     | __main__:save_report:778 - Temple digital twin state exported to C:\Users\Admin\Downloads\crowdsense\Git-Good\digitaltwin\temple_prediction_state.js
+2026-04-11 02:17:36.034 | INFO     | __main__:save_report:791 - Opened digital twin: C:\Users\Admin\Downloads\crowdsense\Git-Good\digitaltwin\temple_simulation (3).html
+2026-04-11 02:17:36.087 | INFO     | __main__:save_report:791 - Opened digital twin: C:\Users\Admin\Downloads\crowdsense\Git-Good\digitaltwin\digital-twin-stadium-enhanced.html
+2026-04-11 02:17:36.087 | INFO     | __main__:main:925 - ==================================================
+2026-04-11 02:17:36.088 | INFO     | __main__:main:926 - Processing Complete!
+2026-04-11 02:17:36.088 | INFO     | __main__:main:927 - Output video: outputs\videos\output_video.mp4
+2026-04-11 02:17:36.088 | INFO     | __main__:main:928 - Report: C:\Users\Admin\Downloads\crowdsense\Git-Good\outputs\reports\video_report.json
+2026-04-11 02:17:36.088 | INFO     | __main__:main:929 - Average FPS: 0.32
+2026-04-11 02:17:36.088 | INFO     | __main__:main:930 - Total alerts: 0
+2026-04-11 02:17:36.088 | INFO     | __main__:main:931 - ==================================================

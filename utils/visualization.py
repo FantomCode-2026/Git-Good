@@ -105,9 +105,11 @@ class Visualizer:
                            behavior_label: str = "NORMAL",
                            confidence: float = 1.0,
                            anomaly_score: Optional[float] = None,
-                           fall_probability: Optional[float] = None) -> np.ndarray:
+                           fall_probability: Optional[float] = None,
+                           gender: Optional[str] = None,
+                           demographic_label: Optional[str] = None) -> np.ndarray:
         """
-        Draw a tracked person with ID and behavior information
+        Draw a tracked person with ID, behavior, and demographic info
         
         Args:
             frame: Input frame
@@ -116,6 +118,9 @@ class Visualizer:
             behavior_label: Behavior classification label
             confidence: Detection or behavior confidence
             anomaly_score: Anomaly score (0-1)
+            fall_probability: Fall probability (0-1)
+            gender: 'male', 'female', or None
+            demographic_label: Short profile label like 'M' or 'F'
             
         Returns:
             Frame with person visualization
@@ -123,8 +128,9 @@ class Visualizer:
         # Get color based on behavior
         color = self.behavior_colors.get(behavior_label, self.behavior_colors['NORMAL'])
         
-        # Prepare label
-        label = f"ID:{track_id} | {behavior_label}"
+        # Prepare label with demographic indicator
+        demo_tag = f"[{demographic_label}]" if demographic_label else ""
+        label = f"ID:{track_id}{demo_tag} | {behavior_label}"
         if anomaly_score is not None:
             label += f" | A:{anomaly_score:.2f}"
         if fall_probability is not None:
@@ -132,7 +138,72 @@ class Visualizer:
         
         # Draw bounding box
         frame = self.draw_bbox(frame, bbox, label, color, confidence)
+
+        # Draw gender indicator dot at top-right of bbox
+        if gender in ('male', 'female'):
+            dot_color = (255, 150, 50) if gender == 'male' else (180, 105, 255)  # Blue / Pink (BGR)
+            dot_center = (bbox[2] - 8, bbox[1] - 8)
+            cv2.circle(frame, dot_center, 6, dot_color, -1)
+            cv2.circle(frame, dot_center, 6, (255, 255, 255), 1)
+
+        # Draw fallen marker if fall probability is very high
+        if fall_probability is not None and fall_probability >= 0.85:
+            frame = self.draw_fallen_marker(frame, bbox)
         
+        return frame
+
+    def draw_fallen_marker(self,
+                           frame: np.ndarray,
+                           bbox: List[int]) -> np.ndarray:
+        """
+        Draw a ground-level fallen indicator (red X and pulsing circle).
+        """
+        cx = (bbox[0] + bbox[2]) // 2
+        cy = bbox[3]  # bottom of bbox = ground level
+        radius = max(12, (bbox[2] - bbox[0]) // 3)
+
+        # Red semi-transparent circle
+        overlay = frame.copy()
+        cv2.circle(overlay, (cx, cy), radius, (0, 0, 255), -1)
+        frame = cv2.addWeighted(overlay, 0.4, frame, 0.6, 0)
+
+        # Red X cross
+        offset = radius // 2
+        cv2.line(frame, (cx - offset, cy - offset), (cx + offset, cy + offset), (0, 0, 255), 3)
+        cv2.line(frame, (cx + offset, cy - offset), (cx - offset, cy + offset), (0, 0, 255), 3)
+
+        # "FALLEN" text
+        cv2.putText(frame, "FALLEN", (cx - 25, cy + radius + 15),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+        return frame
+
+    def draw_stampede_overlay(self,
+                              frame: np.ndarray,
+                              fallen_count: int) -> np.ndarray:
+        """
+        Draw a full-frame red alert overlay when a stampede is active.
+        """
+        if fallen_count <= 0:
+            return frame
+
+        # Pulsing red border
+        h, w = frame.shape[:2]
+        overlay = frame.copy()
+        border = 8
+        cv2.rectangle(overlay, (0, 0), (w, border), (0, 0, 255), -1)
+        cv2.rectangle(overlay, (0, h - border), (w, h), (0, 0, 255), -1)
+        cv2.rectangle(overlay, (0, 0), (border, h), (0, 0, 255), -1)
+        cv2.rectangle(overlay, (w - border, 0), (w, h), (0, 0, 255), -1)
+        frame = cv2.addWeighted(overlay, 0.7, frame, 0.3, 0)
+
+        # Stampede banner at top center
+        msg = f"!! STAMPEDE ALERT !! {fallen_count} agent(s) fallen"
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        (tw, th), _ = cv2.getTextSize(msg, font, 0.9, 2)
+        bx = (w - tw) // 2 - 10
+        cv2.rectangle(frame, (bx, 2), (bx + tw + 20, th + 18), (0, 0, 180), -1)
+        cv2.putText(frame, msg, (bx + 10, th + 10), font, 0.9, (255, 255, 255), 2)
+
         return frame
     
     def draw_crowd_stats(self,
@@ -141,25 +212,19 @@ class Visualizer:
                         density: float,
                         active_tracks: int,
                         fps: float = 0,
-                        prediction_result: Optional[Dict] = None) -> np.ndarray:
+                        prediction_result: Optional[Dict] = None,
+                        demographic_summary: Optional[Dict] = None,
+                        stampede_fallen: int = 0) -> np.ndarray:
         """
-        Draw crowd statistics overlay
-        
-        Args:
-            frame: Input frame
-            people_count: Number of people detected
-            density: Density estimation (0-1)
-            active_tracks: Number of active tracked persons
-            fps: Current FPS
-            
-        Returns:
-            Frame with statistics overlay
+        Draw crowd statistics overlay with demographics and stampede info
         """
         h, w = frame.shape[:2]
         
         # Create semi-transparent overlay
         overlay = frame.copy()
-        bottom = 190 if prediction_result else 130
+        extra = 25 if demographic_summary else 0
+        extra += 25 if stampede_fallen > 0 else 0
+        bottom = (190 if prediction_result else 130) + extra
         cv2.rectangle(overlay, (10, 10), (360, bottom),
                      self.config.visualization.background_color, -1)
         frame = cv2.addWeighted(overlay, self.config.visualization.opacity, 
@@ -185,10 +250,19 @@ class Visualizer:
                 f"Flow: {prediction_result['flow_status']}",
                 f"Issue: {prediction_result['problem']}",
             ])
+
+        if demographic_summary:
+            m = demographic_summary.get('male', 0)
+            f_ = demographic_summary.get('female', 0)
+            stats.append(f"Demographics: M={m} F={f_}")
+
+        if stampede_fallen > 0:
+            stats.append(f"!! FALLEN: {stampede_fallen} !!")
         
         for i, stat in enumerate(stats):
+            stat_color = (0, 0, 255) if 'FALLEN' in stat else color
             cv2.putText(frame, stat, (20, y_offset + i * 25), 
-                       font, font_scale, color, thickness)
+                       font, font_scale, stat_color, thickness)
         
         return frame
     

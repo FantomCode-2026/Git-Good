@@ -150,10 +150,11 @@ def detect_fall(results):
         for box in r.boxes:
             x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-            width = x2 - x1
-            height = y2 - y1
+            width = max(1, x2 - x1)
+            height = max(1, y2 - y1)
+            aspect_ratio = width / height
 
-            if width > height * 1.2:
+            if aspect_ratio >= 1.1:
                 return True
 
     return False

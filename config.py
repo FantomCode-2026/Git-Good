@@ -152,12 +152,56 @@ class MetricsConfig:
     crowd_density_threshold: float = 0.5  # 50% of frame area
     hybrid_fall_heuristic_weight: float = 0.75
     hybrid_fall_model_weight: float = 0.25
-    fall_probability_smoothing: float = 0.65
+    fall_probability_smoothing: float = 0.30
     hybrid_fall_pose_weight: float = 0.35
     hybrid_fall_motion_weight: float = 0.65
     prediction_alert_threshold: float = 75.0
     prediction_watch_threshold: float = 55.0
     prediction_trend_weight: float = 0.35
+
+@dataclass
+class StampedeConfig:
+    """Stampede / chain-reaction simulation parameters"""
+    propagation_radius: float = 120.0       # pixel radius for chain reaction
+    propagation_factor: float = 0.35        # how much a fallen person raises nearby risk
+    density_fall_boost: float = 0.25        # density contribution to fall risk
+    cascade_decay: float = 0.70             # decay per hop in chain reaction
+    max_cascade_hops: int = 3               # limit chain reaction depth
+    fallen_threshold: float = 0.85          # fall_probability >= this means fallen
+    high_density_threshold: float = 0.55    # density above this boosts fall risk
+    pressure_speed_threshold: float = 15.0  # low speed + high density = pressure
+
+@dataclass
+class DemographicConfig:
+    """Demographic estimation and behavior profile settings"""
+    enabled: bool = True
+    # Gender estimation method: 'heuristic', 'random_seeded', or 'model' (future)
+    gender_method: str = "heuristic"
+    # Default population split (used for random_seeded fallback)
+    male_ratio: float = 0.50
+    # Age-group estimation (placeholder for future extension)
+    age_estimation_enabled: bool = False
+    # Male behavior profile
+    male_speed_multiplier: float = 1.0
+    male_reaction_factor: float = 1.0
+    male_space_radius: float = 1.0
+    male_fall_susceptibility: float = 1.0
+    male_panic_spread: float = 1.0
+    male_crowd_tolerance: float = 1.0
+    # Female behavior profile
+    female_speed_multiplier: float = 0.88
+    female_reaction_factor: float = 0.92
+    female_space_radius: float = 1.15
+    female_fall_susceptibility: float = 1.12
+    female_panic_spread: float = 1.10
+    female_crowd_tolerance: float = 0.85
+    # Elderly behavior profile (for future age-group extension)
+    elderly_speed_multiplier: float = 0.68
+    elderly_reaction_factor: float = 1.35
+    elderly_space_radius: float = 1.10
+    elderly_fall_susceptibility: float = 1.60
+    elderly_panic_spread: float = 0.90
+    elderly_crowd_tolerance: float = 0.70
 
 class Config:
     """Main configuration class aggregating all configs"""
@@ -169,6 +213,8 @@ class Config:
         self.visualization = VisualizationConfig()
         self.logging = LoggingConfig()
         self.metrics = MetricsConfig()
+        self.stampede = StampedeConfig()
+        self.demographics = DemographicConfig()
         
         # Create directories
         self.paths.ensure_directories()
@@ -179,7 +225,8 @@ class Config:
             if hasattr(self, key):
                 sub_config = getattr(self, key)
                 if isinstance(sub_config, (ModelConfig, PipelineConfig, PathConfig, 
-                                          VisualizationConfig, LoggingConfig, MetricsConfig)):
+                                          VisualizationConfig, LoggingConfig, MetricsConfig,
+                                          StampedeConfig, DemographicConfig)):
                     for sub_key, sub_value in value.items():
                         if hasattr(sub_config, sub_key):
                             setattr(sub_config, sub_key, sub_value)
@@ -197,7 +244,9 @@ class Config:
             'paths': {k: convert_value(v) for k, v in self.paths.__dict__.items() if not k.startswith('_')},
             'visualization': {k: convert_value(v) for k, v in self.visualization.__dict__.items()},
             'logging': {k: convert_value(v) for k, v in self.logging.__dict__.items()},
-            'metrics': {k: convert_value(v) for k, v in self.metrics.__dict__.items()}
+            'metrics': {k: convert_value(v) for k, v in self.metrics.__dict__.items()},
+            'stampede': {k: convert_value(v) for k, v in self.stampede.__dict__.items()},
+            'demographics': {k: convert_value(v) for k, v in self.demographics.__dict__.items()}
         }
 
 # Global configuration instance

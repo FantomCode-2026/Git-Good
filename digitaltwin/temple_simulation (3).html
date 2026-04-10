@@ -6,103 +6,288 @@
 <title>Angala Parameswari Temple – 3D Simulation</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0b0b0b; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+  body { background: #0a0608; overflow: hidden; font-family: 'Georgia', serif; }
   #canvas-container { width: 100vw; height: 100vh; }
-  #ui-overlay {
-    position: fixed; top: 18px; left: 18px; z-index: 100;
-    color: #ffffff;
-    pointer-events: none;
-  }
-  #ui-overlay h1 { font-size: 18px; letter-spacing: 0; font-weight: 700; }
-  #ui-overlay p  { font-size: 12px; color: #d2d2d2; margin-top: 5px; letter-spacing: 0; }
-  #zone-info {
-    position: fixed; bottom: 18px; left: 18px; z-index: 100;
-    font-size: 11px; color: #d8d8d8; letter-spacing: 0;
-    pointer-events: none;
-  }
-  #controls-hint {
-    position: fixed; top: 18px; right: 18px; z-index: 100;
-    color: #d8d8d8; font-size: 11px; text-align: right;
-    letter-spacing: 0; pointer-events: none; line-height: 1.7;
-  }
-  #crowd-stats {
-    position: fixed; bottom: 18px; right: 18px; z-index: 200;
-    font-size: 11px; color: #ffffff; letter-spacing: 0;
-    text-align: right; pointer-events: none;
-  }
-  #prediction-panel {
-    position: fixed; top: 70px; left: 18px; z-index: 120;
-    min-width: 260px; max-width: 340px;
-    border: 1px solid #ffffff22; border-radius: 8px;
-    background: #101010cc;
-    color: #f3f3f3; padding: 12px 14px;
-    box-shadow: 0 10px 28px #00000055;
-    backdrop-filter: blur(10px);
-    font-size: 12px; letter-spacing: 0;
-  }
-  #prediction-panel h2 {
-    font-size: 12px; font-weight: 700; letter-spacing: 0;
-    margin-bottom: 7px; color: #ffffff;
-  }
-  #prediction-panel p { margin-top: 5px; color: #d8d8d8; line-height: 1.45; }
-  #prediction-panel .hot { color: #ff6b4a; }
-  #prediction-panel .watch { color: #ffd166; }
-  #prediction-panel .calm { color: #a7f3d0; }
-  #heatmap-panel {
-    position: fixed; top: 70px; right: 18px; z-index: 130;
-    width: 320px;
-    border: 1px solid #ffffff22; border-radius: 8px;
-    background: #101010cc;
-    box-shadow: 0 10px 28px #00000055;
-    backdrop-filter: blur(10px);
-    padding: 12px;
-  }
-  #heatmap-panel h2 {
-    font-size: 12px; font-weight: 700; letter-spacing: 0;
-    margin-bottom: 8px; color: #ffffff;
-  }
-  #heatmap-canvas {
-    width: 100%;
-    height: 320px;
-    display: block;
-    border-radius: 8px;
-    background: #090909;
-  }
-  #heatmap-caption {
-    margin-top: 8px;
-    font-size: 11px;
-    color: #d8d8d8;
-    line-height: 1.4;
-    letter-spacing: 0;
-  }
-</style>
+  .ui-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .ui-panel {
+            position: absolute;
+            background: #101010cc;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 14px;
+            pointer-events: auto;
+            backdrop-filter: blur(8px);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .ui-panel-title {
+            font-weight: 700;
+            font-size: 11px;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            background: rgba(94, 207, 122, 0.06);
+            padding: 7px;
+            border-radius: 4px;
+            border-left: 2px solid #5ecf7a;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #6b8a7a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: #d4f0dc;
+        }
+
+        .zone-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 6px;
+        }
+
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(94, 207, 122, 0.08);
+        }
+
+        .zone-item:last-child { border-bottom: none; }
+        .zone-label { color: #a8c4b4; }
+        .zone-count { font-weight: 700; color: #5ecf7a; }
+
+        .zone-density {
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .control-panel { top: 16px; left: 16px; width: 260px; }
+        .status-panel { top: 16px; right: 16px; width: 230px; }
+        .camera-panel { bottom: 16px; left: 16px; width: 260px; }
+
+        .button-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 70px;
+            padding: 7px 10px;
+            background: rgba(94, 207, 122, 0.08);
+            border: 1px solid rgba(94, 207, 122, 0.35);
+            color: #5ecf7a;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        button:hover {
+            background: rgba(94, 207, 122, 0.18);
+            border-color: #5ecf7a;
+            color: #d4f0dc;
+        }
+
+        button.active {
+            background: rgba(94, 207, 122, 0.25);
+            border-color: #5ecf7a;
+            color: #d4f0dc;
+            box-shadow: 0 0 8px rgba(94, 207, 122, 0.2);
+        }
+
+        .toggle-group { display: flex; gap: 0; margin-top: 10px; }
+        .toggle-group button { border-radius: 0; flex: 1; margin: 0; }
+        .toggle-group button:first-child { border-radius: 4px 0 0 4px; }
+        .toggle-group button:last-child { border-radius: 0 4px 4px 0; }
+
+        .density-indicator { margin-top: 10px; font-size: 11px; color: #6b8a7a; }
+
+        .density-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(94, 207, 122, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .density-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #4a6a5a;
+            margin-top: 10px;
+            padding: 7px;
+            background: rgba(94, 207, 122, 0.04);
+            border-radius: 4px;
+            border-left: 2px solid rgba(94, 207, 122, 0.3);
+        }
+
+        .stadium-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: #101010cc;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 11px;
+            color: #ffffff;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        .zone-list::-webkit-scrollbar { width: 3px; }
+        .zone-list::-webkit-scrollbar-track { background: rgba(20, 30, 20, 0.3); }
+        .zone-list::-webkit-scrollbar-thumb { background: rgba(94, 207, 122, 0.3); border-radius: 2px; }
+
+        /* ── Crowd-Control Panel ── */
+        .crowd-panel { top: 16px; left: 290px; width: 220px; }
+        .heatmap-panel { top: 255px; right: 16px; width: 320px; }
+        #stadium-heatmap-canvas {
+            width: 100%;
+            height: 320px;
+            display: block;
+            border-radius: 8px;
+            background: #090909;
+        }
+
+        #heatmap-status {
+            font-size: 11px;
+            margin-top: 8px;
+            color: #a8c4b4;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
 <div id="canvas-container"></div>
-<div id="ui-overlay">
-  <h1>ANGALA PARAMESWARI TEMPLE</h1>
-  <p>Prediction-Driven Crowd Twin</p>
-</div>
-<div id="controls-hint">
-  ORBIT · PAN · ZOOM<br>
-  Left Drag · Right Drag · Scroll
-</div>
-<div id="prediction-panel">
-  <h2>PREDICTION LAYER</h2>
-  <p>Waiting for temple simulation state...</p>
-</div>
-<div id="heatmap-panel">
-  <h2>CROWD HEATMAP</h2>
-  <canvas id="heatmap-canvas" width="320" height="320"></canvas>
-  <div id="heatmap-caption">Live density view of the simulated temple crowd.</div>
-</div>
-<div id="zone-info"></div>
-<div id="crowd-stats">AGENTS: 0</div>
+<div class="ui-overlay">
+            <div class="ui-panel control-panel">
+                <div class="ui-panel-title">⚙ Simulation Control</div>
+                <div class="toggle-group">
+                    <button id="btn-live-mode" class="active">Live Mode</button>
+                    <button id="btn-demo-mode">Demo Mode</button>
+                </div>
+                <div class="button-group">
+                    <button id="btn-start">Start</button>
+                    <button id="btn-stop">Stop</button>
+                    <button id="btn-reset">Reset</button>
+                </div>
+                <div class="stats-grid" style="margin-top:10px;">
+                    <div class="stat-item">
+                        <div class="stat-label">Total People</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Avg Density</div>
+                        <div class="stat-value" id="stat-density">0%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Active Zones</div>
+                        <div class="stat-value" id="stat-zones">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">FPS</div>
+                        <div class="stat-value" id="stat-fps">60</div>
+                    </div>
+                </div>
+                <div class="help-text">🖱 Orbit: Drag | Zoom: Scroll | Pan: Right-click</div>
+            </div>
+
+            <div class="ui-panel status-panel">
+                <div class="ui-panel-title">📊 Zone Status</div>
+                <div class="zone-list" id="zone-list"></div>
+            </div>
+
+            <div class="ui-panel camera-panel">
+                <div class="ui-panel-title">🎥 Camera Presets</div>
+                <div class="button-group">
+                    <button id="btn-cam-overview">Top Down</button>
+                    <button id="btn-cam-gate">Courtyard</button>
+                    <button id="btn-cam-corridor">Temple</button>
+                </div>
+                <div class="density-indicator">
+                    Overall Density:
+                    <div class="density-bar">
+                        <div class="density-fill" id="density-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel crowd-panel">
+                <div class="ui-panel-title">👥 Crowd Control</div>
+                <div class="button-group">
+                    <button onclick="window.__app.crowdManager.addPeople(50, 'entry')">+ 50 Entry</button>
+                    <button onclick="window.__app.crowdManager.addPeople(100, 'queue')">+ 100 Queue</button>
+                </div>
+                <div class="button-group">
+                    <button onclick="window.__app.crowdManager.addPeople(100, 'courtyard')">+ 100 Courtyard</button>
+                    <button onclick="window.__app.crowdManager.addPeople(100, 'temple')">+ 100 Temple</button>
+                </div>
+                <div class="button-group">
+                    <button onclick="window.__app.crowdManager.fillTemple()">Fill Temple</button>
+                    <button onclick="window.__app.crowdManager.clearCrowd()" style="color:#ffcccc;border-color:#ff6666;">Clear Crowd</button>
+                </div>
+                <button onclick="window.__app.crowdManager.triggerStampede()" style="width:100%;margin-top:10px;padding:8px;background:rgba(255,40,40,0.15);border:1px solid #ff4444;color:#ff6666;border-radius:4px;cursor:pointer;">🚨 TRIGGER STAMPEDE</button>
+            </div>
+
+            <div class="ui-panel heatmap-panel">
+                <div class="ui-panel-title" style="margin-bottom: 12px; display:flex; justify-content:space-between;">
+                    <span>CROWD HEATMAP</span>
+                </div>
+                <canvas id="heatmap-canvas" width="320" height="320"></canvas>
+                <div id="heatmap-status">Live density view of Temple</div>
+            </div>
+
+        </div>
+        <div class="stadium-badge">Angala Parameswari Temple</div>
+    </div>
 
 <script type="importmap">
 {
   "imports": {
-    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+    "three": "./three.min.js"
   }
 }
 </script>
@@ -111,7 +296,7 @@
 // ─── Load Three.js r128 as classic script, OrbitControls via CDN addon ───────
 </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./three.min.js"></script>
 <script src="./temple_prediction_state.js"></script>
 
 <script>
@@ -678,9 +863,7 @@ class CrowdManager {
     this._statsEl  = document.getElementById('crowd-stats');
 
     // Shared geometry + material pool for performance
-    this._agentHeight = 3.2;
-    this._agentBaseY = this._agentHeight / 2;
-    this._agentGeo  = new THREE.CylinderGeometry(1.05, 1.2, this._agentHeight, 8);
+    this._agentGeo  = new THREE.CylinderGeometry(0.7, 0.8, 2.2, 5);
     this._matPool   = [
       new THREE.MeshLambertMaterial({ color: 0xff5500, emissive: 0x220000 }),
       new THREE.MeshLambertMaterial({ color: 0xffdd00, emissive: 0x221100 }),
@@ -697,14 +880,24 @@ class CrowdManager {
     // Sparse grid for density checks (cell size = 6 units)
     this._gridCell = 6;
     this._grid     = new Map();
-    this._scenario = null;
-    this._speedScale = 1.0;
-    this._pauseScale = 1.0;
-    this._pressureScale = 1.0;
-    this._queueBias = 1.0;
-    this._templeBias = 1.0;
 
-    // Start empty and wait for prediction-driven state
+    // Spawn initial 400
+    this.addPeople(400);
+  }
+
+  _pickWaypointIndex(zone) {
+    const ranges = {
+      entry: [0, 1],
+      queue: [2, 10],
+      courtyard: [11, 12, 19, 20],
+      temple: [13, 18],
+      exit: [21, 23],
+      mixed: [0, 11],
+    };
+    const range = ranges[zone] || ranges.mixed;
+    const start = range[0];
+    const end = range[range.length - 1];
+    return start + Math.floor(Math.random() * (end - start + 1));
   }
 
   // ── Flow Path ────────────────────────────────────────────────────
@@ -742,15 +935,33 @@ class CrowdManager {
   // ── Spawn Helpers ────────────────────────────────────────────────
   _createAgent(wpIdx) {
     const wp   = this._flowPath[wpIdx];
+    
+    // Calculate Demographics Ratios
+    let femaleRatio = 0.49, maleRatio = 0.48;
+    if (this._predictionState && this._predictionState.demographics) {
+        const d = this._predictionState.demographics;
+        const total = (d.male || 0) + (d.female || 0);
+        if (total > 0) { maleRatio = d.male / total; femaleRatio = d.female / total; }
+    }
+    const gRoll = Math.random();
+    const gender = gRoll < femaleRatio ? 'female' : gRoll < (femaleRatio + maleRatio) ? 'male' : 'other';
+
+    let col = 0xffffff;
+    if (gender === 'male') col = 0x60a5fa; // Blue
+    else if (gender === 'female') col = 0xf472b6; // Pink
+    else col = 0xa78bfa; // Purple
+
+    const mat = new THREE.MeshLambertMaterial({ color: col });
+
     const mesh = new THREE.Mesh(
       this._agentGeo,
-      this._matPool[Math.floor(Math.random() * this._matPool.length)]
+      mat
     );
     // Slight lateral jitter off waypoint
     const jitter = wpIdx < 11 ? 2.5 : 3.5; // tighter in queue lanes
     mesh.position.set(
       wp.pos.x + (Math.random() - 0.5) * jitter,
-      this._agentBaseY,
+      0.8,
       wp.pos.z + (Math.random() - 0.5) * jitter
     );
     mesh.castShadow = false; // skip shadow for perf at high counts
@@ -766,20 +977,6 @@ class CrowdManager {
     };
   }
 
-  _pickWaypointIndex(zone) {
-    const ranges = {
-      entry: [0, 1],
-      queue: [2, 10],
-      courtyard: [11, 12],
-      temple: [13, 18],
-      exit: [19, 23],
-      mixed: [0, 11],
-    };
-    const range = ranges[zone] || ranges.mixed;
-    const [start, end] = range;
-    return start + Math.floor(Math.random() * (end - start + 1));
-  }
-
   addPeople(count, zone = 'mixed') {
     const toAdd = Math.min(count, this.maxAgents - this.agents.length);
     for (let i = 0; i < toAdd; i++) {
@@ -788,53 +985,27 @@ class CrowdManager {
     }
   }
 
+  fillTemple() {
+    ['entry', 'queue', 'courtyard', 'temple'].forEach(zone => {
+      const amount = zone === 'temple' ? 220 : zone === 'courtyard' ? 180 : zone === 'queue' ? 220 : 100;
+      this.addPeople(amount, zone);
+    });
+  }
+
   clearCrowd() {
     this.agents.forEach(a => this.scene.remove(a.mesh));
     this.agents = [];
     this._grid.clear();
   }
 
-  applyScenario(state) {
-    if (!state || !state.scenario) return;
-
-    this._scenario = state;
-    const tuning = state.crowdTuning || {};
-    this._speedScale = tuning.globalSpeedScale || 1.0;
-    this._pauseScale = tuning.pauseScale || 1.0;
-    this._pressureScale = tuning.pressureScale || 1.0;
-    this._queueBias = tuning.queueBias || 1.0;
-    this._templeBias = tuning.templeBias || 1.0;
-
-    const zoneCounts = state.zoneCounts || {};
-    const hasScenarioCrowd = Object.values(zoneCounts).some(v => v > 0);
-    if (hasScenarioCrowd) {
-      this.clearCrowd();
-      Object.entries(zoneCounts).forEach(([zone, count]) => {
-        this.addPeople(count, zone);
-      });
-    }
-
-    this._rushMode = !!state.scenario.rushMode;
-    this._updatePredictionPanel();
+  triggerStampede() {
+    this._rushMode = true;
+    this.addPeople(500);
+    setTimeout(() => { this._rushMode = false; }, 12000);
   }
 
-  _updatePredictionPanel() {
-    const panel = document.getElementById('prediction-panel');
-    if (!panel || !this._scenario || !this._scenario.scenario) return;
-
-    const s = this._scenario.scenario;
-    const zoneCounts = this._scenario.zoneCounts || {};
-    const levelClass = s.level === 'critical' ? 'hot' : (s.level === 'watch' ? 'watch' : 'calm');
-    panel.innerHTML = `
-      <h2>CROWD STATUS</h2>
-      <p class="${levelClass}">${s.title.toUpperCase()}</p>
-      <p>${s.problem} · ${s.flowStatus}</p>
-      <p>People ${s.currentPeopleCount} · Density ${s.currentDensity}</p>
-      <p>Risk ${s.fusedRisk} · Future ${s.futureRisk}</p>
-      <p>Agents ${s.agentTarget} · ${s.rushMode ? 'Rush flow' : 'Steady flow'}</p>
-      <p>Entry ${zoneCounts.entry || 0} · Queue ${zoneCounts.queue || 0} · Temple ${zoneCounts.temple || 0}</p>
-      <p>${s.alertText}</p>
-    `;
+  triggerRush() {
+    this.triggerStampede();
   }
 
   // ── Sparse Grid (density) ─────────────────────────────────────────
@@ -889,7 +1060,7 @@ class CrowdManager {
         const entry = this._flowPath[0];
         pos.set(
           entry.pos.x + (Math.random() - 0.5) * 4,
-          this._agentBaseY,
+          0.8,
           entry.pos.z + (Math.random() - 0.5) * 4
         );
         continue;
@@ -913,18 +1084,18 @@ class CrowdManager {
       // Rush mode pauses less; temple zone pauses more
       const pauseChance = rush
         ? 0.003
-        : (wp.zone === 'temple' ? 0.025 * this._templeBias : wp.zone === 'queue' ? 0.012 * this._queueBias : 0.006);
+        : (wp.zone === 'temple' ? 0.025 : wp.zone === 'queue' ? 0.012 : 0.006);
 
       if (!agent.pause && Math.random() < pauseChance) {
         agent.pause = rush
           ? 5 + Math.floor(Math.random() * 15)
-          : Math.floor((20 + Math.random() * 40) * this._pauseScale);
+          : 20 + Math.floor(Math.random() * 40);
       }
       if (agent.pause > 0) {
         agent.pause--;
         // Head wobble while waiting — looking around
         agent.mesh.rotation.y += (Math.random() - 0.5) * 0.08;
-        pos.y = this._agentBaseY + 0.03 * Math.sin(t * 1.8 + agent.phase);
+        pos.y = 0.8 + 0.02 * Math.sin(t * 1.8 + agent.phase);
         continue; // skip movement this frame
       }
 
@@ -933,12 +1104,12 @@ class CrowdManager {
       const density   = this._localDensity(pos.x, pos.z);
       const densMult  = Math.max(0.10, 1 - density * 0.055);
       const rushBoost = rush ? 1.5 : 1.0;
-      let   speed     = agent.baseSpeed * zoneMult * densMult * rushBoost * this._speedScale;
+      let   speed     = agent.baseSpeed * zoneMult * densMult * rushBoost;
 
       // ── 2. CROWD PRESSURE in dense areas ────────────────────────
       let pressX = 0, pressZ = 0;
       if (density > 6) {
-        const intensity = (rush ? 0.055 : 0.03) * this._pressureScale;
+        const intensity = rush ? 0.055 : 0.03;
         pressX = (Math.random() - 0.5) * intensity * (density / 6);
         pressZ = (Math.random() - 0.5) * intensity * (density / 6);
         // Jittery movement feel
@@ -987,8 +1158,8 @@ class CrowdManager {
           const ox = pos.x - other.mesh.position.x;
           const oz = pos.z - other.mesh.position.z;
           const d2 = ox * ox + oz * oz;
-          if (d2 < 5.76 && d2 > 0.001) { // within 2.4 units
-            const pushStr = 0.024 / Math.sqrt(d2);
+          if (d2 < 2.25 && d2 > 0.001) { // within 1.5 units
+            const pushStr = 0.018 / Math.sqrt(d2);
             pos.x += ox * pushStr;
             pos.z += oz * pushStr;
             other.mesh.position.x -= ox * pushStr;
@@ -1006,7 +1177,7 @@ class CrowdManager {
       // Bob (more frantic in rush)
       const bobAmp  = rush ? 0.05 : 0.03;
       const bobFreq = rush ? 3.2  : 2.2;
-      pos.y = this._agentBaseY + bobAmp * Math.sin(t * bobFreq + agent.phase);
+      pos.y = 0.8 + bobAmp * Math.sin(t * bobFreq + agent.phase);
 
       // ── 5. STRESS VISUAL: colour by density ─────────────────────
       if (i % 6 === 0) { // update colour every 6th agent for perf
@@ -1023,9 +1194,8 @@ class CrowdManager {
 
     // Update stats
     if (this._statsEl) {
-      const label = this._scenario?.scenario?.problem || 'NO PREDICTION';
       this._statsEl.textContent =
-        `AGENTS: ${this.agents.length}  |  ${label}  |  ${this._rushMode ? 'RUSH' : 'STEADY FLOW'}`;
+        `AGENTS: ${this.agents.length}  |  ${this._rushMode ? '🚨 RUSH MODE' : 'NORMAL FLOW'}`;
     }
   }
 
@@ -1071,194 +1241,6 @@ class CrowdManager {
 
 
 // ╔══════════════════════════════════════════════════════════════════╗
-// ║  TempleHeatmap                                                   ║
-// ╚══════════════════════════════════════════════════════════════════╝
-class TempleHeatmap {
-  constructor() {
-    this.canvas = document.getElementById('heatmap-canvas');
-    this.caption = document.getElementById('heatmap-caption');
-    this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
-    this.bounds = {
-      minX: -150,
-      maxX: 150,
-      minZ: -110,
-      maxZ: 112,
-    };
-  }
-
-  render(people, scenario) {
-    if (!this.ctx || !this.canvas) return;
-
-    const { width, height } = this.canvas;
-    this.ctx.clearRect(0, 0, width, height);
-
-    this.ctx.fillStyle = '#090909';
-    this.ctx.fillRect(0, 0, width, height);
-
-    this._drawGroundPlan();
-    this._drawTempleFootprint();
-    this._drawCrowdPath();
-
-    if (people.length) {
-      const risk = Math.max(0, Math.min(100, Number(scenario?.fusedRisk || 0)));
-      const radius = 22 + risk * 0.08;
-      for (const person of people) {
-        const point = this._project(person.x, person.z);
-        const gradient = this.ctx.createRadialGradient(
-          point.x, point.y, 0, point.x, point.y, radius
-        );
-        gradient.addColorStop(0, 'rgba(255, 245, 170, 0.34)');
-        gradient.addColorStop(0.45, 'rgba(255, 130, 60, 0.22)');
-        gradient.addColorStop(1, 'rgba(255, 40, 0, 0)');
-        this.ctx.fillStyle = gradient;
-        this.ctx.beginPath();
-        this.ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-        this.ctx.fill();
-      }
-    }
-
-    this._drawLabels();
-
-    if (this.caption) {
-      const problem = scenario?.problem || 'NORMAL';
-      const risk = scenario?.fusedRisk ?? 0;
-      this.caption.textContent = `Problem: ${problem} · Risk: ${risk}`;
-    }
-  }
-
-  _project(x, z) {
-    const layout = this._layout();
-    const px = layout.left + ((x - this.bounds.minX) / layout.worldW) * layout.width;
-    const py = layout.top + layout.height - (((z - this.bounds.minZ) / layout.worldD) * layout.height);
-    return { x: px, y: py };
-  }
-
-  _layout() {
-    const pad = 14;
-    const canvasW = this.canvas.width - pad * 2;
-    const canvasH = this.canvas.height - pad * 2;
-    const worldW = this.bounds.maxX - this.bounds.minX;
-    const worldD = this.bounds.maxZ - this.bounds.minZ;
-    const scale = Math.min(canvasW / worldW, canvasH / worldD);
-    const width = worldW * scale;
-    const height = worldD * scale;
-
-    return {
-      left: (this.canvas.width - width) / 2,
-      top: (this.canvas.height - height) / 2,
-      width,
-      height,
-      worldW,
-      worldD,
-    };
-  }
-
-  _drawWorldRect(minX, maxX, minZ, maxZ, fill, stroke = null) {
-    const topLeft = this._project(minX, maxZ);
-    const bottomRight = this._project(maxX, minZ);
-    const x = topLeft.x;
-    const y = topLeft.y;
-    const w = bottomRight.x - topLeft.x;
-    const h = bottomRight.y - topLeft.y;
-
-    if (fill) {
-      this.ctx.fillStyle = fill;
-      this.ctx.fillRect(x, y, w, h);
-    }
-    if (stroke) {
-      this.ctx.strokeStyle = stroke;
-      this.ctx.strokeRect(x, y, w, h);
-    }
-  }
-
-  _drawGroundPlan() {
-    const ctx = this.ctx;
-    const layout = this._layout();
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(layout.left, layout.top, layout.width, layout.height);
-
-    this._drawWorldRect(-150, 150, -110, 110, null, 'rgba(255, 255, 255, 0.16)');
-    this._drawWorldRect(-140, 140, -90, 110, 'rgba(255, 255, 255, 0.035)');
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
-    ctx.lineWidth = 1;
-    for (let x = -130; x <= 130; x += 20) {
-      const a = this._project(x, -90);
-      const b = this._project(x, 110);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.stroke();
-    }
-    for (let z = -90; z <= 110; z += 20) {
-      const a = this._project(-140, z);
-      const b = this._project(140, z);
-      ctx.beginPath();
-      ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
-      ctx.stroke();
-    }
-  }
-
-  _drawTempleFootprint() {
-    const boxes = [
-      { minX: -14, maxX: 14, minZ: 88, maxZ: 112, color: 'rgba(110, 190, 255, 0.10)', stroke: 'rgba(110, 190, 255, 0.28)' },
-      { minX: -55, maxX: 55, minZ: 10, maxZ: 90, color: 'rgba(255, 255, 255, 0.035)', stroke: 'rgba(255, 255, 255, 0.13)' },
-      { minX: -130, maxX: 130, minZ: -80, maxZ: 10, color: 'rgba(255, 255, 255, 0.025)', stroke: 'rgba(255, 255, 255, 0.10)' },
-      { minX: -28, maxX: 28, minZ: -68, maxZ: -8, color: 'rgba(255, 180, 100, 0.10)', stroke: 'rgba(255, 180, 100, 0.30)' },
-      { minX: -125, maxX: -95, minZ: -65, maxZ: -25, color: 'rgba(170, 255, 190, 0.08)', stroke: 'rgba(170, 255, 190, 0.24)' },
-      { minX: -26, maxX: 26, minZ: -66, maxZ: -14, color: 'rgba(255, 255, 255, 0.10)' },
-      { minX: -13, maxX: 13, minZ: -30, maxZ: -10, color: 'rgba(255, 255, 255, 0.12)' },
-      { minX: -14, maxX: 14, minZ: 98, maxZ: 102, color: 'rgba(255, 255, 255, 0.11)' },
-      { minX: -112, maxX: -108, minZ: -60, maxZ: -30, color: 'rgba(255, 255, 255, 0.11)' },
-    ];
-
-    for (const box of boxes) {
-      this._drawWorldRect(box.minX, box.maxX, box.minZ, box.maxZ, box.color, box.stroke);
-    }
-  }
-
-  _drawCrowdPath() {
-    const ctx = this.ctx;
-    const path = [
-      [0, 98], [0, 82], [-20, 68], [20, 52], [-20, 36],
-      [0, 18], [0, -14], [0, -34], [-8, -50], [-60, -45], [-110, -45],
-    ];
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.10)';
-    ctx.lineWidth = 8;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    path.forEach(([x, z], index) => {
-      const point = this._project(x, z);
-      if (index === 0) ctx.moveTo(point.x, point.y);
-      else ctx.lineTo(point.x, point.y);
-    });
-    ctx.stroke();
-  }
-
-  _drawLabels() {
-    const ctx = this.ctx;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
-    ctx.font = '11px Arial';
-    [
-      ['ENTRY', 18, 100],
-      ['QUEUE', 58, 50],
-      ['COURTYARD', 42, -2],
-      ['TEMPLE', 32, -40],
-      ['EXIT', -92, -45],
-    ].forEach(([label, x, z]) => {
-      const point = this._project(x, z);
-      ctx.fillText(label, point.x, point.y);
-    });
-  }
-}
-
-
-// ╔══════════════════════════════════════════════════════════════════╗
 // ║  App – main controller                                           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 class App {
@@ -1270,19 +1252,10 @@ class App {
       this.sceneManager.scene,
       this.templeModel.zones
     );
-    this.heatmap = new TempleHeatmap();
+    this._predictionPanel = document.getElementById('prediction-panel');
     this._clock = new THREE.Clock();
-    this._logZones();
     this._applyTempleSimulationState();
     this._start();
-  }
-
-  _logZones() {
-    const zoneEl = document.getElementById('zone-info');
-    const z = this.templeModel.zones;
-    zoneEl.innerHTML = Object.values(z)
-      .map(zone => `■ ${zone.name}  (${zone.position.x}, ${zone.position.z})`)
-      .join('&nbsp;&nbsp;&nbsp;');
   }
 
   _start() {
@@ -1290,29 +1263,233 @@ class App {
       const t = this._clock.getElapsedTime();
       this.templeModel.update(t);
       this.crowdManager.update(t);
-      this.heatmap.render(
-        this.crowdManager.getPeople(),
-        this.crowdManager._scenario?.scenario || null
-      );
+      this._updatePredictionPanel();
     });
   }
 
   _applyTempleSimulationState() {
     const state = window.__TEMPLE_SIMULATION_STATE__;
-    if (!state) {
-      const panel = document.getElementById('prediction-panel');
-      if (panel) {
-        panel.innerHTML = `
-          <h2>PREDICTION LAYER</h2>
-          <p class="watch">No exported prediction state found.</p>
-          <p>Run the main pipeline first to generate the temple simulation state.</p>
-        `;
+    this._predictionState = state || null;
+    if (!state || !state.scenario) {
+      if (this._predictionPanel) {
+        this._predictionPanel.innerHTML = '<p style="color:#c0956a;font-size:11px;">No exported prediction state found.</p>';
       }
       return;
     }
-    this.crowdManager.applyScenario(state);
+
+    const zoneCounts = state.zoneCounts || {};
+    this.crowdManager.clearCrowd();
+    Object.entries(zoneCounts).forEach(([zone, count]) => {
+      if (count > 0) this.crowdManager.addPeople(count, zone);
+    });
+
+    if (this._predictionPanel) {
+      const s = state.scenario;
+      this._predictionPanel.innerHTML = `
+        <h2 style="font-size:12px;color:#f5c97a;margin-bottom:6px;letter-spacing:1px;">PREDICTION LAYER</h2>
+        <p style="color:#f3f3f3;font-size:11px;line-height:1.5;">${s.title}</p>
+        <p style="color:#c0956a;font-size:11px;line-height:1.5;">Problem: ${s.problem} · Flow: ${s.flowStatus}</p>
+        <p style="color:#c0956a;font-size:11px;line-height:1.5;">Risk: ${s.fusedRisk} · Future: ${s.futureRisk}</p>
+        <p style="color:#c0956a;font-size:11px;line-height:1.5;">Entry ${zoneCounts.entry || 0} · Queue ${zoneCounts.queue || 0} · Temple ${zoneCounts.temple || 0}</p>
+      `;
+    }
   }
+
+
+  _updatePredictionPanel() {
+    // 1. STATS PANEL (Control Panel equivalent)
+    const people = this.crowdManager.agents.length;
+    const statTotal = document.getElementById('stat-total');
+    if (statTotal) statTotal.textContent = people;
+    
+    // FPS Calculation
+    if (!this._frameCount) this._frameCount = 0;
+    if (!this._lastFpsTime) this._lastFpsTime = Date.now();
+    this._frameCount++;
+    const now = Date.now();
+    if (now - this._lastFpsTime >= 1000) {
+        const fpsEl = document.getElementById('stat-fps');
+        if (fpsEl) fpsEl.textContent = this._frameCount;
+        this._frameCount = 0;
+        this._lastFpsTime = now;
+    }
+
+    // Update Heatmap
+    if (!this.heatmap) {
+        this.heatmap = new TempleHeatmap('heatmap-canvas', 'heatmap-status');
+    }
+    this.heatmap.render(this.crowdManager.agents);
+
+    // 2. ZONE STATUS PANEL (Stadium equivalent)
+    const zoneList = document.getElementById('zone-list');
+    if (zoneList) {
+        let html = '';
+        
+        let d = {male:0, female:0};
+        let stampede = {active:false};
+        
+        if (this._predictionState) {
+            d = this._predictionState.demographics || d;
+            stampede = this._predictionState.stampede || stampede;
+            
+            // Inject AI real world alerts
+            html += `<div style="background: rgba(255,40,40,0.1); padding: 8px; border: 1px solid rgba(255,40,40,0.3); border-radius: 4px; margin-bottom: 15px;">
+                <h3 style="color:#ff6666; font-size:12px; margin-bottom:5px;">🚨 REAL WORLD AI ALERTS</h3>
+                <p style="color:#ddd; font-size:11px; margin-bottom:3px;">Male: ${d.male || 0} | Female: ${d.female || 0}</p>
+                <p style="color:#ddd; font-size:11px;">Active Stampede: <b style="color:${stampede.active ? '#ff3333' : '#66cc66'}">${stampede.active ? 'YES' : 'NO'}</b> (${stampede.latestFallenCount || 0} fallen)</p>
+            </div>`;
+            
+            // Auto trigger panic
+            if (stampede.active && !window._stampedeActive) {
+                this.crowdManager.triggerStampede();
+                window._stampedeActive = true;
+            } else if (!stampede.active && window._stampedeActive) {
+                this.crowdManager._rushMode = false;
+                window._stampedeActive = false;
+            }
+        }
+
+        // Aggregate densities
+        const counts = { Entry:0, Queue:0, Courtyard:0, Temple:0, Exit:0 };
+        this.crowdManager.agents.forEach(a => {
+           let z = a.zoneTag;
+           if(z==='entry') counts.Entry++;
+           if(z==='queue') counts.Queue++;
+           if(z==='courtyard') counts.Courtyard++;
+           if(z==='temple') counts.Temple++;
+           if(z==='exit') counts.Exit++;
+        });
+        
+        let avgDens = 0; let activeZ = 0;
+        
+        for (const [zoneId, c] of Object.entries(counts)) {
+            if (c > 0) {
+                const denPercent = Math.min(100, Math.round((c / 200) * 100)); // normalized to 200 max per zone
+                avgDens += denPercent; activeZ++;
+                const dc = denPercent > 70 ? '#ef4444' : denPercent > 40 ? '#f59e0b' : '#22c55e';
+                html += `<div class="zone-item" style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:11px; background:rgba(0,0,0,0.3); padding:4px; border-radius:3px;">
+                    <span class="zone-label" style="color:#ccc;">${zoneId}</span>
+                    <span class="zone-count" style="color:#fff; font-weight:bold;">${c}</span>
+                    <span class="zone-density" style="background:${dc}22;color:${dc}; padding: 1px 4px; border-radius: 2px;">${denPercent}%</span>
+                </div>`;
+            }
+        }
+        
+        zoneList.innerHTML = html || '<div style="color:#6b8a7a;padding:6px;">No active zones</div>';
+        
+        const avg = activeZ > 0 ? Math.round(avgDens / activeZ) : 0;
+        const statDen = document.getElementById('stat-density');
+        if (statDen) statDen.textContent = avg + '%';
+        const statZone = document.getElementById('stat-zones');
+        if (statZone) statZone.textContent = activeZ;
+        
+        const dFill = document.getElementById('density-fill');
+        if (dFill) {
+            dFill.style.width = avg + '%';
+        }
+    }
+  }
+
 }
+
+
+// ==================== TempleHeatmap ====================
+class TempleHeatmap {
+    constructor(canvasId, statusId) {
+        this.canvas = document.getElementById(canvasId);
+        this.status = document.getElementById(statusId);
+        this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+        this.bounds = { minX: -120, maxX: 40, minZ: -60, maxZ: 110 };
+    }
+
+    render(people) {
+        if (!this.ctx || !this.canvas) return;
+
+        const ctx = this.ctx;
+        const { width, height } = this.canvas;
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, width, height);
+
+        this._drawGroundPlan();
+        this._drawPeople(people);
+
+        if (this.status) {
+            this.status.textContent = `Live density view · ${people.length} people`;
+        }
+    }
+
+    _layout() {
+        const pad = 14;
+        const canvasW = this.canvas.width - pad * 2;
+        const canvasH = this.canvas.height - pad * 2;
+        const worldW = this.bounds.maxX - this.bounds.minX;
+        const worldD = this.bounds.maxZ - this.bounds.minZ;
+        const scale = Math.min(canvasW / worldW, canvasH / worldD) * 1.5;
+        const width = worldW * scale;
+        const height = worldD * scale;
+        return {
+            left: (this.canvas.width - width) / 2 + 30, // shift right
+            top: (this.canvas.height - height) / 2 + 10,
+            width, height, worldW, worldD, scale
+        };
+    }
+
+    _project(x, z) {
+        const layout = this._layout();
+        return {
+            x: layout.left + ((x - this.bounds.minX) / layout.worldW) * layout.width,
+            y: layout.top + layout.height - (((z - this.bounds.minZ) / layout.worldD) * layout.height),
+        };
+    }
+
+    _drawGroundPlan() {
+        const ctx = this.ctx;
+        const layout = this._layout();
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.strokeRect(layout.left, layout.top, layout.width, layout.height);
+        
+        // Temple Path Drawing
+        const zones = [
+            { id: 'Entry', x: -10, z: 80, w: 20, d: 25 },
+            { id: 'Queue', x: -25, z: 15, w: 50, d: 65 },
+            { id: 'Courtyard', x: -40, z: -10, w: 50, d: 25 },
+            { id: 'Temple', x: -15, z: -45, w: 30, d: 35 },
+            { id: 'Exit', x: -120, z: -55, w: 80, d: 20 },
+        ];
+        
+        zones.forEach(z => {
+            const tl = this._project(z.x, z.z + z.d);
+            const br = this._project(z.x + z.w, z.z);
+            ctx.fillStyle = 'rgba(200, 160, 80, 0.05)';
+            ctx.strokeStyle = 'rgba(200, 160, 80, 0.2)';
+            ctx.fillRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
+            ctx.strokeRect(tl.x, tl.y, br.x - tl.x, br.y - tl.y);
+            
+            ctx.fillStyle = 'rgba(200, 160, 80, 0.6)';
+            ctx.font = '10px Arial';
+            ctx.fillText(z.id, tl.x + 4, tl.y + 12);
+        });
+    }
+
+    _drawPeople(people) {
+        const ctx = this.ctx;
+        const radius = 2;
+
+        people.forEach((person) => {
+            const pos = this._project(person.mesh.position.x, person.mesh.position.z);
+            let color = 'rgba(255, 255, 255, 0.7)';
+            if (person.gender === 'male') color = 'rgba(96, 165, 250, 0.8)';
+            else if (person.gender === 'female') color = 'rgba(244, 114, 182, 0.8)';
+
+            ctx.beginPath();
+            ctx.arc(pos.x, pos.y, radius, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+        });
+    }
+}
+
 
 // ── Bootstrap ────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {

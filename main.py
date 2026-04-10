@@ -24,6 +24,8 @@ from pipeline.feature_extractor import FeatureExtractor
 from pipeline.pose_estimator import PoseEstimator
 from pipeline.sequence_manager import SequenceManager, SequenceProcessor
 from pipeline.inference import InferencePipeline
+from pipeline.demographic_estimator import DemographicEstimator
+from pipeline.behavior_profile import DEFAULT_PROFILE
 from prediction_layer import PredictionLayerBridge
 from utils.visualization import Visualizer, VideoWriter
 from utils.metrics import CrowdMetrics, MetricsAggregator
@@ -77,6 +79,11 @@ class CrowdBehaviorSystem:
         self.visualizer = Visualizer(config)
         self.prediction_layer = PredictionLayerBridge()
         self.last_prediction_alert_frame = None
+
+        # Demographic estimator for male/female behavior modeling
+        self.demographic_estimator = DemographicEstimator(config.demographics)
+        # Per-track profile cache for quick access
+        self._track_profiles = {}
         
         logger.info("CrowdBehaviorSystem initialized successfully")
 
@@ -280,10 +287,33 @@ class CrowdBehaviorSystem:
             frame.shape[:2], tracked_objects
         )
 
+        # 7.5 Assign demographic profiles (male/female) to each tracked person
+        for obj in tracked_objects:
+            track_id = obj['track_id']
+            pose_feats = obj.get('pose_features')
+            profile = self.demographic_estimator.assign_profile(
+                track_id, obj['bbox'], pose_feats
+            )
+            self._track_profiles[track_id] = profile
+            obj['demographic_profile'] = profile.label
+            obj['gender'] = profile.gender
+        self.demographic_estimator.cleanup(active_track_ids)
+
+        # 8. Compute per-person fall risk with density coupling and demographic profiles
         fall_risk_results = {}
         for obj in tracked_objects:
             track_id = obj['track_id']
-            heuristic_result = self.metrics.estimate_fall_risk(track_id, obj['bbox'])
+            profile = self._track_profiles.get(track_id, DEFAULT_PROFILE)
+            local_density = self.metrics.compute_local_density(
+                track_id, tracked_objects,
+                radius=config.stampede.propagation_radius,
+            )
+            heuristic_result = self.metrics.estimate_fall_risk(
+                track_id, obj['bbox'],
+                density_score=density_score,
+                local_density=local_density,
+                profile=profile,
+            )
             model_fall_prob = None
             if track_id in behavior_results:
                 model_fall_prob = behavior_results[track_id].get('fall_prob')
@@ -292,12 +322,27 @@ class CrowdBehaviorSystem:
                 model_fall_prob=model_fall_prob,
                 prior_probability=self.fall_probability_state.get(track_id),
                 smoothing=config.metrics.fall_probability_smoothing,
+                density_factor=density_score,
             )
             combined_result = {**heuristic_result, **fall_probability_result}
             fall_risk_results[track_id] = combined_result
             self.fall_probability_state[track_id] = combined_result['fall_probability']
             obj['fall_probability'] = combined_result['fall_probability']
             obj['fall_risk'] = combined_result['heuristic_probability']
+
+        # 8.5 Stampede / chain-reaction propagation
+        self.metrics.propagate_stampede_pressure(
+            tracked_objects=tracked_objects,
+            fall_risk_results=fall_risk_results,
+            fall_probability_state=self.fall_probability_state,
+            profiles=self._track_profiles,
+        )
+        # Update tracked objects with post-stampede fall probabilities
+        for obj in tracked_objects:
+            track_id = obj['track_id']
+            obj['fall_probability'] = self.fall_probability_state.get(
+                track_id, obj.get('fall_probability', 0.0)
+            )
 
         if self.inference_pipeline.is_demo_behavior_mode():
             behavior_results = {
@@ -340,6 +385,12 @@ class CrowdBehaviorSystem:
                 anomaly_desc = prediction_desc
             crowd_anomaly = True
 
+        # Count stampede / fallen stats
+        stampede_fallen_count = sum(
+            1 for p in self.fall_probability_state.values()
+            if p >= config.stampede.fallen_threshold
+        )
+
         # 10. Prepare frame results
         frame_results = {
             'frame_number': frame_number,
@@ -352,7 +403,9 @@ class CrowdBehaviorSystem:
             'density_grid': density_grid,
             'prediction_result': prediction_result,
             'crowd_anomaly': crowd_anomaly,
-            'anomaly_description': anomaly_desc
+            'anomaly_description': anomaly_desc,
+            'stampede_fallen_count': stampede_fallen_count,
+            'demographic_summary': self.demographic_estimator.get_demographic_summary(),
         }
         
         # Store metrics
@@ -364,6 +417,7 @@ class CrowdBehaviorSystem:
             'avg_fall_probability': np.mean(
                 [r['fall_probability'] for r in fall_risk_results.values()]
             ) if fall_risk_results else 0.0,
+            'stampede_fallen_count': stampede_fallen_count,
             'base_prediction_risk': prediction_result['base_risk'],
             'predicted_future_risk': prediction_result['predicted_future_risk'],
             'trend_risk': prediction_result['trend_risk'],
@@ -371,7 +425,9 @@ class CrowdBehaviorSystem:
             'flow_status': prediction_result['flow_status'],
             'predicted_problem': prediction_result['problem'],
             'num_tracks': len(tracked_objects),
-            'num_inferences': len(behavior_results)
+            'num_inferences': len(behavior_results),
+            'demographic_males': self.demographic_estimator.get_demographic_summary().get('male', 0),
+            'demographic_females': self.demographic_estimator.get_demographic_summary().get('female', 0),
         })
         
         # Log alerts
@@ -424,13 +480,27 @@ class CrowdBehaviorSystem:
                     'frame': frame_number,
                     'track_id': track_id,
                     'type': 'fall_risk',
-                    'fall_risk': fall_risk['fall_probability']
+                    'fall_risk': fall_risk['fall_probability'],
+                    'stampede_boost': fall_risk.get('stampede_boost', 0.0),
                 }
                 self.metrics_aggregator.add_alert(alert)
                 logger.warning(
                     f"Frame {frame_number}: Person {track_id} high fall risk "
-                    f"({fall_risk['fall_probability']:.2f})"
+                    f"({fall_risk['fall_probability']:.2f}, stampede_boost={fall_risk.get('stampede_boost', 0.0):.2f})"
                 )
+
+        # Log stampede event if active
+        if stampede_fallen_count > 0:
+            alert = {
+                'frame': frame_number,
+                'type': 'stampede_active',
+                'fallen_count': stampede_fallen_count,
+                'description': f"STAMPEDE: {stampede_fallen_count} agents fallen",
+            }
+            self.metrics_aggregator.add_alert(alert)
+            logger.critical(
+                f"Frame {frame_number}: STAMPEDE ACTIVE — {stampede_fallen_count} agent(s) fallen"
+            )
         
         return frame_results
     
@@ -476,7 +546,14 @@ class CrowdBehaviorSystem:
                 confidence,
                 anomaly_score,
                 fall_probability=fall_probability,
+                gender=obj.get('gender'),
+                demographic_label=obj.get('demographic_profile'),
             )
+
+        # Draw stampede overlay if active
+        stampede_fallen = results.get('stampede_fallen_count', 0)
+        if stampede_fallen > 0:
+            frame = self.visualizer.draw_stampede_overlay(frame, stampede_fallen)
         
         # Draw crowd statistics
         frame = self.visualizer.draw_crowd_stats(
@@ -486,6 +563,8 @@ class CrowdBehaviorSystem:
                 len(results['tracked_objects']),
                 fps=30,  # Will be updated with actual FPS
                 prediction_result=results.get('prediction_result'),
+                demographic_summary=results.get('demographic_summary'),
+                stampede_fallen=stampede_fallen,
             )
         
         # Draw density heatmap
@@ -634,6 +713,12 @@ class CrowdBehaviorSystem:
                 'latest_flow_status': final_metrics.get('flow_status', 'smooth'),
                 'model_loaded': self.prediction_layer.predictor.model is not None,
             }
+
+        # Add demographic summary
+        summary['demographic_distribution'] = self.demographic_estimator.get_demographic_summary()
+        summary['stampede_events'] = sum(
+            1 for a in self.metrics_aggregator.alerts_history if a.get('type') == 'stampede_active'
+        )
         
         logger.info(f"Video processing completed. Summary: {summary}")
         
@@ -686,6 +771,9 @@ class CrowdBehaviorSystem:
             summary=self._make_json_safe(summary),
             metrics_history=self._make_json_safe(self.metrics_aggregator.metrics_history),
             alerts_history=self._make_json_safe(self.metrics_aggregator.alerts_history),
+            demographic_summary=self._make_json_safe(
+                self.demographic_estimator.get_demographic_summary()
+            ),
         )
         logger.info(
             "Temple digital twin state exported to "
@@ -697,17 +785,21 @@ class CrowdBehaviorSystem:
             config.paths.base_dir / "digitaltwin" / "digital-twin-stadium-enhanced.html",
         ]
         for page in digital_twin_pages:
-            if page.exists():
-                webbrowser.open(page.resolve().as_uri())
-                logger.info(f"Opened digital twin: {page}")
-            else:
-                logger.warning(f"Digital twin page not found: {page}")
+            try:
+                if page.exists():
+                    webbrowser.open(page.resolve().as_uri())
+                    logger.info(f"Opened digital twin: {page}")
+                else:
+                    logger.warning(f"Digital twin page not found: {page}")
+            except Exception as exc:
+                logger.warning(f"Failed to open digital twin {page}: {exc}")
     
     def reset(self):
         """Reset system state for new video"""
         self.frame_count = 0
         self.total_frames = 0
         self.fall_probability_state = {}
+        self._track_profiles = {}
         self.last_prediction_alert_frame = None
         self.tracker.reset()
         self.sequence_manager.reset()
@@ -715,6 +807,7 @@ class CrowdBehaviorSystem:
         self.metrics_aggregator.reset()
         self.inference_pipeline.clear_cache()
         self.prediction_layer.reset()
+        self.demographic_estimator.reset()
         logger.info("System reset")
 
 def main():

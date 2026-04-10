@@ -8,6 +8,8 @@ from collections import deque
 from dataclasses import dataclass
 from loguru import logger
 
+from pipeline.behavior_profile import BehaviorProfile, DEFAULT_PROFILE
+
 @dataclass
 class MovementStats:
     """Container for movement statistics of a person"""
@@ -219,9 +221,57 @@ class CrowdMetrics:
             movement_pattern=pattern
         )
 
-    def estimate_fall_risk(self, track_id: int, bbox: List[int]) -> Dict[str, float]:
+    def compute_local_density(
+        self,
+        track_id: int,
+        tracked_objects: List[Dict],
+        radius: float = 120.0,
+    ) -> float:
         """
-        Estimate fall risk from bounding-box posture and short-term motion.
+        Compute the local density around a specific person.
+
+        Returns a 0-1 score based on how many other people are within *radius*
+        pixels of this person's centre.
+        """
+        history = self.movement_history.get(track_id)
+        if not history:
+            return 0.0
+
+        center = history[-1][0]
+        neighbor_count = 0
+
+        for obj in tracked_objects:
+            other_id = obj["track_id"]
+            if other_id == track_id:
+                continue
+            other_center = self.get_center(obj["bbox"])
+            dist = np.sqrt(
+                (center[0] - other_center[0]) ** 2 + (center[1] - other_center[1]) ** 2
+            )
+            if dist < radius:
+                neighbor_count += 1
+
+        # Normalise: 0 neighbours → 0, 8+ → 1.0
+        return float(np.clip(neighbor_count / 8.0, 0.0, 1.0))
+
+    def estimate_fall_risk(
+        self,
+        track_id: int,
+        bbox: List[int],
+        density_score: float = 0.0,
+        local_density: float = 0.0,
+        profile: BehaviorProfile = DEFAULT_PROFILE,
+    ) -> Dict[str, float]:
+        """
+        Estimate fall risk from bounding-box posture, short-term motion,
+        crowd density pressure, and demographic profile.
+
+        Args:
+            track_id: Person's track ID
+            bbox: Bounding box [x1, y1, x2, y2]
+            density_score: Global frame density (0-1)
+            local_density: Local neighbour density (0-1)
+            profile: Demographic behavior profile
 
         Returns:
             Dictionary with a probability-like score and feature contributions.
@@ -230,8 +280,8 @@ class CrowdMetrics:
         height = max(1, bbox[3] - bbox[1])
         aspect_ratio = width / height
 
-        # Horizontal posture is a strong fall cue.
-        posture_score = np.clip((aspect_ratio - 0.45) / 0.85, 0.0, 1.0)
+        # Horizontal posture is a strong fall cue — widened detection range.
+        posture_score = np.clip((aspect_ratio - 0.40) / 0.70, 0.0, 1.0)
 
         history = self.movement_history.get(track_id, deque())
         pose_history = self.pose_history.get(track_id, deque())
@@ -243,6 +293,18 @@ class CrowdMetrics:
         com_shift_score = 0.0
         gait_score = 0.0
 
+        # --- Density-pressure factor (NEW) ---
+        stampede_cfg = self.config.stampede
+        density_pressure = 0.0
+        if density_score > stampede_cfg.high_density_threshold:
+            density_pressure = (
+                (density_score - stampede_cfg.high_density_threshold)
+                / (1.0 - stampede_cfg.high_density_threshold)
+            ) * stampede_cfg.density_fall_boost
+        # Local density contributes even more
+        density_pressure += local_density * stampede_cfg.density_fall_boost * 0.5
+        density_pressure = float(np.clip(density_pressure, 0.0, 0.5))
+
         if len(history) >= 2:
             (prev_center, prev_t), (curr_center, curr_t) = history[-2], history[-1]
             dt = max(curr_t - prev_t, 1)
@@ -253,8 +315,8 @@ class CrowdMetrics:
             ) / dt
 
             # Large sudden downward motion increases risk.
-            drop_score = np.clip(vertical_drop / max(height * 0.35, 1.0), 0.0, 1.0)
-            speed_score = np.clip(total_speed / max(self.velocity_threshold_normal, 1.0), 0.0, 1.0)
+            drop_score = np.clip(vertical_drop / max(height * 0.25, 1.0), 0.0, 1.0)
+            speed_score = np.clip(total_speed / max(self.velocity_threshold_normal * profile.speed_multiplier, 1.0), 0.0, 1.0)
 
         movement_stats = self.compute_movement_stats(track_id)
         if movement_stats is not None:
@@ -262,7 +324,7 @@ class CrowdMetrics:
                 acceleration_score = float(
                     np.clip(
                         np.max(np.abs(movement_stats.accelerations))
-                        / max(self.velocity_threshold_normal, 1.0),
+                        / max(self.velocity_threshold_normal * profile.speed_multiplier, 1.0),
                         0.0,
                         1.0,
                     )
@@ -292,22 +354,22 @@ class CrowdMetrics:
         if pose_history:
             latest_pose = pose_history[-1]
             lean_score = float(
-                np.clip(abs(latest_pose.get("body_angle_deg", 0.0)) / 35.0, 0.0, 1.0)
+                np.clip(abs(latest_pose.get("body_angle_deg", 0.0)) / 30.0, 0.0, 1.0)
             )
             com_shift_score = float(
-                np.clip(latest_pose.get("center_of_mass_shift", 0.0) / 0.18, 0.0, 1.0)
+                np.clip(latest_pose.get("center_of_mass_shift", 0.0) / 0.15, 0.0, 1.0)
             )
             gait_score = float(
-                np.clip(latest_pose.get("step_irregularity", 0.0) / 0.12, 0.0, 1.0)
+                np.clip(latest_pose.get("step_irregularity", 0.0) / 0.10, 0.0, 1.0)
             )
 
         motion_probability = float(
             np.clip(
-                0.4 * posture_score
+                0.35 * posture_score
                 + 0.25 * drop_score
-                + 0.1 * speed_score
+                + 0.10 * speed_score
                 + 0.15 * acceleration_score
-                + 0.1 * direction_change_score,
+                + 0.15 * direction_change_score,
                 0.0,
                 1.0,
             )
@@ -317,19 +379,25 @@ class CrowdMetrics:
             np.clip(0.5 * lean_score + 0.3 * com_shift_score + 0.2 * gait_score, 0.0, 1.0)
         )
 
-        probability = float(
+        # Combine motion + pose + density pressure
+        raw_probability = float(
             np.clip(
                 self.hybrid_fall_motion_weight * motion_probability
-                + self.hybrid_fall_pose_weight * pose_probability,
+                + self.hybrid_fall_pose_weight * pose_probability
+                + density_pressure,
                 0.0,
                 1.0,
             )
         )
 
+        # Apply demographic susceptibility multiplier
+        probability = float(np.clip(raw_probability * profile.fall_susceptibility, 0.0, 1.0))
+
         return {
             "fall_risk": probability,
             "motion_probability": motion_probability,
             "pose_probability": pose_probability,
+            "density_pressure": density_pressure,
             "posture_score": float(posture_score),
             "drop_score": float(drop_score),
             "speed_score": float(speed_score),
@@ -340,17 +408,144 @@ class CrowdMetrics:
             "gait_score": float(gait_score),
         }
 
+    # ── Stampede / Chain-Reaction Propagation ──────────────────────
+    def propagate_stampede_pressure(
+        self,
+        tracked_objects: List[Dict],
+        fall_risk_results: Dict[int, Dict],
+        fall_probability_state: Dict[int, float],
+        profiles: Optional[Dict[int, BehaviorProfile]] = None,
+    ) -> Dict[int, Dict]:
+        """
+        Propagate fall/stampede pressure from fallen agents to their neighbors.
+
+        When a person falls (fall_probability >= fallen_threshold), all people
+        within propagation_radius receive an additional fall-risk boost.  The
+        boost decays with distance and cascade depth, creating a realistic
+        domino / stampede effect.
+
+        Args:
+            tracked_objects: Currently tracked people
+            fall_risk_results: Per-person fall risk dicts (modified in-place)
+            fall_probability_state: Smoothed per-person fall probabilities
+            profiles: Optional demographic profiles per track_id
+
+        Returns:
+            Updated fall_risk_results dict (same dict mutated)
+        """
+        scfg = self.config.stampede
+        profs = profiles or {}
+
+        # Build centre lookup
+        centres: Dict[int, Tuple[int, int]] = {}
+        for obj in tracked_objects:
+            centres[obj["track_id"]] = self.get_center(obj["bbox"])
+
+        # Identify initially fallen agents
+        fallen_ids = set()
+        for tid, prob in fall_probability_state.items():
+            if prob >= scfg.fallen_threshold:
+                fallen_ids.add(tid)
+
+        if not fallen_ids:
+            return fall_risk_results
+
+        logger.warning(
+            f"Stampede propagation triggered — {len(fallen_ids)} fallen agent(s): {fallen_ids}"
+        )
+
+        # Iterative BFS-like cascade
+        wave = set(fallen_ids)  # current sources
+        visited = set(fallen_ids)
+
+        for hop in range(scfg.max_cascade_hops):
+            next_wave = set()
+            decay = scfg.cascade_decay ** hop
+            if decay < 0.05:
+                break
+
+            for source_id in wave:
+                if source_id not in centres:
+                    continue
+                src_center = centres[source_id]
+                src_profile = profs.get(source_id, DEFAULT_PROFILE)
+
+                for obj in tracked_objects:
+                    target_id = obj["track_id"]
+                    if target_id in visited:
+                        continue
+                    tgt_center = centres.get(target_id)
+                    if tgt_center is None:
+                        continue
+
+                    dist = np.sqrt(
+                        (src_center[0] - tgt_center[0]) ** 2
+                        + (src_center[1] - tgt_center[1]) ** 2
+                    )
+                    if dist > scfg.propagation_radius:
+                        continue
+
+                    # Distance-based attenuation (closer = stronger)
+                    proximity = 1.0 - (dist / scfg.propagation_radius)
+                    tgt_profile = profs.get(target_id, DEFAULT_PROFILE)
+
+                    boost = (
+                        scfg.propagation_factor
+                        * proximity
+                        * decay
+                        * src_profile.panic_spread
+                        * tgt_profile.fall_susceptibility
+                    )
+
+                    # Apply boost to fall risk
+                    if target_id in fall_risk_results:
+                        old = fall_risk_results[target_id].get("fall_risk", 0.0)
+                        new_risk = float(np.clip(old + boost, 0.0, 1.0))
+                        fall_risk_results[target_id]["fall_risk"] = new_risk
+                        fall_risk_results[target_id]["stampede_boost"] = float(
+                            fall_risk_results[target_id].get("stampede_boost", 0.0) + boost
+                        )
+
+                    # Update smoothed probability
+                    old_prob = fall_probability_state.get(target_id, 0.0)
+                    new_prob = float(np.clip(old_prob + boost, 0.0, 1.0))
+                    fall_probability_state[target_id] = new_prob
+
+                    # If this target is now fallen, it becomes a source for the next hop
+                    if new_prob >= scfg.fallen_threshold:
+                        next_wave.add(target_id)
+
+            visited.update(next_wave)
+            wave = next_wave
+            if not wave:
+                break
+
+        # Log stampede stats
+        total_fallen = sum(
+            1 for p in fall_probability_state.values() if p >= scfg.fallen_threshold
+        )
+        if total_fallen > len(fallen_ids):
+            logger.warning(
+                f"Stampede cascade: {len(fallen_ids)} initial → {total_fallen} total fallen"
+            )
+
+        return fall_risk_results
+
     def compute_hybrid_fall_probability(
         self,
         heuristic_result: Dict[str, float],
         model_fall_prob: Optional[float] = None,
         prior_probability: Optional[float] = None,
-        smoothing: float = 0.65,
+        smoothing: float = 0.30,
+        density_factor: float = 0.0,
     ) -> Dict[str, float]:
         """
-        Combine heuristic instability and model fall signal into P(fall soon).
+        Combine heuristic instability, model fall signal, and density
+        pressure into P(fall soon).
         """
         heuristic_prob = float(heuristic_result.get("fall_risk", 0.0))
+        stampede_boost = float(heuristic_result.get("stampede_boost", 0.0))
+
         if model_fall_prob is None:
             combined = heuristic_prob
             model_component = 0.0
@@ -365,10 +560,19 @@ class CrowdMetrics:
                 )
             )
 
+        # Add density pressure
+        combined = float(np.clip(combined + density_factor * 0.15, 0.0, 1.0))
+
         if prior_probability is not None:
+            # Use asymmetric smoothing: rising risk smooths less (faster response)
+            if combined > prior_probability:
+                effective_smoothing = smoothing * 0.5  # less damping when rising
+            else:
+                effective_smoothing = smoothing
             combined = float(
                 np.clip(
-                    smoothing * float(prior_probability) + (1.0 - smoothing) * combined,
+                    effective_smoothing * float(prior_probability)
+                    + (1.0 - effective_smoothing) * combined,
                     0.0,
                     1.0,
                 )
@@ -378,6 +582,7 @@ class CrowdMetrics:
             "fall_probability": combined,
             "heuristic_probability": heuristic_prob,
             "model_probability": model_component,
+            "stampede_boost": stampede_boost,
         }
     
     def detect_crowd_anomaly(self, 
