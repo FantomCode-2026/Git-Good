@@ -3407,3 +3407,51 @@ NotImplementedError: The operator 'aten::_nested_tensor_from_mask_left_aligned' 
 2026-04-11 02:17:36.088 | INFO     | __main__:main:929 - Average FPS: 0.32
 2026-04-11 02:17:36.088 | INFO     | __main__:main:930 - Total alerts: 0
 2026-04-11 02:17:36.088 | INFO     | __main__:main:931 - ==================================================
+2026-04-11 04:02:03.108 | INFO     | __main__:main:909 - Starting Crowd Behavior Analysis System
+2026-04-11 04:02:03.110 | INFO     | __main__:__init__:66 - Using CPU
+2026-04-11 04:02:03.110 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:02:03.205 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-11 04:02:03.206 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:02:03.399 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:02:03.400 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-11 04:02:03.619 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task
+2026-04-11 04:02:03.620 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task.
+2026-04-11 04:02:03.620 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:02:03.742 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:02:03.745 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:02:03.746 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on cpu
+2026-04-11 04:02:03.747 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-11 04:02:03.747 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on cpu
+2026-04-11 04:02:03.747 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on cpu
+2026-04-11 04:02:03.747 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:02:03.747 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:02:03.748 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:02:03.748 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:02:05.103 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:02:05.103 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:02:05.103 | ERROR    | __main__:main:916 - Video file not found: path/to/your/video.mp4
+2026-04-11 04:02:36.315 | INFO     | __main__:main:909 - Starting Crowd Behavior Analysis System
+2026-04-11 04:02:36.316 | INFO     | __main__:__init__:66 - Using CPU
+2026-04-11 04:02:36.316 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:02:36.352 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-11 04:02:36.353 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:02:36.488 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:02:36.489 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-11 04:02:36.600 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task
+2026-04-11 04:02:36.600 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model C:\Users\Admin\Downloads\crowdsense\Git-Good\pose_landmarker.task.
+2026-04-11 04:02:36.600 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:02:36.657 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:02:36.661 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:02:36.662 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on cpu
+2026-04-11 04:02:36.663 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-11 04:02:36.663 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on cpu
+2026-04-11 04:02:36.663 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on cpu
+2026-04-11 04:02:36.664 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:02:36.664 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:02:36.664 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:02:36.664 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:02:37.435 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:02:37.435 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:02:37.519 | INFO     | __main__:process_video:650 - Processing video: data\sample_videos\video.mp4
+2026-04-11 04:02:37.519 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 04:02:37.527 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to outputs\final_annotated.mp4

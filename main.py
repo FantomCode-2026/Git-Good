@@ -85,6 +85,9 @@ class CrowdBehaviorSystem:
         # Per-track profile cache for quick access
         self._track_profiles = {}
         
+        # ── Layer E+F: Control Engine (optional – activated by app.py) ──
+        self._control_engine = None  # set externally by app.py when running dashboard
+
         logger.info("CrowdBehaviorSystem initialized successfully")
 
     @staticmethod
@@ -371,6 +374,18 @@ class CrowdBehaviorSystem:
             fall_risk_results=fall_risk_results,
             metrics=self.metrics,
         )
+
+        # ── Layer E: feed result into Control Engine (non-blocking) ──
+        if hasattr(self, '_control_engine') and self._control_engine is not None:
+            try:
+                import threading as _threading
+                _threading.Thread(
+                    target=self._control_engine.process_evaluation,
+                    args=(prediction_result, 'A'),
+                    daemon=True,
+                ).start()
+            except Exception:
+                pass
 
         prediction_threshold = config.metrics.prediction_alert_threshold
         if prediction_result['fused_risk'] >= prediction_threshold:
