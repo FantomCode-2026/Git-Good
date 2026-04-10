@@ -1,0 +1,227 @@
+"""
+🛕 Predictive Crowd Monitoring & Control System (Temple Version)
+
+Features:
+- Predicts crowd stages BEFORE chaos
+- Gives detailed volunteer instructions
+- Preventive crowd control actions
+- Clean alert output for mobile notifications
+"""
+
+import time
+
+# ---------------------------
+# 📊 GLOBAL STATE
+# ---------------------------
+risk_history = []
+last_call_time = 0
+
+
+# ---------------------------
+# 🚨 POLICE ALERT
+# ---------------------------
+def can_call():
+    global last_call_time
+    if time.time() - last_call_time > 30:
+        last_call_time = time.time()
+        return True
+    return False
+
+
+def call_police(location, risk):
+    print("\n🚨 [AUTHORITY ALERT]")
+    print(f"Location: {location}")
+    print(f"Risk Level: {risk}")
+    print("Action: Immediate intervention required\n")
+
+
+# ---------------------------
+# 📈 RISK TREND
+# ---------------------------
+def get_risk_trend(risk):
+    risk_history.append(risk)
+
+    if len(risk_history) < 2:
+        return "Stable"
+
+    if risk_history[-1] > risk_history[-2]:
+        return "Increasing ⬆️"
+    elif risk_history[-1] < risk_history[-2]:
+        return "Decreasing ⬇️"
+    return "Stable"
+
+
+# ---------------------------
+# 🚪 BEST EXIT
+# ---------------------------
+def get_best_exit(zone_density, current_location):
+    filtered = {k: v for k, v in zone_density.items() if k != current_location}
+    return min(filtered, key=filtered.get)
+
+
+# ---------------------------
+# 👷 VOLUNTEER INSTRUCTIONS
+# ---------------------------
+def volunteer_action(stage, location, best_exit):
+
+    if stage == "early_build":
+        return f"""
+✔ Send 2 volunteers to {location}
+✔ Guide devotees towards {best_exit}
+✔ Prepare queue lines
+"""
+
+    elif stage == "pre_congestion":
+        return f"""
+✔ Send 3–4 volunteers to {location}
+✔ Redirect crowd to {best_exit}
+✔ Slow down entry
+✔ Activate one-way flow
+"""
+
+    elif stage == "high_risk":
+        return f"""
+✔ Deploy full team at {location}
+✔ Stop entry temporarily
+✔ Redirect crowd to {best_exit}
+✔ Deploy security
+"""
+
+    elif stage == "critical":
+        return f"""
+✔ Emergency team at {location}
+✔ Stop all entry
+✔ Call medical support
+✔ Coordinate with authorities
+"""
+
+    else:
+        return "✔ Normal monitoring"
+
+
+# ---------------------------
+# 🔮 STAGE PREDICTION
+# ---------------------------
+def predict_stage(density, risk, heatmap, trend):
+
+    if density > 0.9 and risk > 85:
+        return "critical"
+
+    elif density > 0.85 and risk > 75:
+        return "high_risk"
+
+    elif density > 0.7 and trend == "Increasing ⬆️":
+        return "pre_congestion"
+
+    elif density > 0.5:
+        return "early_build"
+
+    else:
+        return "normal"
+
+
+# ---------------------------
+# 🚨 SIMPLE ALERT (FOR MOBILE)
+# ---------------------------
+def simple_alert(location, stage, risk):
+
+    if stage == "high_risk":
+        action = "Send volunteers immediately and control crowd."
+
+    elif stage == "critical":
+        action = "Emergency! Stop entry and call authorities."
+
+    else:
+        action = "Monitor situation."
+
+    print(f"""
+🚨 TEMPLE ALERT
+
+Location: {location}
+Stage: {stage}
+Risk: {risk}
+
+Action:
+{action}
+""")
+
+
+# ---------------------------
+# 📊 MAIN REPORT FUNCTION
+# ---------------------------
+def generate_report(location, density, risk, heatmap, zone_density):
+
+    trend = get_risk_trend(risk)
+    stage = predict_stage(density, risk, heatmap, trend)
+    best_exit = get_best_exit(zone_density, location)
+
+    # 🔥 CLEAN ALERT OUTPUT
+    if stage in ["high_risk", "critical"]:
+        simple_alert(location, stage, risk)
+
+    print("\n====================================")
+    print("🛕 TEMPLE CROWD CONTROL SYSTEM")
+    print("====================================")
+
+    print(f"\n📍 Location: {location}")
+    print(f"📊 Density: {density}")
+    print(f"🔥 Heatmap: {heatmap}")
+    print(f"⚠️ Risk Level: {risk}")
+    print(f"📈 Trend: {trend}")
+
+    print("\n🔮 Stage:", stage)
+
+    print("\n⚙️ Volunteer Instructions:")
+    print(volunteer_action(stage, location, best_exit))
+
+    print("📊 Zone Status:")
+    for gate, d in zone_density.items():
+        print(f"{gate}: {round(d,2)}")
+
+    if risk > 80:
+        priority = "🔴 HIGH"
+    elif risk > 50:
+        priority = "🟠 MEDIUM"
+    else:
+        priority = "🟢 LOW"
+
+    print(f"\n🚨 Priority: {priority}")
+
+    if stage in ["high_risk", "critical"] and can_call():
+        call_police(location, risk)
+
+    print("====================================\n")
+
+
+# ---------------------------
+# 🧪 TEST RUN
+# ---------------------------
+if __name__ == "__main__":
+
+    zones = {
+        "Gate A": 0.3,
+        "Gate B": 0.25,
+        "Gate C": 0.2,
+        "Gate D": 0.15,
+        "Gate E": 0.2,
+        "Gate F": 0.18
+    }
+
+    # Normal
+    generate_report("Gate A", 0.3, 20, 0.3, zones)
+    time.sleep(5)
+
+    # Crowd build
+    zones["Gate A"] = 0.65
+    generate_report("Gate A", 0.65, 55, 0.6, zones)
+    time.sleep(5)
+
+    # Pre congestion
+    zones["Gate A"] = 0.8
+    generate_report("Gate A", 0.8, 75, 0.85, zones)
+    time.sleep(5)
+
+    # High risk
+    zones["Gate A"] = 0.95
+    generate_report("Gate A", 0.95, 90, 0.95, zones)
+    
