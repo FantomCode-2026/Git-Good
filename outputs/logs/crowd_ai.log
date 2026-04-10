@@ -1,0 +1,1096 @@
+2026-04-10 14:23:14.990 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:23:14.990 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:23:14.990 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:23:18.507 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:23:18.664 | INFO     | pipeline.tracker:__init__:45 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:23:29.132 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:23:29.133 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:23:29.133 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:23:29.158 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:23:29.159 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:23:29.159 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:23:29.159 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:23:29.160 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:23:29.160 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:23:29.160 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:23:29.160 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:23:29.160 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:23:29.160 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:23:29.160 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:23:29.160 | ERROR    | __main__:main:468 - Video file not found: path/to/video.mp4
+2026-04-10 14:24:20.501 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:24:20.501 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:24:20.501 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:24:20.531 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:24:20.668 | INFO     | pipeline.tracker:__init__:45 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:24:20.845 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:24:20.846 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:24:20.846 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:24:20.865 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:24:20.865 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:24:20.866 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:24:20.866 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:24:20.866 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:24:20.866 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:24:20.866 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:24:20.866 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:24:20.866 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:24:20.866 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:24:20.866 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:24:20.866 | ERROR    | __main__:main:468 - Video file not found: path/to/video.mp4
+2026-04-10 14:24:29.576 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:24:29.576 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:24:29.576 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:24:29.595 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:24:29.706 | INFO     | pipeline.tracker:__init__:45 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:24:29.866 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:24:29.866 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:24:29.867 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:24:29.882 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:24:29.883 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:24:29.883 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:24:29.884 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:24:29.884 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:24:29.884 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:24:29.884 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:24:29.884 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:24:29.884 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:24:29.884 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:24:29.884 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:24:29.884 | ERROR    | __main__:main:468 - Video file not found: path/to/video.mp4
+2026-04-10 14:25:59.589 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:25:59.589 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:25:59.589 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:25:59.618 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:25:59.761 | INFO     | pipeline.tracker:__init__:45 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:25:59.945 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:25:59.945 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:25:59.945 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:25:59.969 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:25:59.970 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:25:59.970 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:25:59.970 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:25:59.970 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:25:59.970 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:25:59.971 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:25:59.971 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:25:59.971 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:25:59.971 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:25:59.971 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:25:59.971 | ERROR    | __main__:main:468 - Video file not found: data/smaple_videos/video.mp4
+2026-04-10 14:30:04.169 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:30:04.169 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:30:04.169 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:30:04.198 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:30:04.351 | INFO     | pipeline.tracker:__init__:45 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:30:04.558 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:30:04.559 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:30:04.559 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:30:04.578 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:30:04.579 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:30:04.579 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:30:04.580 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:30:04.580 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:30:04.580 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:30:04.580 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:30:04.580 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:30:04.580 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:30:04.580 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:30:04.580 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:30:04.641 | INFO     | __main__:process_video:313 - Processing video: /Users/chaitanya/projects/hackathon thing idk/data/sample_videos/video.mp4
+2026-04-10 14:30:04.641 | INFO     | __main__:process_video:314 - Resolution: 2320x1080, FPS: 30, Total frames: 336
+2026-04-10 14:30:04.645 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to output_video.mp4
+2026-04-10 14:30:04.765 | ERROR    | __main__:main:503 - System error: 'DeepSort' object has no attribute 'update'
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 507, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x10111b690>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 482, in main
+    summary = system.process_video(
+              │      └ <function CrowdBehaviorSystem.process_video at 0x11bdfa8d0>
+              └ <__main__.CrowdBehaviorSystem object at 0x114ca6660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 333, in process_video
+    results = self.process_frame(frame, self.frame_count)
+              │    │             │      │    └ 0
+              │    │             │      └ <__main__.CrowdBehaviorSystem object at 0x114ca6660>
+              │    │             └ array([[[117, 113, 123],
+              │    │                       [119, 116, 125],
+              │    │                       [120, 117, 126],
+              │    │                       ...,
+              │    │                       [ 73, 172, 136],
+              │    │                       [ 77...
+              │    └ <function CrowdBehaviorSystem.process_frame at 0x11bdf8ca0>
+              └ <__main__.CrowdBehaviorSystem object at 0x114ca6660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 125, in process_frame
+    tracked_objects = self.tracker.update(detections, frame)
+                      │    │       │      │           └ array([[[117, 113, 123],
+                      │    │       │      │                     [119, 116, 125],
+                      │    │       │      │                     [120, 117, 126],
+                      │    │       │      │                     ...,
+                      │    │       │      │                     [ 73, 172, 136],
+                      │    │       │      │                     [ 77...
+                      │    │       │      └ [{'bbox': [1624, 733, 1931, 1080], 'confidence': 0.707384467124939, 'class_id': 0}, {'bbox': [2043, 691, 2319, 1079], 'confid...
+                      │    │       └ <function PersonTracker.update at 0x11bdc2770>
+                      │    └ <pipeline.tracker.PersonTracker object at 0x11bb8fcb0>
+                      └ <__main__.CrowdBehaviorSystem object at 0x114ca6660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/pipeline/tracker.py", line 74, in update
+    tracked_objects = self.tracker.update(deepsort_detections, frame)
+                      │    │              │                    └ array([[[117, 113, 123],
+                      │    │              │                              [119, 116, 125],
+                      │    │              │                              [120, 117, 126],
+                      │    │              │                              ...,
+                      │    │              │                              [ 73, 172, 136],
+                      │    │              │                              [ 77...
+                      │    │              └ [([1624, 733, 307, 347], 0.707384467124939, 0), ([2043, 691, 276, 388], 0.7057420611381531, 0), ([157, 557, 266, 523], 0.7052...
+                      │    └ <deep_sort_realtime.deepsort_tracker.DeepSort object at 0x11bb8f230>
+                      └ <pipeline.tracker.PersonTracker object at 0x11bb8fcb0>
+
+AttributeError: 'DeepSort' object has no attribute 'update'
+2026-04-10 14:32:45.641 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:32:45.641 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:32:45.641 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:32:45.673 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:32:45.827 | INFO     | pipeline.tracker:__init__:125 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:32:46.007 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:32:46.008 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:32:46.008 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:32:46.030 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:32:46.031 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:32:46.031 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:32:46.031 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:32:46.032 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:32:46.032 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:32:46.032 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:32:46.032 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:32:46.032 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:32:46.032 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:32:46.032 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:32:46.086 | INFO     | __main__:process_video:313 - Processing video: /Users/chaitanya/projects/hackathon thing idk/data/sample_videos/video.mp4
+2026-04-10 14:32:46.086 | INFO     | __main__:process_video:314 - Resolution: 2320x1080, FPS: 30, Total frames: 336
+2026-04-10 14:32:46.089 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to output_video.mp4
+2026-04-10 14:32:47.341 | ERROR    | __main__:main:503 - System error: 'Track' object has no attribute 'hit_streak'
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 507, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x10199f690>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 482, in main
+    summary = system.process_video(
+              │      └ <function CrowdBehaviorSystem.process_video at 0x11bd86c40>
+              └ <__main__.CrowdBehaviorSystem object at 0x114cb2660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 333, in process_video
+    results = self.process_frame(frame, self.frame_count)
+              │    │             │      │    └ 2
+              │    │             │      └ <__main__.CrowdBehaviorSystem object at 0x114cb2660>
+              │    │             └ array([[[117, 112, 126],
+              │    │                       [119, 115, 129],
+              │    │                       [120, 116, 130],
+              │    │                       ...,
+              │    │                       [154, 247, 207],
+              │    │                       [147...
+              │    └ <function CrowdBehaviorSystem.process_frame at 0x11bd85010>
+              └ <__main__.CrowdBehaviorSystem object at 0x114cb2660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 125, in process_frame
+    tracked_objects = self.tracker.update(detections, frame)
+                      │    │       │      │           └ array([[[117, 112, 126],
+                      │    │       │      │                     [119, 115, 129],
+                      │    │       │      │                     [120, 116, 130],
+                      │    │       │      │                     ...,
+                      │    │       │      │                     [154, 247, 207],
+                      │    │       │      │                     [147...
+                      │    │       │      └ [{'bbox': [1620, 707, 1946, 1079], 'confidence': 0.7285221219062805, 'class_id': 0}, {'bbox': [163, 563, 426, 1080], 'confide...
+                      │    │       └ <function PersonTracker.update at 0x11bd42c40>
+                      │    └ <pipeline.tracker.PersonTracker object at 0x11bb3be00>
+                      └ <__main__.CrowdBehaviorSystem object at 0x114cb2660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/pipeline/tracker.py", line 177, in update
+    'hit_streak': track.hit_streak
+                  └ <deep_sort_realtime.deep_sort.track.Track object at 0x11c1170e0>
+
+AttributeError: 'Track' object has no attribute 'hit_streak'
+2026-04-10 14:34:16.319 | INFO     | __main__:main:462 - Starting Crowd Behavior Analysis System
+2026-04-10 14:34:16.320 | INFO     | __main__:__init__:45 - Using device: cpu
+2026-04-10 14:34:16.320 | INFO     | __main__:_initialize_components:63 - Initializing pipeline components...
+2026-04-10 14:34:16.351 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 14:34:16.505 | INFO     | pipeline.tracker:__init__:112 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:34:16.692 | INFO     | models.cnn:__init__:55 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 14:34:16.692 | INFO     | pipeline.feature_extractor:__init__:42 - Initialized FeatureExtractor with output dim 512 on cpu
+2026-04-10 14:34:16.692 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 14:34:16.712 | INFO     | models.transformer:__init__:98 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 14:34:16.713 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 14:34:16.713 | INFO     | models.transformer:__init__:179 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 14:34:16.714 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 14:34:16.714 | INFO     | pipeline.inference:__init__:45 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 14:34:16.714 | INFO     | pipeline.inference:__init__:205 - Initialized complete InferencePipeline on cpu
+2026-04-10 14:34:16.714 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 14:34:16.714 | INFO     | __main__:_initialize_components:108 - All pipeline components initialized
+2026-04-10 14:34:16.714 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 14:34:16.714 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 14:34:16.714 | INFO     | __main__:__init__:59 - CrowdBehaviorSystem initialized successfully
+2026-04-10 14:34:16.770 | INFO     | __main__:process_video:313 - Processing video: /Users/chaitanya/projects/hackathon thing idk/data/sample_videos/video.mp4
+2026-04-10 14:34:16.770 | INFO     | __main__:process_video:314 - Resolution: 2320x1080, FPS: 30, Total frames: 336
+2026-04-10 14:34:16.773 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to output_video.mp4
+2026-04-10 14:34:18.903 | WARNING  | __main__:process_frame:204 - Frame 5: Sudden crowd surge (+31.8%)
+2026-04-10 14:34:20.706 | ERROR    | __main__:main:503 - System error: name 'np' is not defined
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 507, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x104e2f690>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 482, in main
+    summary = system.process_video(
+              │      └ <function CrowdBehaviorSystem.process_video at 0x11f1fae50>
+              └ <__main__.CrowdBehaviorSystem object at 0x1180fe660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 333, in process_video
+    results = self.process_frame(frame, self.frame_count)
+              │    │             │      │    └ 11
+              │    │             │      └ <__main__.CrowdBehaviorSystem object at 0x1180fe660>
+              │    │             └ array([[[115, 112, 125],
+              │    │                       [117, 115, 127],
+              │    │                       [118, 116, 129],
+              │    │                       ...,
+              │    │                       [176, 255, 221],
+              │    │                       [176...
+              │    └ <function CrowdBehaviorSystem.process_frame at 0x11f1f9220>
+              └ <__main__.CrowdBehaviorSystem object at 0x1180fe660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 145, in process_frame
+    behavior_results = self.inference_pipeline.analyze(sequences_ready)
+                       │    │                  │       └ {'1': array([[          0,           0,     0.12527, ...,      0.1255,           0,           0],
+                       │    │                  │                [          0,       ...
+                       │    │                  └ <function InferencePipeline.analyze at 0x11f1d7d70>
+                       │    └ <pipeline.inference.InferencePipeline object at 0x11f58c2f0>
+                       └ <__main__.CrowdBehaviorSystem object at 0x1180fe660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/pipeline/inference.py", line 217, in analyze
+    return self.inference.analyze_sequences(sequences)
+           │    │         │                 └ {'1': array([[          0,           0,     0.12527, ...,      0.1255,           0,           0],
+           │    │         │                          [          0,       ...
+           │    │         └ <function BehaviorInference.analyze_sequences at 0x11f1d75e0>
+           │    └ <pipeline.inference.BehaviorInference object at 0x11f58c830>
+           └ <pipeline.inference.InferencePipeline object at 0x11f58c2f0>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<pipeline.inference.BehaviorInference object at 0x11f58c830>, {'1': array([[          0,           0,     0.12527, ...,     ...
+           └ <function BehaviorInference.analyze_sequences at 0x11f1d7530>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/pipeline/inference.py", line 76, in analyze_sequences
+    sequence_embeddings = self.transformer_processor.process_sequence_batch(sequence_list)
+                          │    │                     │                      └ [array([[          0,           0,     0.12527, ...,      0.1255,           0,           0],
+                          │    │                     │                               [          0,           0...
+                          │    │                     └ <function TemporalFeatureProcessor.process_sequence_batch at 0x11f1d4a90>
+                          │    └ <models.transformer.TemporalFeatureProcessor object at 0x11f58c980>
+                          └ <pipeline.inference.BehaviorInference object at 0x11f58c830>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           │     │       └ {}
+           │     └ (<models.transformer.TemporalFeatureProcessor object at 0x11f58c980>, [array([[          0,           0,     0.12527, ...,   ...
+           └ <function TemporalFeatureProcessor.process_sequence_batch at 0x11f1d49e0>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/models/transformer.py", line 216, in process_sequence_batch
+    batch_tensor = torch.from_numpy(np.stack(padded_sequences)).float().to(self.device)
+                   │     │                   │                             │    └ 'cpu'
+                   │     │                   │                             └ <models.transformer.TemporalFeatureProcessor object at 0x11f58c980>
+                   │     │                   └ [array([[          0,           0,     0.12527, ...,      0.1255,           0,           0],
+                   │     │                            [          0,           0...
+                   │     └ <built-in method from_numpy of type object at 0x1166c3948>
+                   └ <module 'torch' from '/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/__init__.py'>
+
+NameError: name 'np' is not defined
+2026-04-10 14:40:49.144 | INFO     | __main__:main:470 - Starting Crowd Behavior Analysis System
+2026-04-10 14:40:49.145 | INFO     | __main__:__init__:50 - Using MPS (Apple Silicon GPU)
+2026-04-10 14:40:49.145 | INFO     | __main__:_initialize_components:71 - Initializing pipeline components...
+2026-04-10 14:40:49.246 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-10 14:40:49.400 | INFO     | pipeline.tracker:__init__:112 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 14:40:49.400 | ERROR    | __main__:main:511 - System error: FeatureExtractor() takes no arguments
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 515, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x100c5f690>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 471, in main
+    system = CrowdBehaviorSystem(config_override)
+             │                   └ {'model': {'yolo_confidence_threshold': 0.5}, 'pipeline': {'sequence_length': 30}}
+             └ <class '__main__.CrowdBehaviorSystem'>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 56, in __init__
+    self._initialize_components()
+    │    └ <function CrowdBehaviorSystem._initialize_components at 0x122877e20>
+    └ <__main__.CrowdBehaviorSystem object at 0x11488e660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 91, in _initialize_components
+    self.feature_extractor = FeatureExtractor(
+    │                        └ <class 'pipeline.feature_extractor.FeatureExtractor'>
+    └ <__main__.CrowdBehaviorSystem object at 0x11488e660>
+
+TypeError: FeatureExtractor() takes no arguments
+2026-04-10 15:02:00.001 | INFO     | __main__:main:470 - Starting Crowd Behavior Analysis System
+2026-04-10 15:02:00.001 | INFO     | __main__:__init__:53 - Using CPU
+2026-04-10 15:02:00.002 | INFO     | __main__:_initialize_components:71 - Initializing pipeline components...
+2026-04-10 15:02:00.045 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:02:00.264 | INFO     | pipeline.tracker:__init__:112 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 15:02:00.484 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:02:00.485 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:02:00.486 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:02:00.508 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:02:00.510 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:02:00.512 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:02:00.513 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:02:00.513 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:02:00.514 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:02:00.515 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:02:00.515 | INFO     | __main__:_initialize_components:117 - All pipeline components initialized
+2026-04-10 15:02:00.516 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:02:00.516 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:02:00.517 | INFO     | __main__:__init__:67 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:02:00.576 | INFO     | __main__:process_video:321 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:02:00.576 | INFO     | __main__:process_video:322 - Resolution: 2320x1080, FPS: 30, Total frames: 5
+2026-04-10 15:02:00.581 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:02:02.295 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:02:02.299 | INFO     | __main__:process_video:378 - Video processing completed. Summary: {'total_frames': 5, 'avg_people_count': np.float64(2.8), 'max_people_count': np.int64(5), 'avg_density': np.float64(0.35032540442741594), 'max_density': np.float64(0.6207960834397616), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'total_processing_time': 1.4753549098968506, 'avg_fps': 3.389015054248591}
+2026-04-10 15:02:02.300 | ERROR    | __main__:main:511 - System error: Object of type int64 is not JSON serializable
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 515, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x10319f7f0>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 497, in main
+    system.save_report(str(report_path), summary)
+    │      │               │             └ {'total_frames': 5, 'avg_people_count': np.float64(2.8), 'max_people_count': np.int64(5), 'avg_density': np.float64(0.3503254...
+    │      │               └ PosixPath('/Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json')
+    │      └ <function CrowdBehaviorSystem.save_report at 0x12fa61590>
+    └ <__main__.CrowdBehaviorSystem object at 0x116bdc050>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 402, in save_report
+    json.dump(report, f, indent=2)
+    │    │    │       └ <_io.TextIOWrapper name='/Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json' mode='w' encoding='...
+    │    │    └ {'timestamp': '2026-04-10T15:02:02.299936', 'config': {'model': {'yolo_model_name': 'yolov8n.pt', 'yolo_confidence_threshold'...
+    │    └ <function dump at 0x111be90c0>
+    └ <module 'json' from '/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/__init__.py'>
+
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/__init__.py", line 181, in dump
+    for chunk in iterable:
+        │        └ <generator object _make_iterencode.<locals>._iterencode at 0x12fd7d7b0>
+        └ ': '
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/encoder.py", line 444, in _iterencode
+    yield from _iterencode_dict(o, _current_indent_level)
+               │                │  └ 0
+               │                └ {'timestamp': '2026-04-10T15:02:02.299936', 'config': {'model': {'yolo_model_name': 'yolov8n.pt', 'yolo_confidence_threshold'...
+               └ <function _make_iterencode.<locals>._iterencode_dict at 0x12fed0460>
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/encoder.py", line 413, in _iterencode_dict
+    yield from chunks
+               └ <generator object _make_iterencode.<locals>._iterencode_dict at 0x12fbce510>
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/encoder.py", line 413, in _iterencode_dict
+    yield from chunks
+               └ <generator object _make_iterencode.<locals>._iterencode at 0x12fd7d940>
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/encoder.py", line 451, in _iterencode
+    newobj = _default(o)
+             │        └ np.int64(5)
+             └ <bound method JSONEncoder.default of <json.encoder.JSONEncoder object at 0x12fa52ad0>>
+  File "/Users/chaitanya/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/json/encoder.py", line 182, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                                      │ │         └ <member '__name__' of 'getset_descriptor' objects>
+                                      │ └ <attribute '__class__' of 'object' objects>
+                                      └ np.int64(5)
+
+TypeError: Object of type int64 is not JSON serializable
+when serializing dict item 'max_people_count'
+when serializing dict item 'summary'
+2026-04-10 15:03:25.468 | INFO     | __main__:main:491 - Starting Crowd Behavior Analysis System
+2026-04-10 15:03:25.469 | INFO     | __main__:__init__:60 - Using CPU
+2026-04-10 15:03:25.469 | INFO     | __main__:_initialize_components:78 - Initializing pipeline components...
+2026-04-10 15:03:25.505 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:03:25.663 | INFO     | pipeline.tracker:__init__:113 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 15:03:25.851 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:03:25.852 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:03:25.853 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:03:25.877 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:03:25.878 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:03:25.879 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:03:25.879 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:03:25.880 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:03:25.880 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:03:25.880 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:03:25.881 | INFO     | __main__:_initialize_components:124 - All pipeline components initialized
+2026-04-10 15:03:25.881 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:03:25.881 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:03:25.882 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:03:25.937 | INFO     | __main__:process_video:328 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:03:25.938 | INFO     | __main__:process_video:329 - Resolution: 2320x1080, FPS: 30, Total frames: 5
+2026-04-10 15:03:25.942 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:03:27.533 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:03:27.537 | INFO     | __main__:process_video:385 - Video processing completed. Summary: {'total_frames': 5, 'avg_people_count': np.float64(2.8), 'max_people_count': np.int64(5), 'avg_density': np.float64(0.35032540442741594), 'max_density': np.float64(0.6207960834397616), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'total_processing_time': 1.3641705513000488, 'avg_fps': 3.6652308578535293}
+2026-04-10 15:03:27.538 | INFO     | __main__:save_report:425 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:03:40.540 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:03:40.541 | INFO     | __main__:main:522 - ==================================================
+2026-04-10 15:03:40.541 | INFO     | __main__:main:523 - Processing Complete!
+2026-04-10 15:03:40.542 | INFO     | __main__:main:524 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:03:40.542 | INFO     | __main__:main:525 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:03:40.542 | INFO     | __main__:main:526 - Average FPS: 3.67
+2026-04-10 15:03:40.543 | INFO     | __main__:main:527 - Total alerts: 0
+2026-04-10 15:03:40.543 | INFO     | __main__:main:528 - ==================================================
+2026-04-10 15:06:50.083 | INFO     | __main__:main:491 - Starting Crowd Behavior Analysis System
+2026-04-10 15:06:50.084 | INFO     | __main__:__init__:51 - Using user-selected device: mps
+2026-04-10 15:06:50.084 | INFO     | __main__:_initialize_components:78 - Initializing pipeline components...
+2026-04-10 15:06:50.193 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-10 15:06:50.348 | INFO     | pipeline.tracker:__init__:113 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 15:06:50.554 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:06:50.582 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-10 15:06:50.582 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:06:50.601 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:06:50.602 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:06:50.622 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on mps
+2026-04-10 15:06:50.622 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-10 15:06:50.623 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on mps
+2026-04-10 15:06:50.623 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on mps
+2026-04-10 15:06:50.623 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:06:50.623 | INFO     | __main__:_initialize_components:124 - All pipeline components initialized
+2026-04-10 15:06:50.623 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:06:50.623 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:06:50.623 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:06:50.680 | INFO     | __main__:process_video:328 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:06:50.680 | INFO     | __main__:process_video:329 - Resolution: 2320x1080, FPS: 30, Total frames: 336
+2026-04-10 15:06:50.686 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:07:00.002 | WARNING  | __main__:process_frame:219 - Frame 5: Sudden crowd surge (+31.8%)
+2026-04-10 15:07:07.677 | WARNING  | __main__:process_frame:219 - Frame 20: Overcrowding detected (density: 71.0%)
+2026-04-10 15:07:07.992 | WARNING  | __main__:process_frame:219 - Frame 21: Overcrowding detected (density: 71.8%)
+2026-04-10 15:07:08.289 | WARNING  | __main__:process_frame:219 - Frame 22: Overcrowding detected (density: 72.5%)
+2026-04-10 15:07:08.678 | WARNING  | __main__:process_frame:219 - Frame 23: Overcrowding detected (density: 72.7%)
+2026-04-10 15:07:08.990 | WARNING  | __main__:process_frame:219 - Frame 24: Overcrowding detected (density: 73.2%)
+2026-04-10 15:07:09.373 | WARNING  | __main__:process_frame:219 - Frame 25: Overcrowding detected (density: 73.8%)
+2026-04-10 15:07:09.704 | WARNING  | __main__:process_frame:219 - Frame 26: Overcrowding detected (density: 74.4%)
+2026-04-10 15:07:10.011 | WARNING  | __main__:process_frame:219 - Frame 27: Overcrowding detected (density: 74.9%)
+2026-04-10 15:07:10.314 | WARNING  | __main__:process_frame:219 - Frame 28: Overcrowding detected (density: 75.3%)
+2026-04-10 15:07:10.618 | WARNING  | __main__:process_frame:219 - Frame 29: Overcrowding detected (density: 75.4%)
+2026-04-10 15:07:10.924 | WARNING  | __main__:process_frame:219 - Frame 30: Overcrowding detected (density: 75.6%)
+2026-04-10 15:07:11.231 | WARNING  | __main__:process_frame:219 - Frame 31: Overcrowding detected (density: 74.5%)
+2026-04-10 15:07:11.416 | WARNING  | __main__:process_frame:219 - Frame 32: Overcrowding detected (density: 74.4%)
+2026-04-10 15:07:11.600 | WARNING  | __main__:process_frame:219 - Frame 33: Overcrowding detected (density: 74.7%)
+2026-04-10 15:07:11.784 | WARNING  | __main__:process_frame:219 - Frame 34: Overcrowding detected (density: 73.9%)
+2026-04-10 15:07:11.970 | WARNING  | __main__:process_frame:219 - Frame 35: Overcrowding detected (density: 73.6%)
+2026-04-10 15:07:12.149 | WARNING  | __main__:process_frame:219 - Frame 36: Overcrowding detected (density: 72.9%)
+2026-04-10 15:07:23.748 | WARNING  | __main__:process_frame:219 - Frame 88: Overcrowding detected (density: 70.7%)
+2026-04-10 15:07:24.031 | WARNING  | __main__:process_frame:219 - Frame 89: Overcrowding detected (density: 70.0%)
+2026-04-10 15:07:26.441 | INFO     | __main__:process_video:371 - Processed 100/336 frames (~3.3 FPS)
+2026-04-10 15:07:30.197 | WARNING  | __main__:process_frame:219 - Frame 115: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:30.547 | WARNING  | __main__:process_frame:219 - Frame 116: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:30.809 | WARNING  | __main__:process_frame:219 - Frame 117: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:31.182 | WARNING  | __main__:process_frame:219 - Frame 118: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:31.444 | WARNING  | __main__:process_frame:219 - Frame 119: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:32.026 | WARNING  | __main__:process_frame:219 - Frame 120: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:32.329 | WARNING  | __main__:process_frame:219 - Frame 121: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:32.568 | WARNING  | __main__:process_frame:219 - Frame 122: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:32.782 | WARNING  | __main__:process_frame:219 - Frame 123: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:33.455 | WARNING  | __main__:process_frame:219 - Frame 124: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:33.700 | WARNING  | __main__:process_frame:219 - Frame 125: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:33.904 | WARNING  | __main__:process_frame:219 - Frame 126: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:34.099 | WARNING  | __main__:process_frame:219 - Frame 127: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:34.307 | WARNING  | __main__:process_frame:219 - Frame 128: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:34.737 | WARNING  | __main__:process_frame:219 - Frame 129: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:34.984 | WARNING  | __main__:process_frame:219 - Frame 130: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:35.182 | WARNING  | __main__:process_frame:219 - Frame 131: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:35.397 | WARNING  | __main__:process_frame:219 - Frame 132: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:35.609 | WARNING  | __main__:process_frame:219 - Frame 133: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:35.800 | WARNING  | __main__:process_frame:219 - Frame 134: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:36.004 | WARNING  | __main__:process_frame:219 - Frame 135: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:36.196 | WARNING  | __main__:process_frame:219 - Frame 136: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:36.373 | WARNING  | __main__:process_frame:219 - Frame 137: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:36.566 | WARNING  | __main__:process_frame:219 - Frame 138: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:36.815 | WARNING  | __main__:process_frame:219 - Frame 139: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:37.012 | WARNING  | __main__:process_frame:219 - Frame 140: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:37.255 | WARNING  | __main__:process_frame:219 - Frame 141: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:37.454 | WARNING  | __main__:process_frame:219 - Frame 142: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:37.661 | WARNING  | __main__:process_frame:219 - Frame 143: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:37.849 | WARNING  | __main__:process_frame:219 - Frame 144: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:38.061 | WARNING  | __main__:process_frame:219 - Frame 145: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:38.259 | WARNING  | __main__:process_frame:219 - Frame 146: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:38.434 | WARNING  | __main__:process_frame:219 - Frame 147: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:38.640 | WARNING  | __main__:process_frame:219 - Frame 148: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:38.844 | WARNING  | __main__:process_frame:219 - Frame 149: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:39.039 | WARNING  | __main__:process_frame:219 - Frame 150: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:39.275 | WARNING  | __main__:process_frame:219 - Frame 151: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:39.474 | WARNING  | __main__:process_frame:219 - Frame 152: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:39.712 | WARNING  | __main__:process_frame:219 - Frame 153: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:39.932 | WARNING  | __main__:process_frame:219 - Frame 154: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:40.165 | WARNING  | __main__:process_frame:219 - Frame 155: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:40.369 | WARNING  | __main__:process_frame:219 - Frame 156: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:40.579 | WARNING  | __main__:process_frame:219 - Frame 157: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:40.748 | WARNING  | __main__:process_frame:219 - Frame 158: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:40.917 | WARNING  | __main__:process_frame:219 - Frame 159: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:41.109 | WARNING  | __main__:process_frame:219 - Frame 160: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:41.337 | WARNING  | __main__:process_frame:219 - Frame 161: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:41.528 | WARNING  | __main__:process_frame:219 - Frame 162: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:41.699 | WARNING  | __main__:process_frame:219 - Frame 163: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:41.874 | WARNING  | __main__:process_frame:219 - Frame 164: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:42.126 | WARNING  | __main__:process_frame:219 - Frame 165: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:42.392 | WARNING  | __main__:process_frame:219 - Frame 166: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:42.580 | WARNING  | __main__:process_frame:219 - Frame 167: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:42.775 | WARNING  | __main__:process_frame:219 - Frame 168: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:42.967 | WARNING  | __main__:process_frame:219 - Frame 169: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:43.166 | WARNING  | __main__:process_frame:219 - Frame 170: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:43.333 | WARNING  | __main__:process_frame:219 - Frame 171: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:43.508 | WARNING  | __main__:process_frame:219 - Frame 172: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:43.674 | WARNING  | __main__:process_frame:219 - Frame 173: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:43.894 | WARNING  | __main__:process_frame:219 - Frame 174: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.061 | WARNING  | __main__:process_frame:219 - Frame 175: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.248 | WARNING  | __main__:process_frame:219 - Frame 176: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.443 | WARNING  | __main__:process_frame:219 - Frame 177: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.631 | WARNING  | __main__:process_frame:219 - Frame 178: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.809 | WARNING  | __main__:process_frame:219 - Frame 179: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:44.995 | WARNING  | __main__:process_frame:219 - Frame 180: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:45.276 | WARNING  | __main__:process_frame:219 - Frame 181: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:45.514 | WARNING  | __main__:process_frame:219 - Frame 182: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:45.881 | WARNING  | __main__:process_frame:219 - Frame 183: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:46.194 | WARNING  | __main__:process_frame:219 - Frame 184: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:46.456 | WARNING  | __main__:process_frame:219 - Frame 185: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:46.720 | WARNING  | __main__:process_frame:219 - Frame 186: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:46.985 | WARNING  | __main__:process_frame:219 - Frame 187: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:47.244 | WARNING  | __main__:process_frame:219 - Frame 188: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:47.455 | WARNING  | __main__:process_frame:219 - Frame 189: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:47.666 | WARNING  | __main__:process_frame:219 - Frame 190: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:47.893 | WARNING  | __main__:process_frame:219 - Frame 191: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:48.117 | WARNING  | __main__:process_frame:219 - Frame 192: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:48.312 | WARNING  | __main__:process_frame:219 - Frame 193: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:48.562 | WARNING  | __main__:process_frame:219 - Frame 194: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:48.796 | WARNING  | __main__:process_frame:219 - Frame 195: Overcrowding detected (density: 99.7%)
+2026-04-10 15:07:49.029 | WARNING  | __main__:process_frame:219 - Frame 196: Overcrowding detected (density: 99.8%)
+2026-04-10 15:07:49.255 | WARNING  | __main__:process_frame:219 - Frame 197: Overcrowding detected (density: 91.4%)
+2026-04-10 15:07:49.514 | WARNING  | __main__:process_frame:219 - Frame 198: Overcrowding detected (density: 92.9%)
+2026-04-10 15:07:49.778 | WARNING  | __main__:process_frame:219 - Frame 199: Overcrowding detected (density: 95.1%)
+2026-04-10 15:07:49.839 | INFO     | __main__:process_video:371 - Processed 200/336 frames (~4.1 FPS)
+2026-04-10 15:07:50.109 | WARNING  | __main__:process_frame:219 - Frame 200: Overcrowding detected (density: 96.7%)
+2026-04-10 15:07:50.424 | WARNING  | __main__:process_frame:219 - Frame 201: Overcrowding detected (density: 97.8%)
+2026-04-10 15:07:50.730 | WARNING  | __main__:process_frame:219 - Frame 202: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:51.009 | WARNING  | __main__:process_frame:219 - Frame 203: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:51.430 | WARNING  | __main__:process_frame:219 - Frame 204: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:51.913 | WARNING  | __main__:process_frame:219 - Frame 205: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:52.227 | WARNING  | __main__:process_frame:219 - Frame 206: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:52.523 | WARNING  | __main__:process_frame:219 - Frame 207: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:52.948 | WARNING  | __main__:process_frame:219 - Frame 208: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:53.380 | WARNING  | __main__:process_frame:219 - Frame 209: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:53.847 | WARNING  | __main__:process_frame:219 - Frame 210: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:54.174 | WARNING  | __main__:process_frame:219 - Frame 211: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:54.515 | WARNING  | __main__:process_frame:219 - Frame 212: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:54.897 | WARNING  | __main__:process_frame:219 - Frame 213: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:55.449 | WARNING  | __main__:process_frame:219 - Frame 214: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:56.020 | WARNING  | __main__:process_frame:219 - Frame 215: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:56.358 | WARNING  | __main__:process_frame:219 - Frame 216: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:56.741 | WARNING  | __main__:process_frame:219 - Frame 217: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:57.026 | WARNING  | __main__:process_frame:219 - Frame 218: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:57.228 | WARNING  | __main__:process_frame:219 - Frame 219: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:57.494 | WARNING  | __main__:process_frame:219 - Frame 220: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:58.031 | WARNING  | __main__:process_frame:219 - Frame 221: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:58.550 | WARNING  | __main__:process_frame:219 - Frame 222: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:58.997 | WARNING  | __main__:process_frame:219 - Frame 223: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:59.265 | WARNING  | __main__:process_frame:219 - Frame 224: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:59.516 | WARNING  | __main__:process_frame:219 - Frame 225: Overcrowding detected (density: 100.0%)
+2026-04-10 15:07:59.795 | WARNING  | __main__:process_frame:219 - Frame 226: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:00.088 | WARNING  | __main__:process_frame:219 - Frame 227: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:00.374 | WARNING  | __main__:process_frame:219 - Frame 228: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:00.596 | WARNING  | __main__:process_frame:219 - Frame 229: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:00.827 | WARNING  | __main__:process_frame:219 - Frame 230: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:01.129 | WARNING  | __main__:process_frame:219 - Frame 231: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:01.377 | WARNING  | __main__:process_frame:219 - Frame 232: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:01.693 | WARNING  | __main__:process_frame:219 - Frame 233: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:01.963 | WARNING  | __main__:process_frame:219 - Frame 234: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:02.184 | WARNING  | __main__:process_frame:219 - Frame 235: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:02.445 | WARNING  | __main__:process_frame:219 - Frame 236: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:02.696 | WARNING  | __main__:process_frame:219 - Frame 237: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:02.900 | WARNING  | __main__:process_frame:219 - Frame 238: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:03.134 | WARNING  | __main__:process_frame:219 - Frame 239: Overcrowding detected (density: 100.0%)
+2026-04-10 15:08:03.303 | WARNING  | __main__:process_frame:219 - Frame 240: Overcrowding detected (density: 98.7%)
+2026-04-10 15:08:03.526 | WARNING  | __main__:process_frame:219 - Frame 241: Overcrowding detected (density: 96.3%)
+2026-04-10 15:08:03.712 | WARNING  | __main__:process_frame:219 - Frame 242: Overcrowding detected (density: 94.6%)
+2026-04-10 15:08:03.928 | WARNING  | __main__:process_frame:219 - Frame 243: Overcrowding detected (density: 92.6%)
+2026-04-10 15:08:04.226 | WARNING  | __main__:process_frame:219 - Frame 244: Overcrowding detected (density: 90.6%)
+2026-04-10 15:08:04.401 | WARNING  | __main__:process_frame:219 - Frame 245: Overcrowding detected (density: 89.3%)
+2026-04-10 15:08:04.590 | WARNING  | __main__:process_frame:219 - Frame 246: Overcrowding detected (density: 88.0%)
+2026-04-10 15:08:04.843 | WARNING  | __main__:process_frame:219 - Frame 247: Overcrowding detected (density: 87.8%)
+2026-04-10 15:08:05.050 | WARNING  | __main__:process_frame:219 - Frame 248: Overcrowding detected (density: 73.4%)
+2026-04-10 15:08:05.268 | WARNING  | __main__:process_frame:219 - Frame 249: Overcrowding detected (density: 75.3%)
+2026-04-10 15:08:05.431 | WARNING  | __main__:process_frame:219 - Frame 250: Overcrowding detected (density: 76.1%)
+2026-04-10 15:08:05.633 | WARNING  | __main__:process_frame:219 - Frame 251: Overcrowding detected (density: 76.7%)
+2026-04-10 15:08:05.831 | WARNING  | __main__:process_frame:219 - Frame 252: Overcrowding detected (density: 77.3%)
+2026-04-10 15:08:06.939 | WARNING  | __main__:process_frame:219 - Frame 257: Overcrowding detected (density: 72.1%)
+2026-04-10 15:08:07.179 | WARNING  | __main__:process_frame:219 - Frame 258: Overcrowding detected (density: 72.2%)
+2026-04-10 15:08:07.487 | WARNING  | __main__:process_frame:219 - Frame 259: Overcrowding detected (density: 71.5%)
+2026-04-10 15:08:07.703 | WARNING  | __main__:process_frame:219 - Frame 260: Overcrowding detected (density: 70.7%)
+2026-04-10 15:08:09.957 | WARNING  | __main__:process_frame:219 - Frame 272: Overcrowding detected (density: 70.5%)
+2026-04-10 15:08:10.110 | WARNING  | __main__:process_frame:219 - Frame 273: Overcrowding detected (density: 70.8%)
+2026-04-10 15:08:10.273 | WARNING  | __main__:process_frame:219 - Frame 274: Overcrowding detected (density: 70.8%)
+2026-04-10 15:08:10.490 | WARNING  | __main__:process_frame:219 - Frame 275: Overcrowding detected (density: 70.6%)
+2026-04-10 15:08:10.687 | WARNING  | __main__:process_frame:219 - Frame 276: Overcrowding detected (density: 70.3%)
+2026-04-10 15:08:10.867 | WARNING  | __main__:process_frame:219 - Frame 277: Overcrowding detected (density: 70.1%)
+2026-04-10 15:08:14.408 | WARNING  | __main__:process_frame:219 - Frame 295: Overcrowding detected (density: 72.1%)
+2026-04-10 15:08:14.617 | WARNING  | __main__:process_frame:219 - Frame 296: Overcrowding detected (density: 72.8%)
+2026-04-10 15:08:14.828 | WARNING  | __main__:process_frame:219 - Frame 297: Overcrowding detected (density: 73.5%)
+2026-04-10 15:08:15.020 | WARNING  | __main__:process_frame:219 - Frame 298: Overcrowding detected (density: 73.5%)
+2026-04-10 15:08:15.208 | WARNING  | __main__:process_frame:219 - Frame 299: Overcrowding detected (density: 73.2%)
+2026-04-10 15:08:15.255 | INFO     | __main__:process_video:371 - Processed 300/336 frames (~4.4 FPS)
+2026-04-10 15:08:15.412 | WARNING  | __main__:process_frame:219 - Frame 300: Overcrowding detected (density: 75.1%)
+2026-04-10 15:08:15.596 | WARNING  | __main__:process_frame:219 - Frame 301: Overcrowding detected (density: 75.3%)
+2026-04-10 15:08:15.774 | WARNING  | __main__:process_frame:219 - Frame 302: Overcrowding detected (density: 75.5%)
+2026-04-10 15:08:15.935 | WARNING  | __main__:process_frame:219 - Frame 303: Overcrowding detected (density: 75.8%)
+2026-04-10 15:08:16.109 | WARNING  | __main__:process_frame:219 - Frame 304: Overcrowding detected (density: 75.7%)
+2026-04-10 15:08:16.262 | WARNING  | __main__:process_frame:219 - Frame 305: Overcrowding detected (density: 75.7%)
+2026-04-10 15:08:16.429 | WARNING  | __main__:process_frame:219 - Frame 306: Overcrowding detected (density: 75.3%)
+2026-04-10 15:08:16.600 | WARNING  | __main__:process_frame:219 - Frame 307: Overcrowding detected (density: 75.2%)
+2026-04-10 15:08:16.750 | WARNING  | __main__:process_frame:219 - Frame 308: Overcrowding detected (density: 74.8%)
+2026-04-10 15:08:16.945 | WARNING  | __main__:process_frame:219 - Frame 309: Overcrowding detected (density: 76.5%)
+2026-04-10 15:08:17.127 | WARNING  | __main__:process_frame:219 - Frame 310: Overcrowding detected (density: 76.4%)
+2026-04-10 15:08:17.305 | WARNING  | __main__:process_frame:219 - Frame 311: Overcrowding detected (density: 75.8%)
+2026-04-10 15:08:17.512 | WARNING  | __main__:process_frame:219 - Frame 312: Overcrowding detected (density: 75.6%)
+2026-04-10 15:08:17.713 | WARNING  | __main__:process_frame:219 - Frame 313: Overcrowding detected (density: 75.6%)
+2026-04-10 15:08:17.910 | WARNING  | __main__:process_frame:219 - Frame 314: Overcrowding detected (density: 75.4%)
+2026-04-10 15:08:18.093 | WARNING  | __main__:process_frame:219 - Frame 315: Overcrowding detected (density: 71.0%)
+2026-04-10 15:08:18.270 | WARNING  | __main__:process_frame:219 - Frame 316: Overcrowding detected (density: 71.2%)
+2026-04-10 15:08:18.542 | WARNING  | __main__:process_frame:219 - Frame 317: Overcrowding detected (density: 72.1%)
+2026-04-10 15:08:18.736 | WARNING  | __main__:process_frame:219 - Frame 318: Overcrowding detected (density: 72.9%)
+2026-04-10 15:08:18.927 | WARNING  | __main__:process_frame:219 - Frame 319: Overcrowding detected (density: 73.8%)
+2026-04-10 15:08:19.108 | WARNING  | __main__:process_frame:219 - Frame 320: Overcrowding detected (density: 75.4%)
+2026-04-10 15:08:19.325 | WARNING  | __main__:process_frame:219 - Frame 321: Overcrowding detected (density: 77.7%)
+2026-04-10 15:08:19.527 | WARNING  | __main__:process_frame:219 - Frame 322: Overcrowding detected (density: 79.0%)
+2026-04-10 15:08:19.725 | WARNING  | __main__:process_frame:219 - Frame 323: Overcrowding detected (density: 72.4%)
+2026-04-10 15:08:20.512 | WARNING  | __main__:process_frame:219 - Frame 327: Overcrowding detected (density: 70.7%)
+2026-04-10 15:08:20.723 | WARNING  | __main__:process_frame:219 - Frame 328: Overcrowding detected (density: 73.4%)
+2026-04-10 15:08:20.906 | WARNING  | __main__:process_frame:219 - Frame 329: Overcrowding detected (density: 75.2%)
+2026-04-10 15:08:21.097 | WARNING  | __main__:process_frame:219 - Frame 330: Overcrowding detected (density: 77.1%)
+2026-04-10 15:08:21.158 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:08:21.188 | INFO     | __main__:process_video:385 - Video processing completed. Summary: {'total_frames': 331, 'avg_people_count': np.float64(6.716012084592145), 'max_people_count': np.int64(10), 'avg_density': np.float64(0.7865297383407993), 'max_density': np.float64(1.0), 'avg_anomaly_score': np.float64(0.4536749905136879), 'total_alerts': 201, 'alerts_by_type': {'crowd_anomaly': 201}, 'total_processing_time': 72.4815981388092, 'avg_fps': 4.5666763495763885}
+2026-04-10 15:08:21.193 | INFO     | __main__:save_report:425 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:08:21.704 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:08:21.704 | INFO     | __main__:main:522 - ==================================================
+2026-04-10 15:08:21.704 | INFO     | __main__:main:523 - Processing Complete!
+2026-04-10 15:08:21.704 | INFO     | __main__:main:524 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:08:21.704 | INFO     | __main__:main:525 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:08:21.704 | INFO     | __main__:main:526 - Average FPS: 4.57
+2026-04-10 15:08:21.716 | INFO     | __main__:main:527 - Total alerts: 201
+2026-04-10 15:08:21.716 | INFO     | __main__:main:528 - ==================================================
+2026-04-10 15:12:16.291 | INFO     | __main__:main:491 - Starting Crowd Behavior Analysis System
+2026-04-10 15:12:16.291 | INFO     | __main__:__init__:51 - Using user-selected device: mps
+2026-04-10 15:12:16.291 | INFO     | __main__:_initialize_components:78 - Initializing pipeline components...
+2026-04-10 15:12:16.393 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-10 15:12:16.543 | INFO     | pipeline.tracker:__init__:113 - Initialized DeepSORT tracker with max_age=30
+2026-04-10 15:12:16.721 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:12:16.748 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-10 15:12:16.748 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:12:16.770 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:12:16.770 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:12:16.792 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on mps
+2026-04-10 15:12:16.792 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-10 15:12:16.792 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on mps
+2026-04-10 15:12:16.792 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on mps
+2026-04-10 15:12:16.792 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:12:16.792 | INFO     | __main__:_initialize_components:124 - All pipeline components initialized
+2026-04-10 15:12:16.792 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:12:16.792 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:12:16.792 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:12:16.825 | INFO     | __main__:process_video:328 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:12:16.825 | INFO     | __main__:process_video:329 - Resolution: 1920x1080, FPS: 25, Total frames: 341
+2026-04-10 15:12:16.828 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:16:37.444 | INFO     | __main__:process_video:371 - Processed 100/341 frames (~0.4 FPS)
+2026-04-10 15:20:11.283 | INFO     | __main__:process_video:371 - Processed 200/341 frames (~0.4 FPS)
+2026-04-10 15:22:30.698 | INFO     | __main__:process_video:371 - Processed 300/341 frames (~0.5 FPS)
+2026-04-10 15:23:40.474 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:23:40.504 | INFO     | __main__:process_video:385 - Video processing completed. Summary: {'total_frames': 341, 'avg_people_count': np.float64(27.375366568914956), 'max_people_count': np.int64(33), 'avg_density': np.float64(0.42901502329145697), 'max_density': np.float64(0.578393454218107), 'avg_anomaly_score': np.float64(0.45121658622536603), 'total_alerts': 0, 'alerts_by_type': {}, 'total_processing_time': 662.9060413837433, 'avg_fps': 0.5144017081036101}
+2026-04-10 15:23:40.529 | INFO     | __main__:save_report:425 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:23:41.607 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:23:41.607 | INFO     | __main__:main:522 - ==================================================
+2026-04-10 15:23:41.607 | INFO     | __main__:main:523 - Processing Complete!
+2026-04-10 15:23:41.607 | INFO     | __main__:main:524 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:23:41.607 | INFO     | __main__:main:525 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:23:41.607 | INFO     | __main__:main:526 - Average FPS: 0.51
+2026-04-10 15:23:41.607 | INFO     | __main__:main:527 - Total alerts: 0
+2026-04-10 15:23:41.607 | INFO     | __main__:main:528 - ==================================================
+2026-04-10 15:34:07.093 | INFO     | __main__:main:514 - Starting Crowd Behavior Analysis System
+2026-04-10 15:34:07.093 | INFO     | __main__:__init__:51 - Using user-selected device: mps
+2026-04-10 15:34:07.094 | INFO     | __main__:_initialize_components:78 - Initializing pipeline components...
+2026-04-10 15:34:07.128 | ERROR    | pipeline.detector:__init__:41 - Failed to load YOLO model: The MPS backend is supported on MacOS 14.0+. Current OS version can be queried using `sw_vers`
+2026-04-10 15:34:07.128 | ERROR    | __main__:main:556 - System error: The MPS backend is supported on MacOS 14.0+. Current OS version can be queried using `sw_vers`
+Traceback (most recent call last):
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 560, in <module>
+    sys.exit(main())
+    │   │    └ <function main at 0x1012e83b0>
+    │   └ <built-in function exit>
+    └ <module 'sys' (built-in)>
+
+> File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 516, in main
+    system = CrowdBehaviorSystem(config_override, device_override=device_override)
+             │                   │                                └ 'mps'
+             │                   └ {'visualization': {'show_display': False}, 'model': {'yolo_confidence_threshold': 0.5}, 'pipeline': {'sequence_length': 30, '...
+             └ <class '__main__.CrowdBehaviorSystem'>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 63, in __init__
+    self._initialize_components()
+    │    └ <function CrowdBehaviorSystem._initialize_components at 0x120145e80>
+    └ <__main__.CrowdBehaviorSystem object at 0x11450a510>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/main.py", line 81, in _initialize_components
+    self.detector = PersonDetector(
+    │               └ <class 'pipeline.detector.PersonDetector'>
+    └ <__main__.CrowdBehaviorSystem object at 0x11450a510>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/pipeline/detector.py", line 38, in __init__
+    self.model.to(device)
+    │    │     │  └ 'mps'
+    │    │     └ <function Module.to at 0x1109e4250>
+    │    └ YOLO(
+    │        (model): DetectionModel(
+    │          (model): Sequential(
+    │            (0): Conv(
+    │              (conv): Conv2d(3, 16, kernel_size=(3, 3), ...
+    └ <pipeline.detector.PersonDetector object at 0x11450a660>
+
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1384, in to
+    return self._apply(convert)
+           │    │      └ <function Module.to.<locals>.convert at 0x120166da0>
+           │    └ <function Model._apply at 0x11905d4e0>
+           └ YOLO(
+               (model): DetectionModel(
+                 (model): Sequential(
+                   (0): Conv(
+                     (conv): Conv2d(3, 16, kernel_size=(3, 3), ...
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/ultralytics/engine/model.py", line 866, in _apply
+    self = super()._apply(fn)
+                          └ <function Module.to.<locals>.convert at 0x120166da0>
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+    │      │      └ <function Module.to.<locals>.convert at 0x120166da0>
+    │      └ <function BaseModel._apply at 0x114f83270>
+    └ DetectionModel(
+        (model): Sequential(
+          (0): Conv(
+            (conv): Conv2d(3, 16, kernel_size=(3, 3), stride=(2, 2), padding=...
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/ultralytics/nn/tasks.py", line 288, in _apply
+    self = super()._apply(fn)
+                          └ <function Module.to.<locals>.convert at 0x120166da0>
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+    │      │      └ <function Module.to.<locals>.convert at 0x120166da0>
+    │      └ <function Module._apply at 0x1109e2c40>
+    └ Sequential(
+        (0): Conv(
+          (conv): Conv2d(3, 16, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+          (bn): B...
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+    │      │      └ <function Module.to.<locals>.convert at 0x120166da0>
+    │      └ <function Module._apply at 0x1109e2c40>
+    └ Conv(
+        (conv): Conv2d(3, 16, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+        (bn): BatchNorm2d(16, eps=0.00...
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 934, in _apply
+    module._apply(fn)
+    │      │      └ <function Module.to.<locals>.convert at 0x120166da0>
+    │      └ <function Module._apply at 0x1109e2c40>
+    └ Conv2d(3, 16, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 965, in _apply
+    param_applied = fn(param)
+                    │  └ Parameter containing:
+                    │    tensor([[[[-1.1523e-01, -1.0582e-02,  1.0693e-01],
+                    │              [-3.6816e-01,  3.3447e-02,  3.8745e-01],
+                    │     ...
+                    └ <function Module.to.<locals>.convert at 0x120166da0>
+  File "/Users/chaitanya/projects/hackathon thing idk/.venv/lib/python3.14/site-packages/torch/nn/modules/module.py", line 1370, in convert
+    return t.to(
+           │ └ <method 'to' of 'torch._C.TensorBase' objects>
+           └ Parameter containing:
+             tensor([[[[-1.1523e-01, -1.0582e-02,  1.0693e-01],
+                       [-3.6816e-01,  3.3447e-02,  3.8745e-01],
+              ...
+
+RuntimeError: The MPS backend is supported on MacOS 14.0+. Current OS version can be queried using `sw_vers`
+2026-04-10 15:35:18.855 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:35:18.855 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:35:18.856 | INFO     | __main__:__init__:51 - Using user-selected device: cpu
+2026-04-10 15:35:18.856 | WARNING  | __main__:_resolve_device:83 - MPS was requested but is not available. Falling back to CPU.
+2026-04-10 15:35:18.856 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:35:18.856 | INFO     | __main__:__init__:51 - Using user-selected device: cpu
+2026-04-10 15:35:18.856 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:35:18.892 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:35:18.892 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:35:19.082 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:35:19.082 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:35:19.290 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:35:19.290 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:35:19.291 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:35:19.291 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:35:19.291 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:35:19.291 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:35:19.315 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:35:19.316 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:35:19.317 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:35:19.318 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:35:19.320 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:35:19.321 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:35:19.321 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:35:19.321 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:35:19.323 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:35:19.323 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:35:19.324 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:35:19.324 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:35:19.324 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:35:19.324 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:35:19.324 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:35:19.325 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:35:19.325 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:35:19.325 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:35:19.325 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:35:19.325 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:35:19.326 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:35:19.326 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:35:19.359 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:35:19.359 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:35:19.359 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 30, Frame stride: 3
+2026-04-10 15:35:19.359 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 30, Frame stride: 3
+2026-04-10 15:35:19.366 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:19.366 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:48.690 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:48.695 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:48.720 | INFO     | __main__:process_video:419 - Video processing completed. Summary: {'total_frames': 10, 'avg_people_count': np.float64(20.0), 'max_people_count': np.int64(25), 'avg_density': np.float64(0.3129357960390947), 'max_density': np.float64(0.3904417438271605), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 10, 'source_frames_read': 30, 'frame_stride': 3, 'total_processing_time': 28.928597927093506, 'avg_fps': 0.3456786957045835}
+2026-04-10 15:35:48.723 | INFO     | __main__:process_video:419 - Video processing completed. Summary: {'total_frames': 10, 'avg_people_count': np.float64(20.0), 'max_people_count': np.int64(25), 'avg_density': np.float64(0.3129357960390947), 'max_density': np.float64(0.3904417438271605), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 10, 'source_frames_read': 30, 'frame_stride': 3, 'total_processing_time': 28.930607557296753, 'avg_fps': 0.34565468354562234}
+2026-04-10 15:35:48.739 | INFO     | __main__:save_report:459 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:35:48.739 | INFO     | __main__:save_report:459 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:35:49.464 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:35:49.464 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:35:49.465 | INFO     | __main__:main:562 - ==================================================
+2026-04-10 15:35:49.465 | INFO     | __main__:main:562 - ==================================================
+2026-04-10 15:35:49.465 | INFO     | __main__:main:563 - Processing Complete!
+2026-04-10 15:35:49.465 | INFO     | __main__:main:563 - Processing Complete!
+2026-04-10 15:35:49.465 | INFO     | __main__:main:564 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:49.465 | INFO     | __main__:main:564 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:35:49.466 | INFO     | __main__:main:565 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:35:49.466 | INFO     | __main__:main:565 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:35:49.466 | INFO     | __main__:main:566 - Average FPS: 0.35
+2026-04-10 15:35:49.466 | INFO     | __main__:main:566 - Average FPS: 0.35
+2026-04-10 15:35:49.466 | INFO     | __main__:main:567 - Total alerts: 0
+2026-04-10 15:35:49.467 | INFO     | __main__:main:567 - Total alerts: 0
+2026-04-10 15:35:49.467 | INFO     | __main__:main:568 - ==================================================
+2026-04-10 15:35:49.467 | INFO     | __main__:main:568 - ==================================================
+2026-04-10 15:38:25.389 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:38:25.389 | INFO     | __main__:__init__:57 - Using MPS (Apple Silicon GPU)
+2026-04-10 15:38:25.389 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:38:25.471 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-10 15:38:25.587 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:38:25.789 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:38:25.817 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-10 15:38:25.818 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:38:25.833 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:38:25.834 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:38:25.859 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on mps
+2026-04-10 15:38:25.859 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-10 15:38:25.859 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on mps
+2026-04-10 15:38:25.859 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on mps
+2026-04-10 15:38:25.860 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:38:25.860 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:38:25.860 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:38:25.860 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:38:25.860 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:38:25.871 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:38:25.871 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-10 15:38:25.871 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:39:17.260 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:39:17.260 | INFO     | __main__:__init__:51 - Using user-selected device: cpu
+2026-04-10 15:39:17.260 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:39:17.285 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:39:17.408 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:39:17.608 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:39:17.609 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:39:17.609 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:39:17.625 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:39:17.626 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:39:17.627 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:39:17.627 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:39:17.627 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:39:17.627 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:39:17.627 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:39:17.627 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:39:17.627 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:39:17.627 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:39:17.627 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:39:17.646 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:39:17.646 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 30, Frame stride: 3
+2026-04-10 15:39:17.648 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:39:38.786 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:39:38.788 | INFO     | __main__:process_video:419 - Video processing completed. Summary: {'total_frames': 10, 'avg_people_count': np.float64(20.0), 'max_people_count': np.int64(25), 'avg_density': np.float64(0.3129357960390947), 'max_density': np.float64(0.3904417438271605), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 10, 'source_frames_read': 30, 'frame_stride': 3, 'total_processing_time': 20.888285875320435, 'avg_fps': 0.47873722428392396}
+2026-04-10 15:39:38.789 | INFO     | __main__:save_report:459 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:39:39.111 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:39:39.111 | INFO     | __main__:main:562 - ==================================================
+2026-04-10 15:39:39.111 | INFO     | __main__:main:563 - Processing Complete!
+2026-04-10 15:39:39.111 | INFO     | __main__:main:564 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:39:39.111 | INFO     | __main__:main:565 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:39:39.111 | INFO     | __main__:main:566 - Average FPS: 0.48
+2026-04-10 15:39:39.111 | INFO     | __main__:main:567 - Total alerts: 0
+2026-04-10 15:39:39.111 | INFO     | __main__:main:568 - ==================================================
+2026-04-10 15:40:12.646 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:40:12.646 | INFO     | __main__:__init__:51 - Using user-selected device: cpu
+2026-04-10 15:40:12.646 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:40:12.668 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:40:12.773 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:40:12.971 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:40:12.972 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:40:12.972 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:40:12.986 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:40:12.987 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:40:12.987 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:40:12.987 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:40:12.987 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:40:12.987 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:40:12.987 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:40:12.987 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:40:12.987 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:40:12.988 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:40:12.988 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:40:12.999 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:40:12.999 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 30, Frame stride: 3
+2026-04-10 15:40:13.000 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:40:34.716 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:40:34.719 | INFO     | __main__:process_video:419 - Video processing completed. Summary: {'total_frames': 10, 'avg_people_count': np.float64(20.0), 'max_people_count': np.int64(25), 'avg_density': np.float64(0.3129357960390947), 'max_density': np.float64(0.3904417438271605), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 10, 'source_frames_read': 30, 'frame_stride': 3, 'total_processing_time': 20.880589485168457, 'avg_fps': 0.4789136823509235}
+2026-04-10 15:40:34.720 | INFO     | __main__:save_report:459 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:40:35.043 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:40:35.043 | INFO     | __main__:main:562 - ==================================================
+2026-04-10 15:40:35.043 | INFO     | __main__:main:563 - Processing Complete!
+2026-04-10 15:40:35.043 | INFO     | __main__:main:564 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:40:35.043 | INFO     | __main__:main:565 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:40:35.043 | INFO     | __main__:main:566 - Average FPS: 0.48
+2026-04-10 15:40:35.043 | INFO     | __main__:main:567 - Total alerts: 0
+2026-04-10 15:40:35.043 | INFO     | __main__:main:568 - ==================================================
+2026-04-10 15:42:40.099 | INFO     | __main__:main:531 - Starting Crowd Behavior Analysis System
+2026-04-10 15:42:40.100 | INFO     | __main__:__init__:51 - Using user-selected device: mps
+2026-04-10 15:42:40.100 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:42:40.196 | INFO     | pipeline.detector:__init__:39 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-10 15:42:40.372 | INFO     | pipeline.tracker:__init__:117 - Initialized DeepSORT tracker with max_age=60
+2026-04-10 15:42:40.583 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:42:40.613 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-10 15:42:40.613 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:42:40.633 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:42:40.634 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:42:40.656 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on mps
+2026-04-10 15:42:40.656 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-10 15:42:40.656 | INFO     | pipeline.inference:__init__:39 - Initialized BehaviorInference pipeline on mps
+2026-04-10 15:42:40.656 | INFO     | pipeline.inference:__init__:85 - Initialized complete InferencePipeline on mps
+2026-04-10 15:42:40.656 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:42:40.656 | INFO     | __main__:_initialize_components:141 - All pipeline components initialized
+2026-04-10 15:42:40.656 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:42:40.656 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:42:40.656 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:42:40.685 | INFO     | __main__:process_video:347 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:42:40.686 | INFO     | __main__:process_video:348 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-10 15:42:40.689 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:43:57.151 | WARNING  | __main__:process_frame:236 - Frame 96: Overcrowding detected (density: 70.7%)
+2026-04-10 15:44:01.538 | WARNING  | __main__:process_frame:236 - Frame 99: Overcrowding detected (density: 70.5%)
+2026-04-10 15:46:18.522 | WARNING  | __main__:process_frame:236 - Frame 210: Overcrowding detected (density: 71.6%)
+2026-04-10 15:46:19.247 | WARNING  | __main__:process_frame:236 - Frame 213: Overcrowding detected (density: 73.4%)
+2026-04-10 15:46:21.183 | WARNING  | __main__:process_frame:236 - Frame 216: Overcrowding detected (density: 74.5%)
+2026-04-10 15:46:23.351 | WARNING  | __main__:process_frame:236 - Frame 219: Overcrowding detected (density: 74.7%)
+2026-04-10 15:46:25.083 | WARNING  | __main__:process_frame:236 - Frame 222: Overcrowding detected (density: 76.9%)
+2026-04-10 15:46:26.598 | WARNING  | __main__:process_frame:236 - Frame 225: Overcrowding detected (density: 78.5%)
+2026-04-10 15:46:27.961 | WARNING  | __main__:process_frame:236 - Frame 228: Overcrowding detected (density: 79.8%)
+2026-04-10 15:46:29.357 | WARNING  | __main__:process_frame:236 - Frame 231: Overcrowding detected (density: 81.5%)
+2026-04-10 15:46:30.715 | WARNING  | __main__:process_frame:236 - Frame 234: Overcrowding detected (density: 83.0%)
+2026-04-10 15:46:32.100 | WARNING  | __main__:process_frame:236 - Frame 237: Overcrowding detected (density: 82.3%)
+2026-04-10 15:46:32.694 | WARNING  | __main__:process_frame:236 - Frame 240: Overcrowding detected (density: 83.9%)
+2026-04-10 15:46:33.228 | WARNING  | __main__:process_frame:236 - Frame 243: Overcrowding detected (density: 86.6%)
+2026-04-10 15:46:33.742 | WARNING  | __main__:process_frame:236 - Frame 246: Overcrowding detected (density: 88.1%)
+2026-04-10 15:46:39.789 | WARNING  | __main__:process_frame:236 - Frame 249: Overcrowding detected (density: 90.4%)
+2026-04-10 15:46:41.588 | WARNING  | __main__:process_frame:236 - Frame 252: Overcrowding detected (density: 92.9%)
+2026-04-10 15:46:43.977 | WARNING  | __main__:process_frame:236 - Frame 255: Overcrowding detected (density: 94.8%)
+2026-04-10 15:46:46.534 | WARNING  | __main__:process_frame:236 - Frame 258: Overcrowding detected (density: 99.3%)
+2026-04-10 15:46:48.671 | WARNING  | __main__:process_frame:236 - Frame 261: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:50.537 | WARNING  | __main__:process_frame:236 - Frame 264: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:52.312 | WARNING  | __main__:process_frame:236 - Frame 267: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:53.978 | WARNING  | __main__:process_frame:236 - Frame 270: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:56.071 | WARNING  | __main__:process_frame:236 - Frame 273: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:57.382 | WARNING  | __main__:process_frame:236 - Frame 276: Overcrowding detected (density: 100.0%)
+2026-04-10 15:46:58.280 | WARNING  | __main__:process_frame:236 - Frame 279: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:00.356 | WARNING  | __main__:process_frame:236 - Frame 282: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:02.401 | WARNING  | __main__:process_frame:236 - Frame 285: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:04.382 | WARNING  | __main__:process_frame:236 - Frame 288: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:06.505 | WARNING  | __main__:process_frame:236 - Frame 291: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:07.482 | WARNING  | __main__:process_frame:236 - Frame 294: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:09.531 | WARNING  | __main__:process_frame:236 - Frame 297: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:09.592 | INFO     | __main__:process_video:400 - Processed 100 frames out of 298 read (stride 3, ~0.4 FPS)
+2026-04-10 15:47:10.343 | WARNING  | __main__:process_frame:236 - Frame 300: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:12.090 | WARNING  | __main__:process_frame:236 - Frame 303: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:14.159 | WARNING  | __main__:process_frame:236 - Frame 306: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:16.627 | WARNING  | __main__:process_frame:236 - Frame 309: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:19.030 | WARNING  | __main__:process_frame:236 - Frame 312: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:21.293 | WARNING  | __main__:process_frame:236 - Frame 315: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:23.403 | WARNING  | __main__:process_frame:236 - Frame 318: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:25.513 | WARNING  | __main__:process_frame:236 - Frame 321: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:27.859 | WARNING  | __main__:process_frame:236 - Frame 324: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:29.940 | WARNING  | __main__:process_frame:236 - Frame 327: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:32.185 | WARNING  | __main__:process_frame:236 - Frame 330: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:34.001 | WARNING  | __main__:process_frame:236 - Frame 333: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:35.951 | WARNING  | __main__:process_frame:236 - Frame 336: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:37.658 | WARNING  | __main__:process_frame:236 - Frame 339: Overcrowding detected (density: 100.0%)
+2026-04-10 15:47:37.739 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:47:37.791 | INFO     | __main__:process_video:419 - Video processing completed. Summary: {'total_frames': 114, 'avg_people_count': np.float64(36.55263157894737), 'max_people_count': np.int64(44), 'avg_density': np.float64(0.6875555860136452), 'max_density': np.float64(1.0), 'avg_anomaly_score': np.float64(0.4511107327228532), 'total_alerts': 46, 'alerts_by_type': {'crowd_anomaly': 46}, 'processed_frames': 114, 'source_frames_read': 341, 'frame_stride': 3, 'total_processing_time': 286.58132815361023, 'avg_fps': 0.39779283854422975}
+2026-04-10 15:47:37.815 | INFO     | __main__:save_report:459 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:47:38.999 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:47:39.000 | INFO     | __main__:main:562 - ==================================================
+2026-04-10 15:47:39.000 | INFO     | __main__:main:563 - Processing Complete!
+2026-04-10 15:47:39.000 | INFO     | __main__:main:564 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:47:39.000 | INFO     | __main__:main:565 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:47:39.000 | INFO     | __main__:main:566 - Average FPS: 0.40
+2026-04-10 15:47:39.000 | INFO     | __main__:main:567 - Total alerts: 46
+2026-04-10 15:47:39.000 | INFO     | __main__:main:568 - ==================================================
+2026-04-10 15:56:01.915 | INFO     | __main__:main:560 - Starting Crowd Behavior Analysis System
+2026-04-10 15:56:01.915 | INFO     | __main__:__init__:51 - Using user-selected device: cpu
+2026-04-10 15:56:01.916 | INFO     | __main__:_initialize_components:95 - Initializing pipeline components...
+2026-04-10 15:56:01.946 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on cpu
+2026-04-10 15:56:01.946 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-10 15:56:02.152 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-10 15:56:02.153 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on cpu
+2026-04-10 15:56:02.154 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-10 15:56:02.177 | INFO     | models.transformer:__init__:99 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-10 15:56:02.179 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-10 15:56:02.179 | INFO     | models.transformer:__init__:180 - TemporalFeatureProcessor initialized on cpu
+2026-04-10 15:56:02.180 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on cpu
+2026-04-10 15:56:02.180 | INFO     | pipeline.inference:__init__:40 - Initialized BehaviorInference pipeline on cpu
+2026-04-10 15:56:02.180 | INFO     | pipeline.inference:__init__:111 - Initialized complete InferencePipeline on cpu
+2026-04-10 15:56:02.181 | INFO     | utils.metrics:__init__:43 - Initialized CrowdMetrics
+2026-04-10 15:56:02.181 | INFO     | __main__:_initialize_components:145 - All pipeline components initialized
+2026-04-10 15:56:02.181 | INFO     | utils.metrics:__init__:316 - Initialized MetricsAggregator
+2026-04-10 15:56:02.182 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-10 15:56:02.182 | INFO     | __main__:__init__:74 - CrowdBehaviorSystem initialized successfully
+2026-04-10 15:56:02.214 | INFO     | __main__:process_video:351 - Processing video: data/sample_videos/video.mp4
+2026-04-10 15:56:02.214 | INFO     | __main__:process_video:352 - Resolution: 1920x1080, FPS: 25, Total frames: 15, Frame stride: 3
+2026-04-10 15:56:02.219 | INFO     | utils.visualization:__init__:387 - Initialized VideoWriter to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:56:11.232 | INFO     | utils.visualization:release:398 - Released VideoWriter, saved to /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:56:11.234 | INFO     | __main__:process_video:423 - Video processing completed. Summary: {'total_frames': 5, 'avg_people_count': np.float64(35.4), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.48987043467078184), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 5, 'source_frames_read': 15, 'frame_stride': 3, 'total_processing_time': 8.867217302322388, 'avg_fps': 0.5638747568180679}
+2026-04-10 15:56:11.235 | INFO     | __main__:save_report:463 - Report saved to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:56:11.567 | INFO     | utils.metrics:export_to_csv:382 - Exported metrics to /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report_metrics.csv
+2026-04-10 15:56:11.568 | INFO     | __main__:main:591 - ==================================================
+2026-04-10 15:56:11.568 | INFO     | __main__:main:592 - Processing Complete!
+2026-04-10 15:56:11.569 | INFO     | __main__:main:593 - Output video: /Users/chaitanya/projects/hackathon thing idk/outputs/videos/video_annotated.mp4
+2026-04-10 15:56:11.569 | INFO     | __main__:main:594 - Report: /Users/chaitanya/projects/hackathon thing idk/outputs/reports/video_report.json
+2026-04-10 15:56:11.569 | INFO     | __main__:main:595 - Average FPS: 0.56
+2026-04-10 15:56:11.569 | INFO     | __main__:main:596 - Total alerts: 0
+2026-04-10 15:56:11.570 | INFO     | __main__:main:597 - ==================================================
