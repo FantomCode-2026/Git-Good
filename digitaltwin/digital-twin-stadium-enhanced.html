@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Digital Twin - M. Chinnaswamy Stadium</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #060b14;
+            color: #c8d8e8;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        canvas { display: block; }
+
+        .ui-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+        }
+
+        .ui-panel {
+            position: absolute;
+            background: rgba(6, 11, 20, 0.88);
+            border: 1px solid rgba(96, 200, 120, 0.25);
+            border-radius: 6px;
+            padding: 14px;
+            pointer-events: auto;
+            backdrop-filter: blur(8px);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .ui-panel-title {
+            font-weight: 700;
+            font-size: 11px;
+            margin-bottom: 10px;
+            color: #5ecf7a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .stat-item {
+            background: rgba(94, 207, 122, 0.06);
+            padding: 7px;
+            border-radius: 4px;
+            border-left: 2px solid #5ecf7a;
+        }
+
+        .stat-label {
+            font-size: 10px;
+            color: #6b8a7a;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .stat-value {
+            font-size: 17px;
+            font-weight: 700;
+            color: #d4f0dc;
+        }
+
+        .zone-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 6px;
+        }
+
+        .zone-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 11px;
+            border-bottom: 1px solid rgba(94, 207, 122, 0.08);
+        }
+
+        .zone-item:last-child { border-bottom: none; }
+        .zone-label { color: #a8c4b4; }
+        .zone-count { font-weight: 700; color: #5ecf7a; }
+
+        .zone-density {
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .control-panel { top: 16px; left: 16px; width: 260px; }
+        .status-panel { top: 16px; right: 16px; width: 230px; }
+        .camera-panel { bottom: 16px; left: 16px; width: 260px; }
+
+        .button-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            flex: 1;
+            min-width: 70px;
+            padding: 7px 10px;
+            background: rgba(94, 207, 122, 0.08);
+            border: 1px solid rgba(94, 207, 122, 0.35);
+            color: #5ecf7a;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        button:hover {
+            background: rgba(94, 207, 122, 0.18);
+            border-color: #5ecf7a;
+            color: #d4f0dc;
+        }
+
+        button.active {
+            background: rgba(94, 207, 122, 0.25);
+            border-color: #5ecf7a;
+            color: #d4f0dc;
+            box-shadow: 0 0 8px rgba(94, 207, 122, 0.2);
+        }
+
+        .toggle-group { display: flex; gap: 0; margin-top: 10px; }
+        .toggle-group button { border-radius: 0; flex: 1; margin: 0; }
+        .toggle-group button:first-child { border-radius: 4px 0 0 4px; }
+        .toggle-group button:last-child { border-radius: 0 4px 4px 0; }
+
+        .density-indicator { margin-top: 10px; font-size: 11px; color: #6b8a7a; }
+
+        .density-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(94, 207, 122, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        .density-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #22c55e, #f59e0b, #ef4444);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #4a6a5a;
+            margin-top: 10px;
+            padding: 7px;
+            background: rgba(94, 207, 122, 0.04);
+            border-radius: 4px;
+            border-left: 2px solid rgba(94, 207, 122, 0.3);
+        }
+
+        .stadium-badge {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: rgba(6, 11, 20, 0.85);
+            border: 1px solid rgba(96, 200, 120, 0.2);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 11px;
+            color: #5ecf7a;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .zone-list::-webkit-scrollbar { width: 3px; }
+        .zone-list::-webkit-scrollbar-track { background: rgba(20, 30, 20, 0.3); }
+        .zone-list::-webkit-scrollbar-thumb { background: rgba(94, 207, 122, 0.3); border-radius: 2px; }
+
+        /* ── Crowd-Control Panel ── */
+        .crowd-panel { top: 16px; left: 290px; width: 220px; }
+
+       to   { box-shadow: 0 0 18px rgba(239,68,68,0.9); }
+        
+        #heatmap-status {
+            font-size: 10px;
+            margin-top: 6px;
+            color: #4a6a5a;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div class="ui-overlay">
+            <div class="ui-panel control-panel">
+                <div class="ui-panel-title">⚙ Simulation Control</div>
+                <div class="toggle-group">
+                    <button id="btn-live-mode" class="active">Live Mode</button>
+                    <button id="btn-demo-mode">Demo Mode</button>
+                </div>
+                <div class="button-group">
+                    <button id="btn-start">Start</button>
+                    <button id="btn-stop">Stop</button>
+                    <button id="btn-reset">Reset</button>
+                </div>
+                <div class="stats-grid" style="margin-top:10px;">
+                    <div class="stat-item">
+                        <div class="stat-label">Total People</div>
+                        <div class="stat-value" id="stat-total">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Avg Density</div>
+                        <div class="stat-value" id="stat-density">0%</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Active Zones</div>
+                        <div class="stat-value" id="stat-zones">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">FPS</div>
+                        <div class="stat-value" id="stat-fps">60</div>
+                    </div>
+                </div>
+                <div class="help-text">🖱 Orbit: Drag | Zoom: Scroll | Pan: Right-click</div>
+            </div>
+
+            <div class="ui-panel status-panel">
+                <div class="ui-panel-title">📊 Zone Status</div>
+                <div class="zone-list" id="zone-list"></div>
+            </div>
+
+            <div class="ui-panel camera-panel">
+                <div class="ui-panel-title">🎥 Camera Presets</div>
+                <div class="button-group">
+                    <button id="btn-cam-overview">Overview</button>
+                    <button id="btn-cam-gate">Gates</button>
+                    <button id="btn-cam-corridor">Pitch</button>
+                </div>
+                <div class="density-indicator">
+                    Overall Density:
+                    <div class="density-bar">
+                        <div class="density-fill" id="density-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-panel crowd-panel">
+                <div class="ui-panel-title">👥 Crowd Control</div>
+                <div class="button-group">
+                    <button onclick="addPeople('GateA', 50)">+50 GateA</button>
+                    <button onclick="addPeople('GateB', 50)">+50 GateB</button>
+                </div>
+                <div class="button-group">
+                    <button onclick="addPeople('Corridor1', 100)">+100 Corr1</button>
+                    <button onclick="fillStadium()">Fill Stadium</button>
+                </div>
+                <div class="button-group">
+                    <button onclick="clearAll()">Clear Crowd</button>
+                
+                </div>
+                <div class="ui-panel-title" style="margin-top:12px;">🌡 Heatmap</div>
+                <div class="button-group">
+                    <button id="btn-heatmap-toggle" onclick="toggleHeatmap()">Enable Heatmap</button>
+                </div>
+                <div id="heatmap-status">Heatmap: OFF</div>
+            </div>
+
+            <div class="stadium-badge">M. Chinnaswamy Stadium · Bengaluru</div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+    // ==================== SceneManager.js ====================
+    class SceneManager {
+        constructor(containerElement) {
+            this.container = containerElement;
+            this.scene = new THREE.Scene();
+            this.scene.background = new THREE.Color(0x060b14);
+            this.scene.fog = new THREE.FogExp2(0x060b14, 0.004);
+
+            this.camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1200);
+            // Broadcast-angle default view
+            this.camera.position.set(60, 110, 140);
+            this.camera.lookAt(0, 0, 0);
+
+            this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+            this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            this.renderer.shadowMap.enabled = true;
+            this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            this.renderer.toneMappingExposure = 1.1;
+            this.container.appendChild(this.renderer.domElement);
+
+            this.setupLighting();
+            this.setupControls();
+            window.addEventListener('resize', () => this.onWindowResize());
+
+            this.frameCount = 0;
+            this.fps = 60;
+            this.lastTime = Date.now();
+        }
+
+        setupLighting() {
+            // Soft ambient
+            const ambient = new THREE.AmbientLight(0x334455, 0.7);
+            this.scene.add(ambient);
+
+            // Main sun (stadium floodlight angle)
+            const sun = new THREE.DirectionalLight(0xfff5e0, 1.1);
+            sun.position.set(80, 150, 60);
+            sun.castShadow = true;
+            sun.shadow.mapSize.width = 2048;
+            sun.shadow.mapSize.height = 2048;
+            sun.shadow.camera.left = -180;
+            sun.shadow.camera.right = 180;
+            sun.shadow.camera.top = 180;
+            sun.shadow.camera.bottom = -180;
+            sun.shadow.camera.far = 500;
+            sun.shadow.bias = -0.001;
+            this.scene.add(sun);
+
+            // Fill light from opposite side
+            const fill = new THREE.DirectionalLight(0x8ab0cc, 0.4);
+            fill.position.set(-60, 80, -40);
+            this.scene.add(fill);
+
+            // Ground bounce (green tint from pitch)
+            const bounce = new THREE.HemisphereLight(0x224422, 0x111a11, 0.35);
+            this.scene.add(bounce);
+
+            // Floodlights - 4 corners
+            const floodColors = [0xffe8b0, 0xfff0c0, 0xffe8b0, 0xfff0c0];
+            const floodPositions = [[90, 70, 90], [-90, 70, 90], [90, 70, -90], [-90, 70, -90]];
+            floodPositions.forEach((pos, i) => {
+                const fl = new THREE.PointLight(floodColors[i], 0.5, 200);
+                fl.position.set(...pos);
+                this.scene.add(fl);
+            });
+        }
+
+        setupControls() {
+            this.controls = {
+                isRotating: false,
+                isPanning: false,
+                previousMousePosition: { x: 0, y: 0 },
+                target: new THREE.Vector3(0, 0, 0),
+                spherical: new THREE.Spherical()
+            };
+
+            const offset = this.camera.position.clone().sub(this.controls.target);
+            this.controls.spherical.setFromVector3(offset);
+
+            document.addEventListener('mousedown', (e) => {
+                if (e.button === 0) this.controls.isRotating = true;
+                if (e.button === 2) this.controls.isPanning = true;
+                this.controls.previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                const dx = e.clientX - this.controls.previousMousePosition.x;
+                const dy = e.clientY - this.controls.previousMousePosition.y;
+
+                if (this.controls.isRotating) {
+                    this.controls.spherical.theta -= dx * 0.004;
+                    this.controls.spherical.phi -= dy * 0.004;
+                    this.controls.spherical.phi = Math.max(0.08, Math.min(Math.PI * 0.48, this.controls.spherical.phi));
+                }
+
+                if (this.controls.isPanning) {
+                    const sp = this.controls.spherical.radius * 0.0008;
+                    const right = new THREE.Vector3(
+                        this.camera.matrix.elements[0],
+                        this.camera.matrix.elements[4],
+                        this.camera.matrix.elements[8]
+                    );
+                    this.controls.target.addScaledVector(right, -dx * sp);
+                    this.controls.target.addScaledVector(new THREE.Vector3(0, 1, 0), dy * sp);
+                }
+
+                this.controls.previousMousePosition = { x: e.clientX, y: e.clientY };
+            });
+
+            document.addEventListener('mouseup', () => {
+                this.controls.isRotating = false;
+                this.controls.isPanning = false;
+            });
+
+            document.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                this.controls.spherical.radius += e.deltaY * 0.15;
+                this.controls.spherical.radius = Math.max(40, Math.min(400, this.controls.spherical.radius));
+            }, { passive: false });
+
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+        }
+
+        updateCamera() {
+            const pos = new THREE.Vector3();
+            pos.setFromSpherical(this.controls.spherical);
+            pos.add(this.controls.target);
+            this.camera.position.copy(pos);
+            this.camera.lookAt(this.controls.target);
+        }
+
+        setCameraPreset(name) {
+            const presets = {
+                overview: { pos: [50, 120, 145], target: [0, 5, 0] },
+                gates:    { pos: [145, 50, 0],   target: [0, 5, 0] },
+                corridor: { pos: [0, 50, 55],    target: [0, 0, 0] }
+            };
+            const p = presets[name] || presets.overview;
+            this.camera.position.set(...p.pos);
+            this.controls.target.set(...p.target);
+            this.controls.spherical.setFromVector3(
+                this.camera.position.clone().sub(this.controls.target)
+            );
+        }
+
+        onWindowResize() {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.updateProjectionMatrix();
+            this.renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        render() {
+            this.frameCount++;
+            const now = Date.now();
+            if (now - this.lastTime >= 1000) {
+                this.fps = this.frameCount;
+                this.frameCount = 0;
+                this.lastTime = now;
+            }
+            this.updateCamera();
+            this.renderer.render(this.scene, this.camera);
+        }
+
+        getScene()    { return this.scene; }
+        getCamera()   { return this.camera; }
+        getRenderer() { return this.renderer; }
+    }
+
+    // ==================== StadiumModel.js ====================
+    // M. Chinnaswamy Stadium layout
+    // Stand angles (from top-down, 0=East/right, going counter-clockwise):
+    //   Pavilion Stand : South side  (bottom, ~240°–300° => ~4.19–5.24 rad)
+    //   A Stand        : West side   (left,   ~150°–240° => ~2.62–4.19 rad)
+    //   B Stand        : North-West  (~90°–150°           => ~1.57–2.62 rad)
+    //   C Stand        : North-East  (~30°–90°            => ~0.52–1.57 rad)
+    //   D Stand        : East side   (~300°–360°/0°–30°   => ~5.24–6.28/0–0.52 rad)
+    // Gates mapped to real Chinnaswamy positions
+    class StadiumModel {
+        constructor(scene) {
+            this.scene = scene;
+            this.stadiumGroup = new THREE.Group();
+            this.zones = new Map();
+            this.PITCH_RADIUS = 48;  // crowd must stay outside this
+            this.build();
+        }
+
+        build() {
+            this.buildBase();
+            this.buildPitch();
+            this.buildBoundaryWalkway();
+            this.buildNamedStands();
+            this.buildCorridorNetwork();
+            this.buildGates();
+            this.buildRoofAndPillars();
+            this.scene.add(this.stadiumGroup);
+        }
+
+        buildBase() {
+            const baseGeo = new THREE.CircleGeometry(115, 80);
+            const baseMat = new THREE.MeshLambertMaterial({ color: 0x1a1c22 });
+            const base = new THREE.Mesh(baseGeo, baseMat);
+            base.rotation.x = -Math.PI / 2;
+            base.position.y = -0.1;
+            base.receiveShadow = true;
+            this.stadiumGroup.add(base);
+        }
+
+        buildPitch() {
+            // Green outfield
+            const outfieldGeo = new THREE.CircleGeometry(this.PITCH_RADIUS, 80);
+            const outfieldMat = new THREE.MeshLambertMaterial({ color: 0x2d6a1f });
+            const outfield = new THREE.Mesh(outfieldGeo, outfieldMat);
+            outfield.rotation.x = -Math.PI / 2;
+            outfield.receiveShadow = true;
+            this.stadiumGroup.add(outfield);
+
+            // Mowed stripes
+            for (let i = 0; i < 9; i++) {
+                const stripeGeo = new THREE.PlaneGeometry(this.PITCH_RADIUS * 2, 5.2);
+                const stripeMat = new THREE.MeshLambertMaterial({
+                    color: i % 2 === 0 ? 0x28601a : 0x327220,
+                    transparent: true, opacity: 0.55
+                });
+                const stripe = new THREE.Mesh(stripeGeo, stripeMat);
+                stripe.rotation.x = -Math.PI / 2;
+                stripe.position.set(0, 0.01, -22 + i * 5.8);
+                this.stadiumGroup.add(stripe);
+            }
+
+            // 22-yard centre pitch strip
+            const stripGeo = new THREE.PlaneGeometry(2.4, 20.12);
+            const stripMat = new THREE.MeshLambertMaterial({ color: 0xc4a050 });
+            const strip = new THREE.Mesh(stripGeo, stripMat);
+            strip.rotation.x = -Math.PI / 2;
+            strip.position.y = 0.02;
+            this.stadiumGroup.add(strip);
+
+            // Boundary rope circle
+            const bPts = [];
+            for (let i = 0; i <= 128; i++) {
+                const a = (i / 128) * Math.PI * 2;
+                bPts.push(new THREE.Vector3(Math.cos(a) * (this.PITCH_RADIUS - 1), 0.04, Math.sin(a) * (this.PITCH_RADIUS - 1)));
+            }
+            const boundaryGeo = new THREE.BufferGeometry().setFromPoints(bPts);
+            this.stadiumGroup.add(new THREE.Line(boundaryGeo, new THREE.LineBasicMaterial({ color: 0xffffff })));
+        }
+
+        buildBoundaryWalkway() {
+            // Inner walkway ring (between pitch and seating)
+            const walkGeo = new THREE.RingGeometry(this.PITCH_RADIUS, 63, 80);
+            const walkMat = new THREE.MeshLambertMaterial({ color: 0x3a3c42, side: THREE.DoubleSide });
+            const walk = new THREE.Mesh(walkGeo, walkMat);
+            walk.rotation.x = -Math.PI / 2;
+            walk.position.y = 0.02;
+            walk.receiveShadow = true;
+            this.stadiumGroup.add(walk);
+        }
+
+        // Helper: build one arc stand segment
+        _buildStandArc(innerR, outerR, startAngle, endAngle, tierCount, baseColor, yOffset) {
+            const arcSpan = endAngle - startAngle;
+            const segs = Math.max(12, Math.round(arcSpan / (Math.PI * 2) * 80));
+
+            for (let tier = 0; tier < tierCount; tier++) {
+                const ir = innerR + tier * 8;
+                const or = ir + 7.5;
+                const riseY = yOffset + tier * 4.2;
+
+                // Seat surface arc (THREE.RingGeometry with phi params)
+                const geo = new THREE.RingGeometry(ir, or, segs, 1, startAngle, arcSpan);
+                // Slightly vary color per tier
+                const c = new THREE.Color(baseColor);
+                c.offsetHSL(0, 0, (tier - 1) * 0.04);
+                const mat = new THREE.MeshLambertMaterial({ color: c, side: THREE.DoubleSide });
+                const mesh = new THREE.Mesh(geo, mat);
+                mesh.rotation.x = -Math.PI / 2;
+                mesh.position.y = riseY;
+                mesh.receiveShadow = true;
+                this.stadiumGroup.add(mesh);
+
+                // Riser face (partial cylinder)
+                const riserGeo = new THREE.CylinderGeometry(ir, ir + 0.4, 4.2, segs, 1, true, startAngle, arcSpan);
+                const riserMat = new THREE.MeshLambertMaterial({ color: 0x22242e });
+                const riser = new THREE.Mesh(riserGeo, riserMat);
+                riser.position.y = riseY - 2.1;
+                this.stadiumGroup.add(riser);
+            }
+        }
+
+        // Helper: canvas label floating above stand
+        _addStandLabel(text, angle, radius, yPos) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 320; canvas.height = 90;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(6,11,20,0.0)';
+            ctx.fillRect(0, 0, 320, 90);
+            ctx.fillStyle = '#c8ddf0';
+            ctx.font = 'bold 36px Courier New';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 160, 45);
+            const tex = new THREE.CanvasTexture(canvas);
+            const labGeo = new THREE.PlaneGeometry(12, 3.5);
+            const labMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
+            const label = new THREE.Mesh(labGeo, labMat);
+            label.position.set(Math.cos(angle) * radius, yPos, Math.sin(angle) * radius);
+            label.rotation.y = -angle + Math.PI / 2;
+            this.stadiumGroup.add(label);
+        }
+
+        buildNamedStands() {
+            // M. Chinnaswamy stand layout (angles in radians, measured from +X axis CCW in XZ plane)
+            // Using THREE's RingGeometry thetaStart convention (measured from +X, CCW when viewed from above)
+            // Stadium orientation: Pavilion=South(bottom of screen), North=top, East=right, West=left
+
+            const stands = [
+                {
+                    // Pavilion Stand – South side, largest stand, 3 tiers
+                    id: 'Pavilion',
+                    startAngle: Math.PI + Math.PI * 0.12,   // ~200°
+                    endAngle:   Math.PI * 2 - Math.PI * 0.12, // ~340°
+                    tierCount: 3,
+                    color: 0x1a4a9a,   // deeper blue
+                    capacity: 6000,
+                    corridorId: 'Corridor3'
+                },
+                {
+                    // A Stand – West side
+                    id: 'AStand',
+                    startAngle: Math.PI * 0.55,   // ~99°
+                    endAngle:   Math.PI + Math.PI * 0.12,  // ~200°
+                    tierCount: 2,
+                    color: 0x1e3e8a,
+                    capacity: 3500,
+                    corridorId: 'Corridor2'
+                },
+                {
+                    // B Stand – North side (between West and East, top)
+                    id: 'BStand',
+                    startAngle: -Math.PI * 0.45,  // ~-81° = 279°
+                    endAngle:   Math.PI * 0.55,   // ~99°
+                    tierCount: 2,
+                    color: 0x223880,
+                    capacity: 3500,
+                    corridorId: 'Corridor1'
+                },
+                {
+                    // C Stand – East side (right)
+                    id: 'CStand',
+                    startAngle: -Math.PI + Math.PI * 0.12, // ~-160°
+                    endAngle:   -Math.PI * 0.45,           // ~-81°
+                    tierCount: 2,
+                    color: 0x1c3070,
+                    capacity: 3000,
+                    corridorId: 'Corridor4'
+                },
+            ];
+
+            stands.forEach(stand => {
+                const arcSpan = stand.endAngle - stand.startAngle;
+                const midAngle = stand.startAngle + arcSpan * 0.5;
+                const innerR = 63;
+
+                this._buildStandArc(innerR, innerR + stand.tierCount * 8, stand.startAngle, stand.endAngle, stand.tierCount, stand.color, 0);
+
+                // Label at mid-arc, positioned at outer edge
+                const labelR = innerR + stand.tierCount * 8 + 4;
+                const labelY = stand.tierCount * 4.2 * 0.5 + 4;
+                this._addStandLabel(stand.id.replace('Stand', ' Stand'), midAngle, labelR, labelY);
+
+                // Register stand as a zone (mid-arc position, at inner ring)
+                const sr = innerR + stand.tierCount * 4; // mid-radius
+                this.zones.set(stand.id, {
+                    position: new THREE.Vector3(Math.cos(midAngle) * sr, stand.tierCount * 2, Math.sin(midAngle) * sr),
+                    capacity: stand.capacity,
+                    people: 0,
+                    color: stand.color,
+                    type: 'stand',
+                    startAngle: stand.startAngle,
+                    endAngle: stand.endAngle,
+                    innerR: innerR,
+                    outerR: innerR + stand.tierCount * 8,
+                    tierCount: stand.tierCount,
+                    corridorId: stand.corridorId
+                });
+
+                // Also register per-tier section zones for API compatibility (SectionX-TierY)
+                const sectionIdx = ['Pavilion','AStand','BStand','CStand'].indexOf(stand.id);
+                for (let t = 0; t < stand.tierCount; t++) {
+                    const zId = `Section${sectionIdx}-Tier${t}`;
+                    const tr = innerR + t * 8 + 4;
+                    this.zones.set(zId, {
+                        position: new THREE.Vector3(Math.cos(midAngle) * tr, t * 4.2 + 1, Math.sin(midAngle) * tr),
+                        capacity: Math.floor(stand.capacity / stand.tierCount),
+                        people: 0,
+                        color: stand.color,
+                        type: 'stand',
+                        startAngle: stand.startAngle,
+                        endAngle: stand.endAngle,
+                        innerR: innerR + t * 8,
+                        outerR: innerR + (t + 1) * 8,
+                        parentStand: stand.id
+                    });
+                }
+            });
+
+            // Outer wall
+            const wallGeo = new THREE.CylinderGeometry(100, 101, 42, 80, 1, true);
+            const wallMat = new THREE.MeshLambertMaterial({ color: 0x181a24, side: THREE.DoubleSide });
+            const wall = new THREE.Mesh(wallGeo, wallMat);
+            wall.position.y = 9;
+            this.stadiumGroup.add(wall);
+        }
+
+        buildCorridorNetwork() {
+            // Concourse ring (main circulation corridor between walkway and seating)
+            const concourseGeo = new THREE.RingGeometry(60, 64, 80);
+            const concourseMat = new THREE.MeshLambertMaterial({ color: 0x2e3040, side: THREE.DoubleSide });
+            const concourse = new THREE.Mesh(concourseGeo, concourseMat);
+            concourse.rotation.x = -Math.PI / 2;
+            concourse.position.y = 0.04;
+            concourse.receiveShadow = true;
+            this.stadiumGroup.add(concourse);
+
+            // 4 radial corridor paths (from concourse ring out to gate zones)
+            // Corridor1=North, Corridor2=West, Corridor3=South, Corridor4=East
+            const corridorDefs = [
+                { id: 'Corridor1', angle: Math.PI * 0.05,  label: 'North Corridor' },  // North
+                { id: 'Corridor2', angle: Math.PI * 0.78,  label: 'West Corridor'  },  // West
+                { id: 'Corridor3', angle: Math.PI * 1.5,   label: 'South Corridor' },  // South
+                { id: 'Corridor4', angle: -Math.PI * 0.3,  label: 'East Corridor'  },  // East
+            ];
+
+            const corridorMat = new THREE.MeshLambertMaterial({ color: 0x2a2d38 });
+            corridorDefs.forEach(c => {
+                // Radial path strip from concourse (r=60) out to gate zone (r=92)
+                const pathLen = 30;
+                const pathGeo = new THREE.PlaneGeometry(6, pathLen);
+                const pathMesh = new THREE.Mesh(pathGeo, corridorMat);
+                const midR = 62 + pathLen / 2 + 2;
+                pathMesh.rotation.x = -Math.PI / 2;
+                pathMesh.position.set(Math.cos(c.angle) * midR, 0.05, Math.sin(c.angle) * midR);
+                pathMesh.rotation.z = -c.angle; // orient along radial direction
+                // We need to rotate both x and z; use lookAt trick
+                const tmpGroup = new THREE.Group();
+                tmpGroup.position.copy(pathMesh.position);
+                pathMesh.position.set(0, 0, 0);
+                pathMesh.rotation.set(-Math.PI / 2, 0, -c.angle);
+                tmpGroup.add(pathMesh);
+                this.stadiumGroup.add(tmpGroup);
+
+                // Register corridor zone at mid-concourse radius
+                const cx = Math.cos(c.angle) * 62;
+                const cz = Math.sin(c.angle) * 62;
+                this.zones.set(c.id, {
+                    position: new THREE.Vector3(cx, 1, cz),
+                    capacity: 700,
+                    people: 0,
+                    color: 0xf59e0b,
+                    type: 'corridor',
+                    angle: c.angle
+                });
+            });
+        }
+
+        buildGates() {
+            // Real Chinnaswamy gate positions (8 gates, angles roughly mapped to real layout)
+            // Gate 1/A = Main entrance (South), Gate 2/B = Pavilion entrance, etc.
+            const gateRadius = 97;
+            const gateDefs = [
+                { id: 'GateA', angle: Math.PI * 1.5,        label: 'Gate A · Main'    }, // South main
+                { id: 'GateB', angle: Math.PI * 1.22,       label: 'Gate B'           }, // South-West
+                { id: 'GateC', angle: Math.PI * 0.9,        label: 'Gate C'           }, // West
+                { id: 'GateD', angle: Math.PI * 0.35,       label: 'Gate D'           }, // North-West
+                { id: 'GateE', angle: -Math.PI * 0.35,      label: 'Gate E'           }, // North-East
+                { id: 'GateF', angle: -Math.PI * 0.7,       label: 'Gate F'           }, // East
+                { id: 'GateG', angle: -Math.PI + 0.25,      label: 'Gate G'           }, // South-East
+                { id: 'GateH', angle: Math.PI * 1.75,       label: 'Gate H · VIP'    }, // South-West VIP
+            ];
+
+            const frameMat  = new THREE.MeshLambertMaterial({ color: 0x5ecf7a, emissive: 0x1a4a28, emissiveIntensity: 0.25 });
+            const postMat   = new THREE.MeshLambertMaterial({ color: 0x3a4455 });
+            const pathMat   = new THREE.MeshLambertMaterial({ color: 0x333640 });
+            const openingMat= new THREE.MeshLambertMaterial({ color: 0x0d1520 }); // dark gap
+
+            gateDefs.forEach(gate => {
+                const gx = Math.cos(gate.angle) * gateRadius;
+                const gz = Math.sin(gate.angle) * gateRadius;
+                const perpAngle = gate.angle + Math.PI / 2;
+
+                // Arch frame
+                const frameGeo = new THREE.TorusGeometry(3.5, 0.5, 6, 10, Math.PI);
+                const frame = new THREE.Mesh(frameGeo, frameMat);
+                frame.position.set(gx, 3.5, gz);
+                frame.rotation.y = -(gate.angle) + Math.PI / 2;
+                frame.castShadow = true;
+                this.stadiumGroup.add(frame);
+
+                // Two side posts
+                for (const side of [-1, 1]) {
+                    const postGeo = new THREE.CylinderGeometry(0.35, 0.4, 7, 6);
+                    const post = new THREE.Mesh(postGeo, postMat);
+                    post.position.set(
+                        gx + Math.cos(perpAngle) * 3.5 * side,
+                        3.5,
+                        gz + Math.sin(perpAngle) * 3.5 * side
+                    );
+                    post.castShadow = true;
+                    this.stadiumGroup.add(post);
+                }
+
+                // Dark opening cutout between posts (visual gap in wall)
+                const openGeo = new THREE.BoxGeometry(7, 7, 0.8);
+                const opening = new THREE.Mesh(openGeo, openingMat);
+                opening.position.set(gx * 0.97, 3.5, gz * 0.97);
+                opening.rotation.y = gate.angle;
+                this.stadiumGroup.add(opening);
+
+                // Entry path from gate inward to concourse
+                const pathLen = 32;
+                const midR = gateRadius - pathLen / 2 - 1;
+                const pathGeo = new THREE.PlaneGeometry(6, pathLen);
+                const pathMesh = new THREE.Mesh(pathGeo, pathMat);
+                pathMesh.position.set(Math.cos(gate.angle) * midR, 0.06, Math.sin(gate.angle) * midR);
+                pathMesh.rotation.x = -Math.PI / 2;
+                pathMesh.rotation.z = -gate.angle;
+                this.stadiumGroup.add(pathMesh);
+
+                // Gate label
+                this._addGateLabel(gate.label, [gx, 9, gz], gate.angle);
+
+                // Register gate zone (just inside the gate, on the entry path)
+                const zoneR = gateRadius - 10;
+                this.zones.set(gate.id, {
+                    position: new THREE.Vector3(Math.cos(gate.angle) * zoneR, 1, Math.sin(gate.angle) * zoneR),
+                    capacity: 280,
+                    people: 0,
+                    color: 0x5ecf7a,
+                    type: 'gate',
+                    angle: gate.angle
+                });
+            });
+        }
+
+        _addGateLabel(text, pos, angle) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 380; canvas.height = 90;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = 'rgba(6,11,20,0.0)';
+            ctx.fillRect(0, 0, 380, 90);
+            ctx.fillStyle = '#5ecf7a';
+            ctx.font = 'bold 38px Courier New';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, 190, 45);
+            const tex = new THREE.CanvasTexture(canvas);
+            const labGeo = new THREE.PlaneGeometry(11, 2.8);
+            const labMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
+            const label = new THREE.Mesh(labGeo, labMat);
+            label.position.set(pos[0], pos[1], pos[2]);
+            label.rotation.y = -angle + Math.PI / 2;
+            this.stadiumGroup.add(label);
+        }
+
+        buildRoofAndPillars() {
+            // Partial roof canopy (covers stands but not pitch)
+            const roofGeo = new THREE.RingGeometry(76, 102, 80);
+            const roofMat = new THREE.MeshLambertMaterial({ color: 0x0c0e18, side: THREE.DoubleSide, transparent: true, opacity: 0.92 });
+            const roof = new THREE.Mesh(roofGeo, roofMat);
+            roof.rotation.x = -Math.PI / 2;
+            roof.position.y = 32;
+            this.stadiumGroup.add(roof);
+
+            // Floodlight masts at 4 corners
+            const mastPositions = [
+                [85, 0, 85], [-85, 0, 85], [85, 0, -85], [-85, 0, -85]
+            ];
+            mastPositions.forEach(mp => {
+                const mastGeo = new THREE.CylinderGeometry(0.5, 0.9, 55, 6);
+                const mastMat = new THREE.MeshLambertMaterial({ color: 0x404450 });
+                const mast = new THREE.Mesh(mastGeo, mastMat);
+                mast.position.set(mp[0], 27.5, mp[2]);
+                mast.castShadow = true;
+                this.stadiumGroup.add(mast);
+
+                // Light cluster at top
+                const lightGeo = new THREE.BoxGeometry(6, 1.5, 3);
+                const lightMat = new THREE.MeshLambertMaterial({ color: 0xfff8d0, emissive: 0xfff0a0, emissiveIntensity: 0.6 });
+                const lightBox = new THREE.Mesh(lightGeo, lightMat);
+                lightBox.position.set(mp[0], 56, mp[2]);
+                this.stadiumGroup.add(lightBox);
+            });
+
+            // Roof support columns around perimeter
+            for (let i = 0; i < 20; i++) {
+                const a = (i / 20) * Math.PI * 2;
+                const pillarGeo = new THREE.CylinderGeometry(0.5, 0.7, 32, 6);
+                const pillarMat = new THREE.MeshLambertMaterial({ color: 0x252730 });
+                const pillar = new THREE.Mesh(pillarGeo, pillarMat);
+                pillar.position.set(Math.cos(a) * 90, 16, Math.sin(a) * 90);
+                pillar.castShadow = true;
+                this.stadiumGroup.add(pillar);
+            }
+        }
+
+        getZones()        { return this.zones; }
+        getStadiumGroup() { return this.stadiumGroup; }
+    }
+
+    // ==================== CrowdManager.js ====================
+    class CrowdManager {
+        constructor(scene, zones) {
+            this.scene  = scene;
+            this.zones  = zones;
+            this.people = [];
+            this.crowdGroup = new THREE.Group();
+            this.scene.add(this.crowdGroup);
+
+            // Body capsule geometry (slightly oval)
+            this.bodyGeo = new THREE.CylinderGeometry(0.28, 0.32, 1.65, 6);
+            // Head sphere
+            this.headGeo = new THREE.SphereGeometry(0.22, 6, 5);
+
+            this.MAX_PEOPLE = 1000;
+
+            // Instanced mesh for bodies
+            this.bodyMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+            this.bodyMesh = new THREE.InstancedMesh(this.bodyGeo, this.bodyMat, this.MAX_PEOPLE);
+            this.bodyMesh.castShadow = true;
+            this.bodyMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+            this.crowdGroup.add(this.bodyMesh);
+
+            // Instanced mesh for heads
+            this.headMat = new THREE.MeshLambertMaterial({ vertexColors: true });
+            this.headMesh = new THREE.InstancedMesh(this.headGeo, this.headMat, this.MAX_PEOPLE);
+            this.headMesh.castShadow = true;
+            this.headMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+            this.crowdGroup.add(this.headMesh);
+
+            this.bodyColors = new Float32Array(this.MAX_PEOPLE * 3);
+            this.headColors = new Float32Array(this.MAX_PEOPLE * 3);
+
+            // Pre-build color attribute buffers
+            this.bodyMesh.geometry.setAttribute('color', new THREE.InstancedBufferAttribute(this.bodyColors, 3));
+            this.headMesh.geometry.setAttribute('color', new THREE.InstancedBufferAttribute(this.headColors, 3));
+
+            this.time = 0;
+
+            // Palette of person colours (slight variation)
+            this.palette = [
+                new THREE.Color(0x5ecf7a),
+                new THREE.Color(0x4ab8e8),
+                new THREE.Color(0xe8a83a),
+                new THREE.Color(0xe85a5a),
+                new THREE.Color(0xa87ae8),
+                new THREE.Color(0xe8d460),
+                new THREE.Color(0x7ae8d4),
+                new THREE.Color(0xe8806a),
+            ];
+        }
+
+        // ---- Public API (integration-ready) ----
+        injectPeople(zoneId, count) {
+            for (let i = 0; i < count; i++) {
+                if (this.people.length >= this.MAX_PEOPLE) break;
+                this._spawnPerson(zoneId);
+            }
+        }
+
+        updateCrowdData(data) {
+            this.people = [];
+            for (const zone of (data.zones || [])) {
+                this.injectPeople(zone.id, zone.people);
+            }
+        }
+
+        clearCrowd() {
+            this.people = [];
+        }
+
+        getPeople() { return this.people; }
+        getCount()  { return this.people.length; }
+        removePerson(id) { this.people = this.people.filter(p => p.id !== id); }
+        // ---- End public API ----
+
+        _spawnPerson(zoneId) {
+            const zone = this.zones.get(zoneId);
+            if (!zone) return;
+
+            const PITCH_R = 50; // hard exclusion radius (slightly larger than visual pitch)
+
+            let pos;
+            if (zone.type === 'stand') {
+                // Spawn within the arc bounds of the stand
+                const arcSpan = zone.endAngle - zone.startAngle;
+                const randAngle = zone.startAngle + Math.random() * arcSpan;
+                const randR = zone.innerR + 1 + Math.random() * ((zone.outerR - zone.innerR) - 2);
+                const tierY = (zone.tierCount || 1) * Math.random() * 2.5 + 0.85;
+                pos = new THREE.Vector3(
+                    Math.cos(randAngle) * randR,
+                    tierY,
+                    Math.sin(randAngle) * randR
+                );
+            } else if (zone.type === 'gate') {
+                // Spawn on entry path (between gate and concourse)
+                const gateR = 88;
+                const concourseR = 65;
+                const r = concourseR + Math.random() * (gateR - concourseR);
+                const spread = 2.5;
+                pos = new THREE.Vector3(
+                    Math.cos(zone.angle) * r + (Math.random() - 0.5) * spread,
+                    0.85,
+                    Math.sin(zone.angle) * r + (Math.random() - 0.5) * spread
+                );
+            } else {
+                // Corridor: spread along concourse ring
+                const concAngle = zone.angle + (Math.random() - 0.5) * 0.9;
+                const r = 60 + Math.random() * 4;
+                pos = new THREE.Vector3(Math.cos(concAngle) * r, 0.85, Math.sin(concAngle) * r);
+            }
+
+            // Enforce pitch exclusion – push out if inside pitch radius
+            const flatR = Math.sqrt(pos.x * pos.x + pos.z * pos.z);
+            if (flatR < PITCH_R) {
+                const safeAngle = Math.atan2(pos.z, pos.x);
+                pos.x = Math.cos(safeAngle) * (PITCH_R + 2);
+                pos.z = Math.sin(safeAngle) * (PITCH_R + 2);
+            }
+
+            // Determine behaviour
+            const roll = Math.random();
+            let behaviour;
+            if (zone.type === 'gate') {
+                behaviour = roll < 0.65 ? 'entering' : roll < 0.85 ? 'toStand' : 'idle';
+            } else if (zone.type === 'corridor') {
+                behaviour = roll < 0.45 ? 'toStand' : roll < 0.75 ? 'circular' : 'idle';
+            } else {
+                // stand – mostly idle/seated with slight milling
+                behaviour = roll < 0.7 ? 'seated' : roll < 0.9 ? 'idle' : 'circular';
+            }
+
+            // Assign target stand for 'toStand' behaviour (nearest stand zone)
+            let targetStandAngle = zone.angle !== undefined ? zone.angle : Math.atan2(pos.z, pos.x);
+            let targetStandR = 75;
+            if (zone.type === 'gate' || zone.type === 'corridor') {
+                // pick a stand angle based on gate angle
+                targetStandAngle = zone.angle;
+                targetStandR = 72 + Math.random() * 10;
+            }
+
+            const speedMap = { idle: 0.015, circular: 0.055, entering: 0.05, toStand: 0.06, seated: 0.005 };
+            const speed = (speedMap[behaviour] || 0.02) + (Math.random() - 0.5) * 0.01;
+
+            const col = this.palette[Math.floor(Math.random() * this.palette.length)].clone();
+            col.offsetHSL(Math.random() * 0.06 - 0.03, Math.random() * 0.15 - 0.075, Math.random() * 0.15 - 0.075);
+
+            const person = {
+                id: `p_${Date.now()}_${this.people.length}`,
+                zoneId,
+                position: pos,
+                velocity: new THREE.Vector3(),
+                behaviour,
+                speed,
+                angle: Math.atan2(pos.z, pos.x) + Math.PI + (Math.random() - 0.5) * 0.4,
+                circularRadius: 62 + (Math.random() - 0.5) * 3,
+                circularAngle: Math.atan2(pos.z, pos.x),
+                circularDir: Math.random() < 0.5 ? 1 : -1,
+                targetStandAngle,
+                targetStandR,
+                bobPhase: Math.random() * Math.PI * 2,
+                color: col,
+                density: 0,
+                wobble: (Math.random() - 0.5) * 0.025,
+                seatedX: pos.x,   // locked position for seated behaviour
+                seatedZ: pos.z
+            };
+
+            this.people.push(person);
+        }
+
+        updatePositions() {
+            this.time += 0.016;
+            const PITCH_R = 50;  // strict pitch exclusion radius
+            const OUTER_R = 94;  // outer boundary
+
+            // Compute per-zone density for slowdown
+            const zoneCounts = new Map();
+            for (const p of this.people) {
+                zoneCounts.set(p.zoneId, (zoneCounts.get(p.zoneId) || 0) + 1);
+            }
+
+            for (const person of this.people) {
+                const zone = this.zones.get(person.zoneId);
+                const zoneCapacity = zone ? zone.capacity : 200;
+                const zoneCount    = zoneCounts.get(person.zoneId) || 0;
+                const localDensity = Math.min(1, zoneCount / zoneCapacity);
+                person.density = localDensity;
+
+                const densityFactor = 1 - localDensity * 0.65;
+                const effectiveSpeed = person.speed * densityFactor;
+
+                const bobAmp = (person.behaviour === 'idle' || person.behaviour === 'seated') ? 0.008 : 0.022;
+                const bobY = person.position.y + Math.sin(this.time * 8 + person.bobPhase) * bobAmp * 0.3;
+
+                if (person.behaviour === 'seated') {
+                    // Barely moves – gentle sway in place
+                    person.position.x = person.seatedX + Math.sin(this.time * 0.8 + person.bobPhase) * 0.06;
+                    person.position.z = person.seatedZ + Math.cos(this.time * 0.7 + person.bobPhase) * 0.06;
+                    // keep y from spawn
+
+                } else if (person.behaviour === 'entering') {
+                    // Walk inward from gate toward concourse ring (r~62)
+                    const flatR = Math.sqrt(person.position.x * person.position.x + person.position.z * person.position.z);
+                    if (flatR <= 65) {
+                        // Reached concourse – switch to toStand
+                        person.behaviour = 'toStand';
+                        person.circularAngle = Math.atan2(person.position.z, person.position.x);
+                    } else {
+                        const towardCenter = new THREE.Vector3(-person.position.x, 0, -person.position.z).normalize();
+                        towardCenter.x += person.wobble * Math.sin(this.time * 2);
+                        towardCenter.z += person.wobble * Math.cos(this.time * 1.8);
+                        person.position.x += towardCenter.x * effectiveSpeed;
+                        person.position.z += towardCenter.z * effectiveSpeed;
+                        person.position.y = 0.85;
+                    }
+
+                } else if (person.behaviour === 'toStand') {
+                    // Walk from concourse ring outward toward stand seating area
+                    const targetX = Math.cos(person.targetStandAngle) * person.targetStandR;
+                    const targetZ = Math.sin(person.targetStandAngle) * person.targetStandR;
+                    const dx = targetX - person.position.x;
+                    const dz = targetZ - person.position.z;
+                    const dist = Math.sqrt(dx * dx + dz * dz);
+                    if (dist < 2.5) {
+                        // Arrived – settle as seated
+                        person.behaviour = 'seated';
+                        person.seatedX = person.position.x;
+                        person.seatedZ = person.position.z;
+                    } else {
+                        person.position.x += (dx / dist) * effectiveSpeed + person.wobble * Math.sin(this.time);
+                        person.position.z += (dz / dist) * effectiveSpeed + person.wobble * Math.cos(this.time);
+                        person.position.y = 0.85;
+                    }
+
+                } else if (person.behaviour === 'circular') {
+                    // Walk along concourse ring
+                    person.circularAngle += effectiveSpeed * 0.009 * person.circularDir;
+                    const tx = Math.cos(person.circularAngle) * person.circularRadius;
+                    const tz = Math.sin(person.circularAngle) * person.circularRadius;
+                    person.position.x += (tx - person.position.x) * 0.06;
+                    person.position.z += (tz - person.position.z) * 0.06;
+                    person.position.x += Math.sin(this.time * 1.2 + person.bobPhase) * 0.012;
+                    person.position.z += Math.cos(this.time * 1.1 + person.bobPhase) * 0.012;
+                    person.position.y = 0.85;
+
+                } else {
+                    // Idle – very slow drift
+                    if (Math.random() < 0.01) person.angle += (Math.random() - 0.5) * 0.7;
+                    person.position.x += Math.cos(person.angle) * effectiveSpeed * 0.25;
+                    person.position.z += Math.sin(person.angle) * effectiveSpeed * 0.25;
+                    person.position.y = 0.85;
+                }
+
+                // ---- Hard pitch exclusion ----
+                const fx = person.position.x, fz = person.position.z;
+                const fr = Math.sqrt(fx * fx + fz * fz);
+                if (fr < PITCH_R) {
+                    const pushAngle = Math.atan2(fz, fx);
+                    person.position.x = Math.cos(pushAngle) * (PITCH_R + 1.5);
+                    person.position.z = Math.sin(pushAngle) * (PITCH_R + 1.5);
+                    // redirect away from pitch
+                    if (person.behaviour === 'entering' || person.behaviour === 'idle') {
+                        person.behaviour = 'toStand';
+                        person.targetStandAngle = pushAngle;
+                        person.targetStandR = 72 + Math.random() * 10;
+                    }
+                }
+
+                // ---- Outer boundary ----
+                const fr2 = Math.sqrt(person.position.x * person.position.x + person.position.z * person.position.z);
+                if (fr2 > OUTER_R) {
+                    const ba = Math.atan2(person.position.z, person.position.x);
+                    person.position.x = Math.cos(ba) * (OUTER_R - 1);
+                    person.position.z = Math.sin(ba) * (OUTER_R - 1);
+                    if (person.behaviour !== 'seated') person.behaviour = 'circular';
+                }
+
+                // Update zone assignment (nearest zone)
+                let nearestZone = person.zoneId;
+                let nearestDist = Infinity;
+                for (const [zid, z] of this.zones) {
+                    const d = person.position.distanceTo(z.position);
+                    if (d < nearestDist) { nearestDist = d; nearestZone = zid; }
+                }
+                person.zoneId = nearestZone;
+            }
+        }
+
+        renderInstances() {
+            const n = Math.min(this.people.length, this.MAX_PEOPLE);
+
+            for (let i = 0; i < n; i++) {
+                const person = this.people[i];
+
+                // Color shift based on density
+                const d = person.density;
+                const col = person.color.clone();
+                if (d > 0.7)      col.lerp(new THREE.Color(0xef4444), (d - 0.7) / 0.3);
+                else if (d > 0.4) col.lerp(new THREE.Color(0xf59e0b), (d - 0.4) / 0.3);
+
+                this.bodyColors[i * 3]     = col.r;
+                this.bodyColors[i * 3 + 1] = col.g;
+                this.bodyColors[i * 3 + 2] = col.b;
+                this.headColors[i * 3]     = col.r * 0.85;
+                this.headColors[i * 3 + 1] = col.g * 0.85;
+                this.headColors[i * 3 + 2] = col.b * 0.85;
+
+                // Body matrix
+                const bm = new THREE.Matrix4();
+                bm.setPosition(person.position.x, person.position.y, person.position.z);
+                this.bodyMesh.setMatrixAt(i, bm);
+
+                // Head matrix (offset up)
+                const hm = new THREE.Matrix4();
+                hm.setPosition(person.position.x, person.position.y + 1.05, person.position.z);
+                this.headMesh.setMatrixAt(i, hm);
+            }
+
+            // Hide unused instances
+            const dummy = new THREE.Matrix4();
+            dummy.makeScale(0, 0, 0);
+            for (let i = n; i < this.MAX_PEOPLE; i++) {
+                this.bodyMesh.setMatrixAt(i, dummy);
+                this.headMesh.setMatrixAt(i, dummy);
+            }
+
+            this.bodyMesh.count = n;
+            this.headMesh.count = n;
+            this.bodyMesh.instanceMatrix.needsUpdate = true;
+            this.headMesh.instanceMatrix.needsUpdate = true;
+            this.bodyMesh.geometry.getAttribute('color').needsUpdate = true;
+            this.headMesh.geometry.getAttribute('color').needsUpdate = true;
+            this.bodyMat.vertexColors = true;
+            this.headMat.vertexColors = true;
+        }
+    }
+
+    // ==================== DataConnector.js ====================
+    class DataConnector {
+        constructor(onDataReceived) {
+            this.onDataReceived = onDataReceived;
+            this.isRunning      = false;
+            this.updateInterval = 2000;
+            this.intervalId     = null;
+        }
+
+        startLiveMode() {
+            this.isRunning = true;
+            this.intervalId = setInterval(() => this.fetchMockData(), this.updateInterval);
+        }
+
+        startDemoMode() {
+            this.isRunning = true;
+            this.intervalId = setInterval(() => this.generateRandomData(), this.updateInterval);
+        }
+
+        stop() {
+            this.isRunning = false;
+            if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
+        }
+
+        fetchMockData() {
+            const mockData = {
+                timestamp: Date.now(),
+                zones: [
+                    { id: 'GateA', people: 40 + Math.floor(Math.random() * 80) },
+                    { id: 'GateB', people: 30 + Math.floor(Math.random() * 70) },
+                    { id: 'GateC', people: 25 + Math.floor(Math.random() * 60) },
+                    { id: 'GateD', people: 20 + Math.floor(Math.random() * 55) },
+                    { id: 'GateE', people: 15 + Math.floor(Math.random() * 50) },
+                    { id: 'GateF', people: 20 + Math.floor(Math.random() * 60) },
+                    { id: 'GateG', people: 18 + Math.floor(Math.random() * 45) },
+                    { id: 'GateH', people: 30 + Math.floor(Math.random() * 65) },
+                    { id: 'Corridor1', people: 60 + Math.floor(Math.random() * 120) },
+                    { id: 'Corridor2', people: 50 + Math.floor(Math.random() * 100) },
+                    { id: 'Corridor3', people: 55 + Math.floor(Math.random() * 110) },
+                    { id: 'Corridor4', people: 45 + Math.floor(Math.random() * 90)  },
+                    { id: 'Pavilion',  people: 80 + Math.floor(Math.random() * 160) },
+                    { id: 'AStand',    people: 50 + Math.floor(Math.random() * 120) },
+                    { id: 'BStand',    people: 45 + Math.floor(Math.random() * 110) },
+                    { id: 'CStand',    people: 40 + Math.floor(Math.random() * 100) },
+                ],
+                metadata: { source: 'YOLO-Detection', confidence: 0.92 }
+            };
+            this.onDataReceived(mockData);
+        }
+
+        generateRandomData() {
+            const zones = [
+                'GateA','GateB','GateC','GateD','GateE','GateF','GateG','GateH',
+                'Corridor1','Corridor2','Corridor3','Corridor4',
+                'Pavilion','AStand','BStand','CStand'
+            ];
+            const zoneData = zones.map(id => ({
+                id,
+                people: Math.floor(Math.random() * 180)
+            }));
+            this.onDataReceived({ timestamp: Date.now(), zones: zoneData, metadata: { source: 'Demo-Mode', confidence: 1.0 } });
+        }
+
+        injectCustomData(data) {
+            this.onDataReceived(data);
+        }
+    }
+
+    // ==================== App.js ====================
+    class StadiumSimulation {
+        constructor() {
+            this.container    = document.getElementById('canvas-container');
+            this.sceneManager = new SceneManager(this.container);
+            this.stadiumModel = new StadiumModel(this.sceneManager.getScene());
+            this.crowdManager = new CrowdManager(this.sceneManager.getScene(), this.stadiumModel.getZones());
+            this.dataConnector = new DataConnector((data) => this.onDataReceived(data));
+
+            this.isRunning   = false;
+            this.currentMode = 'live';
+            this.stats = { totalPeople: 0, avgDensity: 0, zoneStats: new Map() };
+
+            this.setupUI();
+            this.setupAnimationLoop();
+        }
+
+        setupUI() {
+            document.getElementById('btn-live-mode').addEventListener('click', () => this.setMode('live'));
+            document.getElementById('btn-demo-mode').addEventListener('click', () => this.setMode('demo'));
+            document.getElementById('btn-start').addEventListener('click', () => this.start());
+            document.getElementById('btn-stop').addEventListener('click', () => this.stop());
+            document.getElementById('btn-reset').addEventListener('click', () => this.reset());
+            document.getElementById('btn-cam-overview').addEventListener('click', () => this.sceneManager.setCameraPreset('overview'));
+            document.getElementById('btn-cam-gate').addEventListener('click', () => this.sceneManager.setCameraPreset('gates'));
+            document.getElementById('btn-cam-corridor').addEventListener('click', () => this.sceneManager.setCameraPreset('corridor'));
+        }
+
+        setupAnimationLoop() {
+            const animate = () => {
+                requestAnimationFrame(animate);
+                if (this.isRunning) this.crowdManager.updatePositions();
+                this.crowdManager.renderInstances();
+                this.updateStats();
+                this.updateUI();
+                this.sceneManager.render();
+            };
+            animate();
+        }
+
+        setMode(mode) {
+            this.currentMode = mode;
+            document.getElementById('btn-live-mode').classList.toggle('active', mode === 'live');
+            document.getElementById('btn-demo-mode').classList.toggle('active', mode === 'demo');
+            if (this.isRunning) { this.dataConnector.stop(); this.start(); }
+        }
+
+        start() {
+            this.isRunning = true;
+            if (this.currentMode === 'live') this.dataConnector.startLiveMode();
+            else                             this.dataConnector.startDemoMode();
+        }
+
+        stop() {
+            this.isRunning = false;
+            this.dataConnector.stop();
+        }
+
+        reset() {
+            this.crowdManager.clearCrowd();
+            this.dataConnector.stop();
+            this.isRunning = false;
+            this.updateStats();
+            this.updateUI();
+        }
+
+        onDataReceived(data) {
+            if (!this.isRunning) return;
+            this.crowdManager.updateCrowdData(data);
+        }
+
+        updateStats() {
+            const people = this.crowdManager.getPeople();
+            this.stats.totalPeople = people.length;
+            const zones = this.stadiumModel.getZones();
+            let totalDensity = 0, activeZones = 0;
+            this.stats.zoneStats.clear();
+
+            for (const [zoneId, zone] of zones) {
+                const pop     = people.filter(p => p.zoneId === zoneId).length;
+                const density = Math.min(1, pop / zone.capacity);
+                if (pop > 0) { activeZones++; totalDensity += density; }
+                this.stats.zoneStats.set(zoneId, {
+                    population: pop, capacity: zone.capacity,
+                    density, densityPercent: Math.round(density * 100)
+                });
+            }
+            this.stats.avgDensity = activeZones > 0 ? totalDensity / activeZones : 0;
+        }
+
+        updateUI() {
+            document.getElementById('stat-total').textContent   = this.stats.totalPeople;
+            document.getElementById('stat-density').textContent = Math.round(this.stats.avgDensity * 100) + '%';
+            document.getElementById('stat-zones').textContent   = Array.from(this.stats.zoneStats.values()).filter(z => z.population > 0).length;
+            document.getElementById('stat-fps').textContent     = this.sceneManager.fps;
+
+            const zoneList = document.getElementById('zone-list');
+            let html = '';
+            for (const [zoneId, stat] of this.stats.zoneStats) {
+                if (stat.population > 0) {
+                    const dc = stat.density > 0.7 ? '#ef4444' : stat.density > 0.4 ? '#f59e0b' : '#22c55e';
+                    html += `<div class="zone-item">
+                        <span class="zone-label">${zoneId}</span>
+                        <span class="zone-count">${stat.population}</span>
+                        <span class="zone-density" style="background:${dc}22;color:${dc}">${stat.densityPercent}%</span>
+                    </div>`;
+                }
+            }
+            zoneList.innerHTML = html || '<div style="color:#3a5a4a;padding:6px;">No active zones</div>';
+
+            document.getElementById('density-fill').style.width = Math.round(this.stats.avgDensity * 100) + '%';
+        }
+    }
+
+    // ==================== Crowd Control Functions ====================
+
+    function addPeople(zone, count) {
+        const app = window.simulationApp;
+        if (!app) return;
+        app.crowdManager.injectPeople(zone, count);
+    }
+
+    function clearAll() {
+        const app = window.simulationApp;
+        if (!app) return;
+        app.reset();
+        if (window._stampedeActive) {
+            window._stampedeActive = false;
+            document.getElementById('btn-stampede').classList.remove('active');
+            clearInterval(window._stampedeInterval);
+        }
+    }
+
+    function fillStadium() {
+        const app = window.simulationApp;
+        if (!app) return;
+        ['GateA','GateB','GateC','GateD','GateE','GateF','GateG','GateH'].forEach(g => {
+            app.crowdManager.injectPeople(g, 100 + Math.floor(Math.random() * 100));
+        });
+        ['Corridor1','Corridor2','Corridor3','Corridor4'].forEach(c => {
+            app.crowdManager.injectPeople(c, 400 + Math.floor(Math.random() * 400));
+        });
+        ['Pavilion','AStand','BStand','CStand'].forEach(s => {
+            app.crowdManager.injectPeople(s, 150 + Math.floor(Math.random() * 150));
+        });
+    }
+
+    // ==================== Stampede Simulation ====================
+
+    window._stampedeActive   = false;
+    window._stampedeInterval = null;
+
+    function triggerStampede() {
+        const app = window.simulationApp;
+        if (!app) return;
+
+        window._stampedeActive = !window._stampedeActive;
+        const btn = document.getElementById('btn-stampede');
+
+        if (!window._stampedeActive) {
+            btn.classList.remove('active');
+            clearInterval(window._stampedeInterval);
+            app.crowdManager.people.forEach(p => {
+                if (p._stampedeMode) {
+                    p.speed = p._baseSpeed || p.speed;
+                    p.wobble = (Math.random() - 0.5) * 0.025;
+                    p._stampedeMode = false;
+                }
+            });
+            return;
+        }
+
+        btn.classList.add('active');
+        _doStampedeInject(app);
+
+        app.crowdManager.people.forEach(p => {
+            p._baseSpeed = p.speed;
+            p.speed = p.speed * 2.2 + 0.04;
+            p._stampedeMode = true;
+            p.wobble = (Math.random() - 0.5) * 0.18;
+            if (p.behaviour === 'seated' || p.behaviour === 'idle') {
+                p.behaviour = Math.random() < 0.6 ? 'entering' : 'circular';
+            }
+        });
+
+        window._stampedeInterval = setInterval(() => {
+            if (!window._stampedeActive) { clearInterval(window._stampedeInterval); return; }
+            _doStampedeInject(app);
+        }, 1200);
+    }
+
+    function _doStampedeInject(app) {
+        ['GateA','GateB','GateC','GateD','GateE','GateF','GateG','GateH'].forEach(g => {
+            app.crowdManager.injectPeople(g, 40 + Math.floor(Math.random() * 30));
+        });
+        app.crowdManager.injectPeople('Corridor1', 120 + Math.floor(Math.random() * 80));
+
+        app.crowdManager.people.slice(-500).forEach(p => {
+            if (p._stampedeMode) return;
+            p._baseSpeed = p.speed;
+            p.speed = p.speed * 2.0 + 0.035;
+            p._stampedeMode = true;
+            p.wobble = (Math.random() - 0.5) * 0.18;
+            if (p.behaviour === 'seated') p.behaviour = 'entering';
+        });
+    }
+
+    // ==================== Heatmap Overlay ====================
+
+    window._heatmapEnabled  = false;
+    window._heatmapPlane    = null;
+    window._heatmapTexture  = null;
+    window._heatmapCanvas   = null;
+    window._heatmapInterval = null;
+
+    function toggleHeatmap() {
+        window._heatmapEnabled = !window._heatmapEnabled;
+        const btn    = document.getElementById('btn-heatmap-toggle');
+        const status = document.getElementById('heatmap-status');
+
+        if (window._heatmapEnabled) {
+            btn.textContent = 'Disable Heatmap';
+            btn.classList.add('active');
+            status.textContent = 'Heatmap: ON — fetching…';
+            _initHeatmapPlane();
+            sendToHeatmap();
+            window._heatmapInterval = setInterval(sendToHeatmap, 1500);
+        } else {
+            btn.textContent = 'Enable Heatmap';
+            btn.classList.remove('active');
+            status.textContent = 'Heatmap: OFF';
+            clearInterval(window._heatmapInterval);
+            if (window._heatmapPlane) window._heatmapPlane.visible = false;
+        }
+    }
+
+    function _initHeatmapPlane() {
+        const app = window.simulationApp;
+        if (!app) return;
+        if (window._heatmapPlane) { window._heatmapPlane.visible = true; return; }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = 500; canvas.height = 500;
+        const tex = new THREE.CanvasTexture(canvas);
+        window._heatmapTexture = tex;
+        window._heatmapCanvas  = canvas;
+
+        const geo = new THREE.PlaneGeometry(200, 200);
+        const mat = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            opacity: 0.52,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending
+        });
+        const plane = new THREE.Mesh(geo, mat);
+        plane.rotation.x = -Math.PI / 2;
+        plane.position.y = 3.5;
+        app.sceneManager.getScene().add(plane);
+        window._heatmapPlane = plane;
+    }
+
+    async function sendToHeatmap() {
+        const app = window.simulationApp;
+        if (!app || !window._heatmapEnabled) return;
+
+        const people  = app.crowdManager.getPeople();
+        const scale   = 500 / 200;   // world ±100 → image 0–500
+        const offset  = 250;
+
+        const positions = people.map(p => [
+            Math.round(p.position.x * scale + offset),
+            Math.round(p.position.z * scale + offset)
+        ]);
+
+        try {
+            const resp = await fetch('http://localhost:5000/heatmap', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ positions })
+            });
+            if (!resp.ok) throw new Error('HTTP ' + resp.status);
+
+            const blob = await resp.blob();
+            const url  = URL.createObjectURL(blob);
+
+            const img = new Image();
+            img.onload = () => {
+                const ctx = window._heatmapCanvas.getContext('2d');
+                ctx.clearRect(0, 0, 500, 500);
+                ctx.drawImage(img, 0, 0, 500, 500);
+                window._heatmapTexture.needsUpdate = true;
+                URL.revokeObjectURL(url);
+                document.getElementById('heatmap-status').textContent =
+                    `Heatmap: ON — ${people.length} pts`;
+            };
+            img.src = url;
+        } catch (e) {
+            document.getElementById('heatmap-status').textContent = 'Heatmap: server offline';
+        }
+    }
+
+    // ==================== Main ====================
+    window.addEventListener('DOMContentLoaded', () => {
+        const app = new StadiumSimulation();
+        window.simulationApp = app;
+    });
+    </script>
+</body>
+</html>
