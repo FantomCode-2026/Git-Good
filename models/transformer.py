@@ -90,14 +90,39 @@ class TemporalTransformerEncoder(nn.Module):
         
         self.transformer_encoder = nn.TransformerEncoder(
             encoder_layer,
-            num_layers=num_layers
+            num_layers=num_layers,
+            enable_nested_tensor=False,
         )
         
         # Layer normalization
         self.layer_norm = nn.LayerNorm(d_model)
+
+        self._init_simulated_weights()
         
         logger.info(f"Initialized TemporalTransformerEncoder with {num_layers} layers, "
                    f"{nhead} heads, {d_model} dimensions")
+
+    def _init_simulated_weights(self):
+        """
+        Initialize the untrained/demo transformer so it preserves useful visual
+        features before applying temporal mixing.
+        """
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                if module.bias is not None:
+                    nn.init.zeros_(module.bias)
+            elif isinstance(module, nn.LayerNorm):
+                nn.init.ones_(module.weight)
+                nn.init.zeros_(module.bias)
+
+        if self.input_projection.weight.shape[0] == self.input_projection.weight.shape[1]:
+            with torch.no_grad():
+                self.input_projection.weight.copy_(
+                    torch.eye(self.d_model, device=self.input_projection.weight.device)
+                )
+                self.input_projection.weight.add_(torch.randn_like(self.input_projection.weight) * 0.005)
+                self.input_projection.bias.zero_()
     
     def forward(self, x: torch.Tensor, 
                 mask: Optional[torch.Tensor] = None,
@@ -131,7 +156,11 @@ class TemporalTransformerEncoder(nn.Module):
         
         return output
     
-    def get_sequence_embedding(self, x: torch.Tensor) -> torch.Tensor:
+    def get_sequence_embedding(
+        self,
+        x: torch.Tensor,
+        key_padding_mask: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
         """
         Get a single embedding representing the entire sequence
         Uses mean pooling over the sequence dimension
@@ -143,10 +172,14 @@ class TemporalTransformerEncoder(nn.Module):
             Sequence embedding of shape (batch_size, d_model)
         """
         # Pass through transformer
-        encoded = self.forward(x)
-        
-        # Mean pooling over sequence dimension
-        sequence_embedding = encoded.mean(dim=1)
+        encoded = self.forward(x, key_padding_mask=key_padding_mask)
+
+        if key_padding_mask is not None:
+            valid_mask = (~key_padding_mask).unsqueeze(-1).type_as(encoded)
+            valid_counts = valid_mask.sum(dim=1).clamp_min(1.0)
+            sequence_embedding = (encoded * valid_mask).sum(dim=1) / valid_counts
+        else:
+            sequence_embedding = encoded.mean(dim=1)
         
         return sequence_embedding
     
@@ -218,7 +251,10 @@ class TemporalFeatureProcessor:
         padding_mask = torch.stack(masks).to(self.device)
         
         # Get sequence embeddings
-        embeddings = self.model.get_sequence_embedding(batch_tensor)
+        embeddings = self.model.get_sequence_embedding(
+            batch_tensor,
+            key_padding_mask=padding_mask,
+        )
         
         return embeddings.cpu()
     

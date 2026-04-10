@@ -9,6 +9,7 @@ torchvision>=0.15.0
 # Computer Vision
 opencv-python>=4.8.0
 ultralytics>=8.0.0
+mediapipe>=0.10.0
 
 # Tracking (DeepSORT)
 deep-sort-realtime>=1.3.0

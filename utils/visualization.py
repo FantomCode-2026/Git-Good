@@ -6,7 +6,6 @@ import cv2
 import numpy as np
 from typing import List, Dict, Tuple, Optional
 from loguru import logger
-
 class Visualizer:
     """
     Handles all visualization for the crowd behavior analysis system
@@ -26,6 +25,7 @@ class Visualizer:
         self.behavior_colors = {
             'NORMAL': config.visualization.bbox_color_normal,
             'FALL_DETECTED': config.visualization.bbox_color_fall,
+            'FALL_RISK': (0, 140, 255),
             'ABNORMAL_BEHAVIOR': config.visualization.bbox_color_abnormal,
             'SUSPICIOUS': (0, 165, 255),  # Orange
             'VIOLENT': (0, 0, 255),  # Red
@@ -104,7 +104,8 @@ class Visualizer:
                            bbox: List[int],
                            behavior_label: str = "NORMAL",
                            confidence: float = 1.0,
-                           anomaly_score: Optional[float] = None) -> np.ndarray:
+                           anomaly_score: Optional[float] = None,
+                           fall_probability: Optional[float] = None) -> np.ndarray:
         """
         Draw a tracked person with ID and behavior information
         
@@ -126,6 +127,8 @@ class Visualizer:
         label = f"ID:{track_id} | {behavior_label}"
         if anomaly_score is not None:
             label += f" | A:{anomaly_score:.2f}"
+        if fall_probability is not None:
+            label += f" | F:{fall_probability:.2f}"
         
         # Draw bounding box
         frame = self.draw_bbox(frame, bbox, label, color, confidence)
@@ -137,7 +140,8 @@ class Visualizer:
                         people_count: int,
                         density: float,
                         active_tracks: int,
-                        fps: float = 0) -> np.ndarray:
+                        fps: float = 0,
+                        prediction_result: Optional[Dict] = None) -> np.ndarray:
         """
         Draw crowd statistics overlay
         
@@ -155,7 +159,8 @@ class Visualizer:
         
         # Create semi-transparent overlay
         overlay = frame.copy()
-        cv2.rectangle(overlay, (10, 10), (300, 130), 
+        bottom = 190 if prediction_result else 130
+        cv2.rectangle(overlay, (10, 10), (360, bottom),
                      self.config.visualization.background_color, -1)
         frame = cv2.addWeighted(overlay, self.config.visualization.opacity, 
                                frame, 1 - self.config.visualization.opacity, 0)
@@ -173,6 +178,13 @@ class Visualizer:
             f"Density: {density:.2%}",
             f"FPS: {fps:.1f}"
         ]
+
+        if prediction_result:
+            stats.extend([
+                f"Pred Risk: {prediction_result['fused_risk']:.1f}",
+                f"Flow: {prediction_result['flow_status']}",
+                f"Issue: {prediction_result['problem']}",
+            ])
         
         for i, stat in enumerate(stats):
             cv2.putText(frame, stat, (20, y_offset + i * 25), 
@@ -199,45 +211,28 @@ class Visualizer:
             return frame
         
         h, w = frame.shape[:2]
-        grid_h, grid_w = density_grid.shape
-        
-        # Create heatmap
-        heatmap = np.zeros((h, w, 3), dtype=np.uint8)
-        
-        # Calculate cell dimensions
-        cell_h = h // grid_h
-        cell_w = w // grid_w
-        
-        # Color map for density (blue -> green -> red)
-        for i in range(grid_h):
-            for j in range(grid_w):
-                density = density_grid[i, j]
-                
-                # Color based on density
-                if density < 0.3:
-                    color = (255, 0, 0)  # Blue (low density)
-                elif density < 0.6:
-                    # Green to yellow
-                    ratio = (density - 0.3) / 0.3
-                    color = (0, int(255 * (1 - ratio)), int(255 * ratio))
-                else:
-                    # Yellow to red
-                    ratio = (density - 0.6) / 0.4
-                    color = (0, int(255 * (1 - ratio)), 255)
-                
-                # Fill cell
-                y1 = i * cell_h
-                y2 = (i + 1) * cell_h
-                x1 = j * cell_w
-                x2 = (j + 1) * cell_w
-                
-                heatmap[y1:y2, x1:x2] = color
-        
-        # Blend heatmap with original frame
-        frame = cv2.addWeighted(heatmap, alpha, frame, 1 - alpha, 0)
-        
-        return frame
-    
+        if density_grid.size == 0:
+            return frame
+
+        density = np.nan_to_num(density_grid.astype(np.float32), nan=0.0, posinf=1.0, neginf=0.0)
+        density = np.clip(density, 0.0, 1.0)
+        density = cv2.resize(density, (w, h), interpolation=cv2.INTER_CUBIC)
+
+        blur_kernel = max(3, (min(h, w) // 35) | 1)
+        density = cv2.GaussianBlur(density, (blur_kernel, blur_kernel), 0)
+        density = np.clip(density, 0.0, 1.0)
+
+        heatmap_u8 = (density * 255).astype(np.uint8)
+        heatmap = cv2.applyColorMap(heatmap_u8, cv2.COLORMAP_TURBO)
+
+        alpha_map = (density * alpha)[..., None]
+        blended = (
+            frame.astype(np.float32) * (1.0 - alpha_map)
+            + heatmap.astype(np.float32) * alpha_map
+        )
+
+        return blended.astype(np.uint8)
+
     def draw_alert(self,
                   frame: np.ndarray,
                   alert_message: str,

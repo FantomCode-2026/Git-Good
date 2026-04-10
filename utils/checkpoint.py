@@ -36,9 +36,38 @@ def load_state_dict_flexible(
             key = key[len("module.") :]
         cleaned_state_dict[key] = value
 
-    missing_keys, unexpected_keys = model.load_state_dict(cleaned_state_dict, strict=False)
+    model_state = model.state_dict()
+    compatible_state_dict = {}
+    skipped_keys = []
+    for key, value in cleaned_state_dict.items():
+        if key not in model_state:
+            continue
+        if hasattr(model_state[key], "shape") and hasattr(value, "shape"):
+            if tuple(model_state[key].shape) != tuple(value.shape):
+                skipped_keys.append(key)
+                continue
+        compatible_state_dict[key] = value
+
+    missing_keys, unexpected_keys = model.load_state_dict(compatible_state_dict, strict=False)
     return {
         "path": str(Path(checkpoint_path)),
         "missing_keys": missing_keys,
         "unexpected_keys": unexpected_keys,
+        "skipped_keys": skipped_keys,
     }
+
+
+def read_checkpoint_metadata(checkpoint_path: str) -> Dict[str, Any]:
+    """
+    Read non-state metadata from a checkpoint when available.
+    """
+    checkpoint = torch.load(checkpoint_path, map_location="cpu")
+    if not isinstance(checkpoint, dict):
+        return {}
+
+    metadata = {}
+    for key, value in checkpoint.items():
+        if isinstance(value, dict):
+            continue
+        metadata[key] = value
+    return metadata

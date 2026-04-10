@@ -1,0 +1,139 @@
+{
+  "timestamp": "2026-04-10T22:21:54.327137",
+  "config": {
+    "model": {
+      "yolo_model_name": "yolov8n.pt",
+      "yolo_confidence_threshold": 0.5,
+      "yolo_iou_threshold": 0.45,
+      "detection_classes": [
+        0
+      ],
+      "resnet_feature_dim": 512,
+      "resnet_pretrained": true,
+      "transformer_d_model": 512,
+      "transformer_nhead": 8,
+      "transformer_num_layers": 4,
+      "transformer_dim_feedforward": 2048,
+      "transformer_dropout": 0.1,
+      "transformer_weights": null,
+      "classifier_weights": null,
+      "num_classes": 3,
+      "anomaly_threshold": 0.7
+    },
+    "pipeline": {
+      "target_fps": 30,
+      "frame_skip": 2,
+      "max_frame_queue_size": 128,
+      "detector_imgsz": 960,
+      "enable_pose_features": true,
+      "max_cosine_distance": 0.35,
+      "nn_budget": 200,
+      "max_iou_distance": 0.85,
+      "max_age": 60,
+      "n_init": 1,
+      "tracker_type": "iou",
+      "sequence_length": 30,
+      "min_sequence_length": 10,
+      "overlap_threshold": 0.5,
+      "feature_batch_size": 64
+    },
+    "paths": {
+      "base_dir": "/Users/chaitanya/projects/hackathon thing idk",
+      "data_dir": "/Users/chaitanya/projects/hackathon thing idk/data",
+      "sample_videos_dir": "/Users/chaitanya/projects/hackathon thing idk/data/sample_videos",
+      "output_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs",
+      "logs_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/logs",
+      "videos_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/videos",
+      "reports_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/reports",
+      "yolo_weights": null,
+      "resnet_weights": null,
+      "transformer_weights": null,
+      "pose_landmarker_task": "/Users/chaitanya/projects/hackathon thing idk/pose_landmarker.task"
+    },
+    "visualization": {
+      "show_display": true,
+      "save_output_video": true,
+      "save_annotated_frames": false,
+      "bbox_color_normal": [
+        0,
+        255,
+        0
+      ],
+      "bbox_color_abnormal": [
+        0,
+        0,
+        255
+      ],
+      "bbox_color_fall": [
+        0,
+        0,
+        255
+      ],
+      "text_color": [
+        255,
+        255,
+        255
+      ],
+      "background_color": [
+        0,
+        0,
+        0
+      ],
+      "font_scale": 0.6,
+      "font_thickness": 2,
+      "show_confidence": true,
+      "show_density_map": true,
+      "opacity": 0.6
+    },
+    "logging": {
+      "log_level": "INFO",
+      "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+      "log_file_name": "crowd_ai.log",
+      "max_log_file_size_mb": 10,
+      "backup_count": 5
+    },
+    "metrics": {
+      "frame_area_threshold": 0.3,
+      "density_grid_size": 10,
+      "movement_history_length": 10,
+      "velocity_threshold_normal": 50.0,
+      "velocity_threshold_anomaly": 200.0,
+      "fall_confidence_threshold": 0.8,
+      "anomaly_score_threshold": 0.7,
+      "crowd_density_threshold": 0.5,
+      "hybrid_fall_heuristic_weight": 0.75,
+      "hybrid_fall_model_weight": 0.25,
+      "fall_probability_smoothing": 0.65,
+      "hybrid_fall_pose_weight": 0.35,
+      "hybrid_fall_motion_weight": 0.65
+    }
+  },
+  "summary": {
+    "total_frames": 114,
+    "avg_people_count": 30.105263157894736,
+    "max_people_count": 37,
+    "avg_density": 0.4441122115506101,
+    "max_density": 0.5685956790123456,
+    "avg_anomaly_score": 0.0,
+    "avg_predicted_future_risk": 99.83314020424558,
+    "max_predicted_future_risk": 100.0,
+    "avg_fused_risk": 89.9621937936649,
+    "max_fused_risk": 91.75,
+    "total_alerts": 0,
+    "alerts_by_type": {},
+    "processed_frames": 114,
+    "source_frames_read": 341,
+    "frame_stride": 3,
+    "total_processing_time": 78.92751002311707,
+    "avg_fps": 1.444363314725253,
+    "prediction_layer": {
+      "latest_future_risk": 100.0,
+      "latest_fused_risk": 89.0,
+      "latest_problem": "BOTTLENECK",
+      "latest_flow_status": "chaotic",
+      "model_loaded": true
+    }
+  },
+  "alerts": [],
+  "device": "mps"
+}

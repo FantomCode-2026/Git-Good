@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Angala Parameswari Temple – 3D Simulation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0b0b0b; overflow: hidden; font-family: Arial, Helvetica, sans-serif; }
+  #canvas-container { width: 100vw; height: 100vh; }
+  #ui-overlay {
+    position: fixed; top: 18px; left: 18px; z-index: 100;
+    color: #ffffff;
+    pointer-events: none;
+  }
+  #ui-overlay h1 { font-size: 18px; letter-spacing: 0; font-weight: 700; }
+  #ui-overlay p  { font-size: 12px; color: #d2d2d2; margin-top: 5px; letter-spacing: 0; }
+  #zone-info {
+    position: fixed; bottom: 18px; left: 18px; z-index: 100;
+    font-size: 11px; color: #d8d8d8; letter-spacing: 0;
+    pointer-events: none;
+  }
+  #controls-hint {
+    position: fixed; top: 18px; right: 18px; z-index: 100;
+    color: #d8d8d8; font-size: 11px; text-align: right;
+    letter-spacing: 0; pointer-events: none; line-height: 1.7;
+  }
+  #crowd-stats {
+    position: fixed; bottom: 18px; right: 18px; z-index: 200;
+    font-size: 11px; color: #ffffff; letter-spacing: 0;
+    text-align: right; pointer-events: none;
+  }
+  #prediction-panel {
+    position: fixed; top: 70px; left: 18px; z-index: 120;
+    min-width: 260px; max-width: 340px;
+    border: 1px solid #ffffff22; border-radius: 8px;
+    background: #101010cc;
+    color: #f3f3f3; padding: 12px 14px;
+    box-shadow: 0 10px 28px #00000055;
+    backdrop-filter: blur(10px);
+    font-size: 12px; letter-spacing: 0;
+  }
+  #prediction-panel h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0;
+    margin-bottom: 7px; color: #ffffff;
+  }
+  #prediction-panel p { margin-top: 5px; color: #d8d8d8; line-height: 1.45; }
+  #prediction-panel .hot { color: #ff6b4a; }
+  #prediction-panel .watch { color: #ffd166; }
+  #prediction-panel .calm { color: #a7f3d0; }
+  #heatmap-panel {
+    position: fixed; top: 70px; right: 18px; z-index: 130;
+    width: 320px;
+    border: 1px solid #ffffff22; border-radius: 8px;
+    background: #101010cc;
+    box-shadow: 0 10px 28px #00000055;
+    backdrop-filter: blur(10px);
+    padding: 12px;
+  }
+  #heatmap-panel h2 {
+    font-size: 12px; font-weight: 700; letter-spacing: 0;
+    margin-bottom: 8px; color: #ffffff;
+  }
+  #heatmap-canvas {
+    width: 100%;
+    height: 320px;
+    display: block;
+    border-radius: 8px;
+    background: #090909;
+  }
+  #heatmap-caption {
+    margin-top: 8px;
+    font-size: 11px;
+    color: #d8d8d8;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="ui-overlay">
+  <h1>ANGALA PARAMESWARI TEMPLE</h1>
+  <p>Prediction-Driven Crowd Twin</p>
+</div>
+<div id="controls-hint">
+  ORBIT · PAN · ZOOM<br>
+  Left Drag · Right Drag · Scroll
+</div>
+<div id="prediction-panel">
+  <h2>PREDICTION LAYER</h2>
+  <p>Waiting for temple simulation state...</p>
+</div>
+<div id="heatmap-panel">
+  <h2>CROWD HEATMAP</h2>
+  <canvas id="heatmap-canvas" width="320" height="320"></canvas>
+  <div id="heatmap-caption">Live density view of the simulated temple crowd.</div>
+</div>
+<div id="zone-info"></div>
+<div id="crowd-stats">AGENTS: 0</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+  }
+}
+</script>
+
+<script>
+// ─── Load Three.js r128 as classic script, OrbitControls via CDN addon ───────
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="./temple_prediction_state.js"></script>
+
+<script>
+'use strict';
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  SceneManager                                                    ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class SceneManager {
+  constructor(container) {
+    this.container = container;
+    this.width  = window.innerWidth;
+    this.height = window.innerHeight;
+    this._init();
+  }
+
+  _init() {
+    // Renderer
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    this.renderer.setSize(this.width, this.height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+    this.renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+    this.renderer.toneMappingExposure = 0.85;
+    this.renderer.setClearColor(0x0d0608, 1);
+    this.container.appendChild(this.renderer.domElement);
+
+    // Scene
+    this.scene = new THREE.Scene();
+    // this.scene.fog = new THREE.FogExp2(0x1a0a08, 0.005);
+
+    // Camera
+    this.camera = new THREE.PerspectiveCamera(55, this.width / this.height, 0.1, 2000);
+    this.camera.position.set(0, 35, 120);
+    this.camera.lookAt(0, 10, -20);
+
+    // Orbit Controls (inline – no addon import needed)
+    this._initOrbitControls();
+
+    // Lighting
+    this._initLights();
+
+    // Resize
+    window.addEventListener('resize', () => this._onResize());
+  }
+
+  _initOrbitControls() {
+    // Minimal orbit controls implementation (no external import required)
+    const cam    = this.camera;
+    const dom    = this.renderer.domElement;
+    const target = new THREE.Vector3(0, 5, 0);
+
+    let isLeftDown = false, isRightDown = false;
+    let prevX = 0, prevY = 0;
+    let spherical = new THREE.Spherical().setFromVector3(cam.position.clone().sub(target));
+
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+
+    dom.addEventListener('contextmenu', e => e.preventDefault());
+    dom.addEventListener('mousedown',   e => {
+      if (e.button === 0) isLeftDown  = true;
+      if (e.button === 2) isRightDown = true;
+      prevX = e.clientX; prevY = e.clientY;
+    });
+    window.addEventListener('mouseup', () => { isLeftDown = false; isRightDown = false; });
+    window.addEventListener('mousemove', e => {
+      const dx = e.clientX - prevX;
+      const dy = e.clientY - prevY;
+      prevX = e.clientX; prevY = e.clientY;
+      if (isLeftDown) {
+        spherical.theta -= dx * 0.005;
+        spherical.phi   += dy * 0.005;
+        spherical.phi    = clamp(spherical.phi, 0.1, Math.PI * 0.48);
+      }
+      if (isRightDown) {
+        const right = new THREE.Vector3().crossVectors(
+          cam.getWorldDirection(new THREE.Vector3()), cam.up).normalize();
+        const up    = cam.up.clone();
+        const speed = spherical.radius * 0.001;
+        target.addScaledVector(right, -dx * speed);
+        target.addScaledVector(up,     dy * speed);
+      }
+    });
+    dom.addEventListener('wheel', e => {
+      spherical.radius += e.deltaY * 0.08;
+      spherical.radius  = clamp(spherical.radius, 40, 200);
+    });
+
+    this._updateOrbit = () => {
+      const pos = new THREE.Vector3().setFromSpherical(spherical).add(target);
+      cam.position.copy(pos);
+      cam.lookAt(target);
+    };
+  }
+
+  _initLights() {
+    // Ambient – warm night
+    const ambient = new THREE.AmbientLight(0x3d1f0d, 1.8);
+    this.scene.add(ambient);
+
+    // Main directional (moon-like)
+    const moon = new THREE.DirectionalLight(0x8080c0, 1.2);
+    moon.position.set(-80, 120, -60);
+    moon.castShadow = true;
+    moon.shadow.mapSize.set(2048, 2048);
+    moon.shadow.camera.near = 1;
+    moon.shadow.camera.far  = 600;
+    moon.shadow.camera.left = moon.shadow.camera.bottom = -200;
+    moon.shadow.camera.right = moon.shadow.camera.top   =  200;
+    this.scene.add(moon);
+
+    // Warm fill from south
+    const warm = new THREE.DirectionalLight(0xff8844, 0.9);
+    warm.position.set(60, 60, 80);
+    this.scene.add(warm);
+
+    // Hemisphere sky
+    const hemi = new THREE.HemisphereLight(0x1a0e06, 0x0a0604, 0.5);
+    this.scene.add(hemi);
+
+    this.scene.add(moon, warm, hemi, ambient);
+  }
+
+  addToScene(obj) { this.scene.add(obj); }
+
+  animate(cb) {
+    const loop = () => {
+      requestAnimationFrame(loop);
+      this._updateOrbit();
+      cb && cb();
+      this.renderer.render(this.scene, this.camera);
+    };
+    loop();
+  }
+
+  _onResize() {
+    this.width  = window.innerWidth;
+    this.height = window.innerHeight;
+    this.camera.aspect = this.width / this.height;
+    this.camera.updateProjectionMatrix();
+    this.renderer.setSize(this.width, this.height);
+  }
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  MaterialLibrary                                                 ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class MaterialLibrary {
+  static stone()     { return new THREE.MeshLambertMaterial({ color: 0xc8a87a }); }
+  static darkStone() { return new THREE.MeshLambertMaterial({ color: 0x8b7355 }); }
+  static sandstone() { return new THREE.MeshLambertMaterial({ color: 0xe8c89a }); }
+  static gold()      { return new THREE.MeshLambertMaterial({ color: 0xf5c842, emissive: 0x7a5c00 }); }
+  static floor()     { return new THREE.MeshLambertMaterial({ color: 0xb09070 }); }
+  static wall()      { return new THREE.MeshLambertMaterial({ color: 0xd4a87a }); }
+  static gopuram()   { return new THREE.MeshLambertMaterial({ color: 0xe8b060 }); }
+  static gate()      { return new THREE.MeshLambertMaterial({ color: 0xc89858 }); }
+  static rail()      { return new THREE.MeshLambertMaterial({ color: 0xa08060 }); }
+  static pillar()    { return new THREE.MeshLambertMaterial({ color: 0xd0a878 }); }
+  static lamp()      { return new THREE.MeshLambertMaterial({ color: 0xffd080, emissive: 0xff9900, emissiveIntensity: 0.8 }); }
+  static ground()    { return new THREE.MeshLambertMaterial({ color: 0x6b5740 }); }
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  TempleModel                                                     ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class TempleModel {
+  constructor(scene) {
+    this.scene  = scene;
+    this.root   = new THREE.Group();
+    this.zones  = {};
+    this._lampLights = [];
+    this._build();
+    scene.add(this.root);
+  }
+
+  _box(w, h, d, mat, rx, ry, rz) {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.castShadow = m.receiveShadow = true;
+    if (rx) m.rotation.set(rx, ry || 0, rz || 0);
+    return m;
+  }
+
+  _build() {
+    this._buildGround();
+    this._buildBoundaryWall();
+    this._buildCourtyard();
+    this._buildMainTemple();
+    this._buildQueues();
+    this._buildEntryGate();
+    this._buildExitGate();
+    this._buildLamps();
+    this._buildDecorativePillars();
+    this._defineZones();
+  }
+
+  // ── Ground ──────────────────────────────────────────────────────
+  _buildGround() {
+    const g = this._box(340, 0.5, 280, MaterialLibrary.ground());
+    g.position.set(0, -0.25, 20);
+    this.root.add(g);
+  }
+
+  // ── Boundary Wall ───────────────────────────────────────────────
+  _buildBoundaryWall() {
+    const W = 300, D = 220, H = 8, T = 4;
+    const mat = MaterialLibrary.wall();
+    const walls = [
+      { w: W,   h: H, d: T,   x: 0,       z: -D/2   }, // north
+      { w: W,   h: H, d: T,   x: 0,       z:  D/2   }, // south
+      { w: T,   h: H, d: D,   x: -W/2,    z: 0      }, // west
+      { w: T,   h: H, d: D,   x:  W/2,    z: 0      }, // east
+    ];
+    walls.forEach(p => {
+      const w = this._box(p.w, p.h, p.d, mat);
+      w.position.set(p.x, p.h / 2, p.z);
+      this.root.add(w);
+    });
+
+    // Pillars along walls
+    const pillarMat = MaterialLibrary.pillar();
+    const pillarPositions = [];
+    const spacing = 20;
+    for (let x = -W/2; x <= W/2; x += spacing) {
+      pillarPositions.push({ x, z: -D/2 });
+      pillarPositions.push({ x, z:  D/2 });
+    }
+    for (let z = -D/2; z <= D/2; z += spacing) {
+      pillarPositions.push({ x: -W/2, z });
+      pillarPositions.push({ x:  W/2, z });
+    }
+    pillarPositions.forEach(p => {
+      const pillar = this._box(3, H + 3, 3, pillarMat);
+      pillar.position.set(p.x, (H + 3) / 2, p.z);
+      this.root.add(pillar);
+    });
+  }
+
+  // ── Courtyard Floor ─────────────────────────────────────────────
+  _buildCourtyard() {
+    const mat = MaterialLibrary.floor();
+    const floor = this._box(280, 0.4, 200, mat);
+    floor.position.set(0, 0.2, 10);
+    this.root.add(floor);
+
+    // Stone tile lines (decorative strips)
+    for (let x = -130; x <= 130; x += 20) {
+      const strip = this._box(0.4, 0.5, 200, MaterialLibrary.darkStone());
+      strip.position.set(x, 0.45, 10);
+      this.root.add(strip);
+    }
+    for (let z = -90; z <= 110; z += 20) {
+      const strip = this._box(280, 0.5, 0.4, MaterialLibrary.darkStone());
+      strip.position.set(0, 0.45, z);
+      this.root.add(strip);
+    }
+  }
+
+  // ── Main Temple Complex ─────────────────────────────────────────
+  _buildMainTemple() {
+    const g = new THREE.Group();
+
+    // Base platform – large stepped plinth
+    const platMat = MaterialLibrary.stone();
+    const plat1 = this._box(52, 3, 52, platMat);
+    plat1.position.set(0, 1.5, -40);
+    g.add(plat1);
+    const plat2 = this._box(44, 2.5, 44, MaterialLibrary.sandstone());
+    plat2.position.set(0, 4.25, -40);
+    g.add(plat2);
+    const plat3 = this._box(38, 2, 38, platMat);
+    plat3.position.set(0, 6.5, -40);
+    g.add(plat3);
+
+    // Inner Sanctum (garbhagriha)
+    const sanctum = this._box(18, 12, 18, MaterialLibrary.darkStone());
+    sanctum.position.set(0, 13.5, -40);
+    g.add(sanctum);
+
+    // Sanctum roof
+    const sRoof = this._box(20, 2, 20, MaterialLibrary.stone());
+    sRoof.position.set(0, 20, -40);
+    g.add(sRoof);
+
+    // Gopuram Tower – stacked tapered layers
+    const gopMat = MaterialLibrary.gopuram();
+    const layers = [
+      { w: 22, h: 7,  d: 22, y: 22   },
+      { w: 20, h: 6,  d: 20, y: 28.5 },
+      { w: 17, h: 5,  d: 17, y: 34.5 },
+      { w: 14, h: 5,  d: 14, y: 40   },
+      { w: 11, h: 4,  d: 11, y: 45   },
+      { w: 8,  h: 4,  d: 8,  y: 49.5 },
+      { w: 6,  h: 3.5,d: 6,  y: 53.5 },
+      { w: 4.5,h: 3,  d: 4.5,y: 57.5 },
+      { w: 3,  h: 3,  d: 3,  y: 61   },
+      { w: 2,  h: 3,  d: 2,  y: 64   },
+    ];
+    layers.forEach(l => {
+      const tier = this._box(l.w, l.h, l.d, gopMat);
+      tier.position.set(0, l.y, -40);
+      g.add(tier);
+    });
+
+    // Golden finial (kalasam)
+    const finial = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 1.0, 4, 8), MaterialLibrary.gold());
+    finial.position.set(0, 67.5, -40);
+    finial.castShadow = true;
+    g.add(finial);
+
+    // Mandapam (hall in front of sanctum)
+    const mandapam = this._box(24, 8, 18, MaterialLibrary.sandstone());
+    mandapam.position.set(0, 10.5, -20);
+    g.add(mandapam);
+    const mandaRoof = this._box(26, 1.5, 20, MaterialLibrary.stone());
+    mandaRoof.position.set(0, 15, -20);
+    g.add(mandaRoof);
+    // Gopuram above mandapam (smaller)
+    const mGop = [
+      { w:14, h:5, d:14, y:17 },
+      { w:11, h:4, d:11, y:21.5 },
+      { w:8,  h:3, d:8,  y:25.5 },
+      { w:5,  h:3, d:5,  y:29 },
+      { w:3,  h:2.5,d:3, y:32 },
+    ];
+    mGop.forEach(l => {
+      const t = this._box(l.w, l.h, l.d, gopMat);
+      t.position.set(0, l.y, -20);
+      g.add(t);
+    });
+
+    // Columns around mandapam
+    const colMat = MaterialLibrary.pillar();
+    const colPositions = [
+      [-10,-20],[-10,-28],[10,-20],[10,-28],
+      [-10,-12],[10,-12],
+    ];
+    colPositions.forEach(([x,z]) => {
+      const col = new THREE.Mesh(new THREE.CylinderGeometry(0.8,1.0,10,8), colMat);
+      col.position.set(x, 10, z);
+      col.castShadow = true;
+      g.add(col);
+    });
+
+    this.root.add(g);
+    this._templeGroup = g;
+  }
+
+  // ── Queue System ─────────────────────────────────────────────────
+  _buildQueues() {
+    const railMat = MaterialLibrary.rail();
+    const railH   = 1.2;
+    const railT   = 0.3;
+
+    // Zig-zag from z=80 (entry) to z=0 (temple approach)
+    // 6 lanes, alternating left-right
+    const laneWidth = 6;
+    const laneCount = 8;
+    const laneLength = 28;
+    const startX  = -((laneCount / 2) * laneWidth);
+    const startZ  = 70;
+
+    for (let i = 0; i < laneCount; i++) {
+      const x = startX + i * laneWidth;
+      const z = startZ - i * 8;
+
+      // Side rails (long)
+      [-laneWidth/2, laneWidth/2].forEach(dx => {
+        const rail = this._box(railT, railH, laneLength, railMat);
+        rail.position.set(x + dx, railH / 2 + 0.4, z - laneLength / 2);
+        this.root.add(rail);
+      });
+
+      // Cap rail at end
+      const cap = this._box(laneWidth, railH, railT, railMat);
+      const isEven = i % 2 === 0;
+      cap.position.set(x, railH / 2 + 0.4, isEven ? z - laneLength : z);
+      this.root.add(cap);
+    }
+
+    // Straight corridor from last zigzag to temple steps
+    const corridor = this._box(railT, railH, 20, railMat);
+    corridor.position.set(-8, railH / 2 + 0.4, 10);
+    this.root.add(corridor);
+    const corridor2 = corridor.clone();
+    corridor2.position.set(8, railH / 2 + 0.4, 10);
+    this.root.add(corridor2);
+  }
+
+  // ── Entry Gate ───────────────────────────────────────────────────
+  _buildEntryGate() {
+    const mat   = MaterialLibrary.gate();
+    const gopM  = MaterialLibrary.gopuram();
+
+    // Pillars
+    [[-14, 100], [14, 100]].forEach(([x, z]) => {
+      const p = this._box(6, 16, 6, mat);
+      p.position.set(x, 8, z);
+      this.root.add(p);
+      // Small towers on pillars
+      [[0,0]].forEach(() => {
+        const t1 = this._box(5,4,5, gopM); t1.position.set(x, 18, z); this.root.add(t1);
+        const t2 = this._box(4,3,4, gopM); t2.position.set(x, 22.5, z); this.root.add(t2);
+        const t3 = this._box(2.5,2.5,2.5,gopM); t3.position.set(x, 25.5, z); this.root.add(t3);
+      });
+    });
+    // Lintel beam
+    const lintel = this._box(28, 2, 5, mat);
+    lintel.position.set(0, 17, 100);
+    this.root.add(lintel);
+
+    // Entry sign slab
+    const sign = this._box(18, 3, 1, MaterialLibrary.sandstone());
+    sign.position.set(0, 19.5, 100);
+    this.root.add(sign);
+
+    // Entry label (emissive stone)
+    const eMat = new THREE.MeshLambertMaterial({ color: 0xf5c97a, emissive: 0x7a5c00 });
+    const ePlate = this._box(12, 1.5, 0.5, eMat);
+    ePlate.position.set(0, 20.5, 99.5);
+    this.root.add(ePlate);
+  }
+
+  // ── Exit Gate ────────────────────────────────────────────────────
+  _buildExitGate() {
+    const mat  = MaterialLibrary.gate();
+    const gopM = MaterialLibrary.gopuram();
+
+    [[-110, -30], [-110, -60]].forEach(([x, z]) => {
+      const p = this._box(5, 12, 5, mat);
+      p.position.set(x, 6, z);
+      this.root.add(p);
+      const t = this._box(4, 3, 4, gopM);
+      t.position.set(x, 13.5, z);
+      this.root.add(t);
+    });
+    const lintel = this._box(5, 1.5, 20, mat);
+    lintel.position.set(-110, 13, -45);
+    this.root.add(lintel);
+  }
+
+  // ── Temple Lamps ─────────────────────────────────────────────────
+  _buildLamps() {
+    const lampPositions = [
+      [-20,-40],[20,-40],[-20,-20],[20,-20],
+      [-14,-10],[14,-10],
+      [-30,0],[30,0],[-40,20],[40,20],
+    ];
+    lampPositions.forEach(([x, z]) => {
+      // Post
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.35,5,6), MaterialLibrary.stone());
+      post.position.set(x, 2.5, z);
+      post.castShadow = true;
+      this.root.add(post);
+
+      // Flame bowl
+      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.8,0.3,0.6,8), MaterialLibrary.lamp());
+      bowl.position.set(x, 5.5, z);
+      this.root.add(bowl);
+
+      // Point light
+      const light = new THREE.PointLight(0xff9933, 1.4, 25);
+      light.position.set(x, 6, z);
+      this.root.add(light);
+      this._lampLights.push(light);
+    });
+
+    // Larger lamps at entry gate
+    [[-14,100],[14,100]].forEach(([x,z]) => {
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.5,8,6), MaterialLibrary.stone());
+      post.position.set(x, 4, z);
+      this.root.add(post);
+      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(1.2,0.5,0.8,8), MaterialLibrary.lamp());
+      bowl.position.set(x, 8.5, z);
+      this.root.add(bowl);
+      const light = new THREE.PointLight(0xff8800, 2, 40);
+      light.position.set(x, 9, z);
+      this.root.add(light);
+      this._lampLights.push(light);
+    });
+  }
+
+  // ── Decorative Pillars inside courtyard ──────────────────────────
+  _buildDecorativePillars() {
+    const mat  = MaterialLibrary.pillar();
+    const rows = [
+      { count: 6, zRow: -60, xStart: -50, xStep: 20 },
+      { count: 6, zRow:  20, xStart: -50, xStep: 20 },
+      { count: 4, zRow: -60, xStart: 60,  xStep: 20 },
+      { count: 4, zRow:  20, xStart: 60,  xStep: 20 },
+    ];
+    rows.forEach(row => {
+      for (let i = 0; i < row.count; i++) {
+        const x = row.xStart + i * row.xStep;
+        const col = new THREE.Mesh(new THREE.CylinderGeometry(1, 1.2, 10, 8), mat);
+        col.position.set(x, 5, row.zRow);
+        col.castShadow = true;
+        this.root.add(col);
+        // Capital
+        const cap = this._box(3, 1, 3, mat);
+        cap.position.set(x, 10.5, row.zRow);
+        this.root.add(cap);
+      }
+    });
+  }
+
+  // ── Zone Definitions ─────────────────────────────────────────────
+  _defineZones() {
+    this.zones = {
+      entryZone: {
+        name:   'Entry Zone',
+        position: { x: 0, z: 100 },
+        radius: 20,
+        bounds: { minX: -14, maxX: 14, minZ: 88, maxZ: 112 }
+      },
+      queueZone: {
+        name:   'Queue Zone',
+        position: { x: 0, z: 50 },
+        radius: 55,
+        bounds: { minX: -55, maxX: 55, minZ: 10, maxZ: 90 }
+      },
+      courtyardZone: {
+        name:   'Courtyard Zone',
+        position: { x: 0, z: 0 },
+        radius: 80,
+        bounds: { minX: -130, maxX: 130, minZ: -80, maxZ: 10 }
+      },
+      templeZone: {
+        name:   'Temple Zone',
+        position: { x: 0, z: -35 },
+        radius: 35,
+        bounds: { minX: -28, maxX: 28, minZ: -68, maxZ: -8 }
+      },
+      exitZone: {
+        name:   'Exit Zone',
+        position: { x: -110, z: -45 },
+        radius: 18,
+        bounds: { minX: -125, maxX: -95, minZ: -65, maxZ: -25 }
+      }
+    };
+  }
+
+  // Flicker lamps (called each frame)
+  update(t) {
+    this._lampLights.forEach((light, i) => {
+      light.intensity = 1.2 + 0.3 * Math.sin(t * 3 + i * 1.7);
+    });
+  }
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  CrowdManager  – Realistic Queue Simulation                      ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class CrowdManager {
+  constructor(scene, zones) {
+    this.scene     = scene;
+    this.zones     = zones;
+    this.agents    = [];
+    this.maxAgents = 1500;
+    this._rushMode = false;
+    this._statsEl  = document.getElementById('crowd-stats');
+
+    // Shared geometry + material pool for performance
+    this._agentHeight = 3.2;
+    this._agentBaseY = this._agentHeight / 2;
+    this._agentGeo  = new THREE.CylinderGeometry(1.05, 1.2, this._agentHeight, 8);
+    this._matPool   = [
+      new THREE.MeshLambertMaterial({ color: 0xff5500, emissive: 0x220000 }),
+      new THREE.MeshLambertMaterial({ color: 0xffdd00, emissive: 0x221100 }),
+      new THREE.MeshLambertMaterial({ color: 0xff2200, emissive: 0x220000 }),
+      new THREE.MeshLambertMaterial({ color: 0xff9900, emissive: 0x221100 }),
+      new THREE.MeshLambertMaterial({ color: 0xffee55, emissive: 0x221100 }),
+      new THREE.MeshLambertMaterial({ color: 0xff4400, emissive: 0x220000 }),
+      new THREE.MeshLambertMaterial({ color: 0xffbb00, emissive: 0x221100 }),
+    ];
+
+    // Flow path: densely sampled waypoints entry→queue→courtyard→temple→exit
+    this._flowPath = this._buildFlowPath();
+
+    // Sparse grid for density checks (cell size = 6 units)
+    this._gridCell = 6;
+    this._grid     = new Map();
+    this._scenario = null;
+    this._speedScale = 1.0;
+    this._pauseScale = 1.0;
+    this._pressureScale = 1.0;
+    this._queueBias = 1.0;
+    this._templeBias = 1.0;
+
+    // Start empty and wait for prediction-driven state
+  }
+
+  // ── Flow Path ────────────────────────────────────────────────────
+  _buildFlowPath() {
+    // Each waypoint also carries a zone tag and base speed multiplier
+    const P = (x, y, z, zone, sm) => ({ pos: new THREE.Vector3(x, y, z), zone, sm });
+    return [
+      P(  0, 0.8,  98, 'entry',     1.0),
+      P(  0, 0.8,  90, 'entry',     1.0),
+      P( -4, 0.8,  82, 'queue',     0.85),
+      P( -8, 0.8,  75, 'queue',     0.75),
+      P(-20, 0.8,  68, 'queue',     0.70),
+      P(-20, 0.8,  58, 'queue',     0.65),
+      P( 20, 0.8,  52, 'queue',     0.65),
+      P( 20, 0.8,  42, 'queue',     0.60),
+      P(-20, 0.8,  36, 'queue',     0.60),
+      P(-20, 0.8,  26, 'queue',     0.55),
+      P(  0, 0.8,  18, 'queue',     0.55),
+      P(  0, 0.8,   8, 'courtyard', 0.80),
+      P(  0, 0.8,  -4, 'courtyard', 0.75),
+      P(  0, 0.8, -14, 'temple',    0.40),
+      P(  0, 0.8, -24, 'temple',    0.30),
+      P(  0, 0.8, -34, 'temple',    0.25),
+      P( -6, 0.8, -42, 'temple',    0.25),
+      P(  6, 0.8, -42, 'temple',    0.25),
+      P( -8, 0.8, -50, 'temple',    0.30),
+      P(-18, 0.8, -50, 'courtyard', 0.50),
+      P(-35, 0.8, -45, 'courtyard', 0.65),
+      P(-60, 0.8, -45, 'exit',      0.85),
+      P(-90, 0.8, -45, 'exit',      0.95),
+      P(-110,0.8, -45, 'exit',      1.0 ),
+    ];
+  }
+
+  // ── Spawn Helpers ────────────────────────────────────────────────
+  _createAgent(wpIdx) {
+    const wp   = this._flowPath[wpIdx];
+    const mesh = new THREE.Mesh(
+      this._agentGeo,
+      this._matPool[Math.floor(Math.random() * this._matPool.length)]
+    );
+    // Slight lateral jitter off waypoint
+    const jitter = wpIdx < 11 ? 2.5 : 3.5; // tighter in queue lanes
+    mesh.position.set(
+      wp.pos.x + (Math.random() - 0.5) * jitter,
+      this._agentBaseY,
+      wp.pos.z + (Math.random() - 0.5) * jitter
+    );
+    mesh.castShadow = false; // skip shadow for perf at high counts
+    this.scene.add(mesh);
+
+    return {
+      mesh,
+      waypointIndex : wpIdx,
+      baseSpeed     : 0.06 + Math.random() * 0.03,
+      phase         : Math.random() * Math.PI * 2,
+      stoppedTicks  : 0,
+      id            : Math.random(),
+    };
+  }
+
+  _pickWaypointIndex(zone) {
+    const ranges = {
+      entry: [0, 1],
+      queue: [2, 10],
+      courtyard: [11, 12],
+      temple: [13, 18],
+      exit: [19, 23],
+      mixed: [0, 11],
+    };
+    const range = ranges[zone] || ranges.mixed;
+    const [start, end] = range;
+    return start + Math.floor(Math.random() * (end - start + 1));
+  }
+
+  addPeople(count, zone = 'mixed') {
+    const toAdd = Math.min(count, this.maxAgents - this.agents.length);
+    for (let i = 0; i < toAdd; i++) {
+      const wpIdx = this._pickWaypointIndex(zone);
+      this.agents.push(this._createAgent(wpIdx));
+    }
+  }
+
+  clearCrowd() {
+    this.agents.forEach(a => this.scene.remove(a.mesh));
+    this.agents = [];
+    this._grid.clear();
+  }
+
+  applyScenario(state) {
+    if (!state || !state.scenario) return;
+
+    this._scenario = state;
+    const tuning = state.crowdTuning || {};
+    this._speedScale = tuning.globalSpeedScale || 1.0;
+    this._pauseScale = tuning.pauseScale || 1.0;
+    this._pressureScale = tuning.pressureScale || 1.0;
+    this._queueBias = tuning.queueBias || 1.0;
+    this._templeBias = tuning.templeBias || 1.0;
+
+    const zoneCounts = state.zoneCounts || {};
+    const hasScenarioCrowd = Object.values(zoneCounts).some(v => v > 0);
+    if (hasScenarioCrowd) {
+      this.clearCrowd();
+      Object.entries(zoneCounts).forEach(([zone, count]) => {
+        this.addPeople(count, zone);
+      });
+    }
+
+    this._rushMode = !!state.scenario.rushMode;
+    this._updatePredictionPanel();
+  }
+
+  _updatePredictionPanel() {
+    const panel = document.getElementById('prediction-panel');
+    if (!panel || !this._scenario || !this._scenario.scenario) return;
+
+    const s = this._scenario.scenario;
+    const zoneCounts = this._scenario.zoneCounts || {};
+    const levelClass = s.level === 'critical' ? 'hot' : (s.level === 'watch' ? 'watch' : 'calm');
+    panel.innerHTML = `
+      <h2>CROWD STATUS</h2>
+      <p class="${levelClass}">${s.title.toUpperCase()}</p>
+      <p>${s.problem} · ${s.flowStatus}</p>
+      <p>People ${s.currentPeopleCount} · Density ${s.currentDensity}</p>
+      <p>Risk ${s.fusedRisk} · Future ${s.futureRisk}</p>
+      <p>Agents ${s.agentTarget} · ${s.rushMode ? 'Rush flow' : 'Steady flow'}</p>
+      <p>Entry ${zoneCounts.entry || 0} · Queue ${zoneCounts.queue || 0} · Temple ${zoneCounts.temple || 0}</p>
+      <p>${s.alertText}</p>
+    `;
+  }
+
+  // ── Sparse Grid (density) ─────────────────────────────────────────
+  _gridKey(x, z) {
+    return `${Math.floor(x / this._gridCell)},${Math.floor(z / this._gridCell)}`;
+  }
+
+  _rebuildGrid() {
+    this._grid.clear();
+    for (const a of this.agents) {
+      const k = this._gridKey(a.mesh.position.x, a.mesh.position.z);
+      if (!this._grid.has(k)) this._grid.set(k, 0);
+      this._grid.set(k, this._grid.get(k) + 1);
+    }
+  }
+
+  _localDensity(x, z) {
+    // Sum agents in 3x3 grid cells around position
+    let count = 0;
+    const cx = Math.floor(x / this._gridCell);
+    const cz = Math.floor(z / this._gridCell);
+    for (let dx = -1; dx <= 1; dx++)
+      for (let dz = -1; dz <= 1; dz++) {
+        const v = this._grid.get(`${cx+dx},${cz+dz}`);
+        if (v) count += v;
+      }
+    return count;
+  }
+
+  // ── Update (called each frame) ────────────────────────────────────
+  update(t) {
+    // Rebuild grid every 3 frames for perf
+    if ((Math.round(t * 60) % 3) === 0) this._rebuildGrid();
+
+    const rush    = this._rushMode;
+    const pathLen = this._flowPath.length;
+
+    // Stress color thresholds (reuse material references per agent)
+    const colNormal = 0xffaa55;
+    const colMedium = 0xff7722;
+    const colHigh   = 0xff2200;
+
+    for (let i = 0; i < this.agents.length; i++) {
+      const agent = this.agents[i];
+      const pos   = agent.mesh.position;
+      const wi    = agent.waypointIndex;
+
+      // Reached end → recycle back to entry
+      if (wi >= pathLen - 1) {
+        agent.waypointIndex = 0;
+        agent.pause = 0;
+        const entry = this._flowPath[0];
+        pos.set(
+          entry.pos.x + (Math.random() - 0.5) * 4,
+          this._agentBaseY,
+          entry.pos.z + (Math.random() - 0.5) * 4
+        );
+        continue;
+      }
+
+      const wp     = this._flowPath[wi];
+      const wpNext = this._flowPath[wi + 1];
+
+      // Direction to next waypoint
+      const dx   = wpNext.pos.x - pos.x;
+      const dz   = wpNext.pos.z - pos.z;
+      const dist = Math.sqrt(dx * dx + dz * dz);
+
+      // Arrived at waypoint?
+      if (dist < 1.2) {
+        agent.waypointIndex++;
+        continue;
+      }
+
+      // ── 1. STOP-AND-GO: random pause injection ──────────────────
+      // Rush mode pauses less; temple zone pauses more
+      const pauseChance = rush
+        ? 0.003
+        : (wp.zone === 'temple' ? 0.025 * this._templeBias : wp.zone === 'queue' ? 0.012 * this._queueBias : 0.006);
+
+      if (!agent.pause && Math.random() < pauseChance) {
+        agent.pause = rush
+          ? 5 + Math.floor(Math.random() * 15)
+          : Math.floor((20 + Math.random() * 40) * this._pauseScale);
+      }
+      if (agent.pause > 0) {
+        agent.pause--;
+        // Head wobble while waiting — looking around
+        agent.mesh.rotation.y += (Math.random() - 0.5) * 0.08;
+        pos.y = this._agentBaseY + 0.03 * Math.sin(t * 1.8 + agent.phase);
+        continue; // skip movement this frame
+      }
+
+      // ── Speed modulation ────────────────────────────────────────
+      const zoneMult  = wp.zone === 'temple' ? Math.min(wp.sm, 0.22) : wp.sm;
+      const density   = this._localDensity(pos.x, pos.z);
+      const densMult  = Math.max(0.10, 1 - density * 0.055);
+      const rushBoost = rush ? 1.5 : 1.0;
+      let   speed     = agent.baseSpeed * zoneMult * densMult * rushBoost * this._speedScale;
+
+      // ── 2. CROWD PRESSURE in dense areas ────────────────────────
+      let pressX = 0, pressZ = 0;
+      if (density > 6) {
+        const intensity = (rush ? 0.055 : 0.03) * this._pressureScale;
+        pressX = (Math.random() - 0.5) * intensity * (density / 6);
+        pressZ = (Math.random() - 0.5) * intensity * (density / 6);
+        // Jittery movement feel
+        speed *= (0.85 + Math.random() * 0.3);
+      }
+
+      // ── Queue zone: ahead-density stop ──────────────────────────
+      if (wp.zone === 'queue' || wp.zone === 'temple') {
+        const lookX = pos.x + (dx / dist) * 3;
+        const lookZ = pos.z + (dz / dist) * 3;
+        const aheadDensity = this._localDensity(lookX, lookZ);
+        if (aheadDensity > 5 && wp.zone === 'queue') {
+          speed *= 0.1;
+          agent.stoppedTicks++;
+        } else {
+          agent.stoppedTicks = 0;
+        }
+      }
+
+      // ── 3. LINE BREAKING: sideways drift ────────────────────────
+      const driftScale = rush
+        ? 0.22
+        : (wp.zone === 'queue' ? 0.08 : wp.zone === 'temple' ? 0.14 : 0.06);
+      const driftX = (Math.random() - 0.5) * driftScale;
+      const driftZ = (Math.random() - 0.5) * (driftScale * 0.5);
+
+      // ── 4. TEMPLE ZONE CHAOS ─────────────────────────────────────
+      let templeJx = 0, templeJz = 0;
+      if (wp.zone === 'temple') {
+        // Very slow cluster with random mini-rotations
+        speed = Math.min(speed, 0.025 + Math.random() * 0.015);
+        templeJx = Math.sin(t + agent.id * 6.28) * 0.022;
+        templeJz = Math.cos(t * 0.7 + agent.id * 3.14) * 0.018;
+        // Random head rotation (looking at deity, praying)
+        agent.mesh.rotation.y += (Math.random() - 0.5) * 0.06;
+      } else {
+        // ── 6. HEAD MOVEMENT outside temple ─────────────────────
+        agent.mesh.rotation.y += (Math.random() - 0.5) * 0.03;
+      }
+
+      // ── 7. MICRO COLLISIONS: push apart nearby agents ────────────
+      // Sample a few neighbours via grid for a lightweight push
+      if (i % 4 === 0) { // only every 4th agent per frame for perf
+        for (let j = i + 1; j < Math.min(i + 8, this.agents.length); j++) {
+          const other = this.agents[j];
+          const ox = pos.x - other.mesh.position.x;
+          const oz = pos.z - other.mesh.position.z;
+          const d2 = ox * ox + oz * oz;
+          if (d2 < 5.76 && d2 > 0.001) { // within 2.4 units
+            const pushStr = 0.024 / Math.sqrt(d2);
+            pos.x += ox * pushStr;
+            pos.z += oz * pushStr;
+            other.mesh.position.x -= ox * pushStr;
+            other.mesh.position.z -= oz * pushStr;
+          }
+        }
+      }
+
+      // ── Compose final movement ───────────────────────────────────
+      const nx = (dx / dist) * speed + driftX + pressX + templeJx;
+      const nz = (dz / dist) * speed + driftZ + pressZ + templeJz;
+      pos.x += nx;
+      pos.z += nz;
+
+      // Bob (more frantic in rush)
+      const bobAmp  = rush ? 0.05 : 0.03;
+      const bobFreq = rush ? 3.2  : 2.2;
+      pos.y = this._agentBaseY + bobAmp * Math.sin(t * bobFreq + agent.phase);
+
+      // ── 5. STRESS VISUAL: colour by density ─────────────────────
+      if (i % 6 === 0) { // update colour every 6th agent for perf
+        const mat = agent.mesh.material;
+        if (density > 12 || rush) {
+          mat.color.setHex(colHigh);
+        } else if (density > 6) {
+          mat.color.setHex(colMedium);
+        } else {
+          mat.color.setHex(colNormal);
+        }
+      }
+    }
+
+    // Update stats
+    if (this._statsEl) {
+      const label = this._scenario?.scenario?.problem || 'NO PREDICTION';
+      this._statsEl.textContent =
+        `AGENTS: ${this.agents.length}  |  ${label}  |  ${this._rushMode ? 'RUSH' : 'STEADY FLOW'}`;
+    }
+  }
+
+  // ── Heatmap / Backend API ────────────────────────────────────────
+  getPeople() {
+    return this.agents.map(a => ({
+      x: a.mesh.position.x,
+      z: a.mesh.position.z,
+    }));
+  }
+
+  getZoneData() {
+    const bounds = this.zones;
+    const counts = { entry: 0, queue: 0, temple: 0, courtyard: 0, exit: 0 };
+
+    for (const a of this.agents) {
+      const x = a.mesh.position.x;
+      const z = a.mesh.position.z;
+      const inBounds = (b) => x >= b.minX && x <= b.maxX && z >= b.minZ && z <= b.maxZ;
+
+      if (inBounds(bounds.entryZone.bounds))     counts.entry++;
+      else if (inBounds(bounds.queueZone.bounds)) counts.queue++;
+      else if (inBounds(bounds.templeZone.bounds)) counts.temple++;
+      else if (inBounds(bounds.courtyardZone.bounds)) counts.courtyard++;
+      else if (inBounds(bounds.exitZone.bounds))  counts.exit++;
+    }
+
+    const total = this.agents.length || 1;
+    return {
+      entryCount    : counts.entry,
+      queueDensity  : +(counts.queue  / total).toFixed(3),
+      templeDensity : +(counts.temple / total).toFixed(3),
+      courtyardCount: counts.courtyard,
+      exitCount     : counts.exit,
+      totalAgents   : this.agents.length,
+    };
+  }
+
+  // Legacy stubs
+  addAgent(position) { this.addPeople(1); }
+  setFlow(path)      { this._flowPath = path; }
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  TempleHeatmap                                                   ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class TempleHeatmap {
+  constructor() {
+    this.canvas = document.getElementById('heatmap-canvas');
+    this.caption = document.getElementById('heatmap-caption');
+    this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+    this.bounds = {
+      minX: -150,
+      maxX: 150,
+      minZ: -110,
+      maxZ: 112,
+    };
+  }
+
+  render(people, scenario) {
+    if (!this.ctx || !this.canvas) return;
+
+    const { width, height } = this.canvas;
+    this.ctx.clearRect(0, 0, width, height);
+
+    this.ctx.fillStyle = '#090909';
+    this.ctx.fillRect(0, 0, width, height);
+
+    this._drawGroundPlan();
+    this._drawTempleFootprint();
+    this._drawCrowdPath();
+
+    if (people.length) {
+      const risk = Math.max(0, Math.min(100, Number(scenario?.fusedRisk || 0)));
+      const radius = 22 + risk * 0.08;
+      for (const person of people) {
+        const point = this._project(person.x, person.z);
+        const gradient = this.ctx.createRadialGradient(
+          point.x, point.y, 0, point.x, point.y, radius
+        );
+        gradient.addColorStop(0, 'rgba(255, 245, 170, 0.34)');
+        gradient.addColorStop(0.45, 'rgba(255, 130, 60, 0.22)');
+        gradient.addColorStop(1, 'rgba(255, 40, 0, 0)');
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
+    }
+
+    this._drawLabels();
+
+    if (this.caption) {
+      const problem = scenario?.problem || 'NORMAL';
+      const risk = scenario?.fusedRisk ?? 0;
+      this.caption.textContent = `Problem: ${problem} · Risk: ${risk}`;
+    }
+  }
+
+  _project(x, z) {
+    const layout = this._layout();
+    const px = layout.left + ((x - this.bounds.minX) / layout.worldW) * layout.width;
+    const py = layout.top + layout.height - (((z - this.bounds.minZ) / layout.worldD) * layout.height);
+    return { x: px, y: py };
+  }
+
+  _layout() {
+    const pad = 14;
+    const canvasW = this.canvas.width - pad * 2;
+    const canvasH = this.canvas.height - pad * 2;
+    const worldW = this.bounds.maxX - this.bounds.minX;
+    const worldD = this.bounds.maxZ - this.bounds.minZ;
+    const scale = Math.min(canvasW / worldW, canvasH / worldD);
+    const width = worldW * scale;
+    const height = worldD * scale;
+
+    return {
+      left: (this.canvas.width - width) / 2,
+      top: (this.canvas.height - height) / 2,
+      width,
+      height,
+      worldW,
+      worldD,
+    };
+  }
+
+  _drawWorldRect(minX, maxX, minZ, maxZ, fill, stroke = null) {
+    const topLeft = this._project(minX, maxZ);
+    const bottomRight = this._project(maxX, minZ);
+    const x = topLeft.x;
+    const y = topLeft.y;
+    const w = bottomRight.x - topLeft.x;
+    const h = bottomRight.y - topLeft.y;
+
+    if (fill) {
+      this.ctx.fillStyle = fill;
+      this.ctx.fillRect(x, y, w, h);
+    }
+    if (stroke) {
+      this.ctx.strokeStyle = stroke;
+      this.ctx.strokeRect(x, y, w, h);
+    }
+  }
+
+  _drawGroundPlan() {
+    const ctx = this.ctx;
+    const layout = this._layout();
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(layout.left, layout.top, layout.width, layout.height);
+
+    this._drawWorldRect(-150, 150, -110, 110, null, 'rgba(255, 255, 255, 0.16)');
+    this._drawWorldRect(-140, 140, -90, 110, 'rgba(255, 255, 255, 0.035)');
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.045)';
+    ctx.lineWidth = 1;
+    for (let x = -130; x <= 130; x += 20) {
+      const a = this._project(x, -90);
+      const b = this._project(x, 110);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+    for (let z = -90; z <= 110; z += 20) {
+      const a = this._project(-140, z);
+      const b = this._project(140, z);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+    }
+  }
+
+  _drawTempleFootprint() {
+    const boxes = [
+      { minX: -14, maxX: 14, minZ: 88, maxZ: 112, color: 'rgba(110, 190, 255, 0.10)', stroke: 'rgba(110, 190, 255, 0.28)' },
+      { minX: -55, maxX: 55, minZ: 10, maxZ: 90, color: 'rgba(255, 255, 255, 0.035)', stroke: 'rgba(255, 255, 255, 0.13)' },
+      { minX: -130, maxX: 130, minZ: -80, maxZ: 10, color: 'rgba(255, 255, 255, 0.025)', stroke: 'rgba(255, 255, 255, 0.10)' },
+      { minX: -28, maxX: 28, minZ: -68, maxZ: -8, color: 'rgba(255, 180, 100, 0.10)', stroke: 'rgba(255, 180, 100, 0.30)' },
+      { minX: -125, maxX: -95, minZ: -65, maxZ: -25, color: 'rgba(170, 255, 190, 0.08)', stroke: 'rgba(170, 255, 190, 0.24)' },
+      { minX: -26, maxX: 26, minZ: -66, maxZ: -14, color: 'rgba(255, 255, 255, 0.10)' },
+      { minX: -13, maxX: 13, minZ: -30, maxZ: -10, color: 'rgba(255, 255, 255, 0.12)' },
+      { minX: -14, maxX: 14, minZ: 98, maxZ: 102, color: 'rgba(255, 255, 255, 0.11)' },
+      { minX: -112, maxX: -108, minZ: -60, maxZ: -30, color: 'rgba(255, 255, 255, 0.11)' },
+    ];
+
+    for (const box of boxes) {
+      this._drawWorldRect(box.minX, box.maxX, box.minZ, box.maxZ, box.color, box.stroke);
+    }
+  }
+
+  _drawCrowdPath() {
+    const ctx = this.ctx;
+    const path = [
+      [0, 98], [0, 82], [-20, 68], [20, 52], [-20, 36],
+      [0, 18], [0, -14], [0, -34], [-8, -50], [-60, -45], [-110, -45],
+    ];
+
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.10)';
+    ctx.lineWidth = 8;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    path.forEach(([x, z], index) => {
+      const point = this._project(x, z);
+      if (index === 0) ctx.moveTo(point.x, point.y);
+      else ctx.lineTo(point.x, point.y);
+    });
+    ctx.stroke();
+  }
+
+  _drawLabels() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
+    ctx.font = '11px Arial';
+    [
+      ['ENTRY', 18, 100],
+      ['QUEUE', 58, 50],
+      ['COURTYARD', 42, -2],
+      ['TEMPLE', 32, -40],
+      ['EXIT', -92, -45],
+    ].forEach(([label, x, z]) => {
+      const point = this._project(x, z);
+      ctx.fillText(label, point.x, point.y);
+    });
+  }
+}
+
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  App – main controller                                           ║
+// ╚══════════════════════════════════════════════════════════════════╝
+class App {
+  constructor() {
+    const container = document.getElementById('canvas-container');
+    this.sceneManager = new SceneManager(container);
+    this.templeModel  = new TempleModel(this.sceneManager.scene);
+    this.crowdManager = new CrowdManager(
+      this.sceneManager.scene,
+      this.templeModel.zones
+    );
+    this.heatmap = new TempleHeatmap();
+    this._clock = new THREE.Clock();
+    this._logZones();
+    this._applyTempleSimulationState();
+    this._start();
+  }
+
+  _logZones() {
+    const zoneEl = document.getElementById('zone-info');
+    const z = this.templeModel.zones;
+    zoneEl.innerHTML = Object.values(z)
+      .map(zone => `■ ${zone.name}  (${zone.position.x}, ${zone.position.z})`)
+      .join('&nbsp;&nbsp;&nbsp;');
+  }
+
+  _start() {
+    this.sceneManager.animate(() => {
+      const t = this._clock.getElapsedTime();
+      this.templeModel.update(t);
+      this.crowdManager.update(t);
+      this.heatmap.render(
+        this.crowdManager.getPeople(),
+        this.crowdManager._scenario?.scenario || null
+      );
+    });
+  }
+
+  _applyTempleSimulationState() {
+    const state = window.__TEMPLE_SIMULATION_STATE__;
+    if (!state) {
+      const panel = document.getElementById('prediction-panel');
+      if (panel) {
+        panel.innerHTML = `
+          <h2>PREDICTION LAYER</h2>
+          <p class="watch">No exported prediction state found.</p>
+          <p>Run the main pipeline first to generate the temple simulation state.</p>
+        `;
+      }
+      return;
+    }
+    this.crowdManager.applyScenario(state);
+  }
+}
+
+// ── Bootstrap ────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  window.__app = new App();
+});
+</script>
+</body>
+</html>

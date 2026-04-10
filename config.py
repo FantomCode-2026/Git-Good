@@ -55,6 +55,7 @@ class PipelineConfig:
     frame_skip: int = 2  # Process every 3rd frame by default for speed
     max_frame_queue_size: int = 128
     detector_imgsz: int = 960
+    enable_pose_features: bool = True
     
     # Tracking (DeepSORT)
     max_cosine_distance: float = 0.35
@@ -92,6 +93,7 @@ class PathConfig:
         self.yolo_weights: Optional[Path] = None
         self.resnet_weights: Optional[Path] = None
         self.transformer_weights: Optional[Path] = None
+        self.pose_landmarker_task: Optional[Path] = self.base_dir / "pose_landmarker.task"
     
     def ensure_directories(self):
         """Create all necessary directories if they don't exist"""
@@ -148,6 +150,14 @@ class MetricsConfig:
     fall_confidence_threshold: float = 0.8
     anomaly_score_threshold: float = 0.7
     crowd_density_threshold: float = 0.5  # 50% of frame area
+    hybrid_fall_heuristic_weight: float = 0.75
+    hybrid_fall_model_weight: float = 0.25
+    fall_probability_smoothing: float = 0.65
+    hybrid_fall_pose_weight: float = 0.35
+    hybrid_fall_motion_weight: float = 0.65
+    prediction_alert_threshold: float = 75.0
+    prediction_watch_threshold: float = 55.0
+    prediction_trend_weight: float = 0.35
 
 class Config:
     """Main configuration class aggregating all configs"""

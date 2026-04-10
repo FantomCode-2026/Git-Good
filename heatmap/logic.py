@@ -10,32 +10,30 @@ def detect_problem(data):
     compression = data.get("compression", False)
     unusual_behavior = data.get("unusual_behavior", False)
     fallen = data.get("fallen", False)
+    gate_pressure = data.get("gate_pressure", False)
+    queue_pressure = data.get("queue_pressure", False)
 
-    # 🔴 Highest priority
     if fallen:
         return "FALL_DETECTED"
 
-    # 🔴 Compression
-    if compression and avg_speed < 1.5:
+    if compression and density >= 8.5 and avg_speed < 0.7:
         return "HIGH_COMPRESSION"
 
-    # 🔴 Bottleneck
-    if density > 5 and avg_speed < 2:
+    if gate_pressure and density >= 7.0 and avg_speed < 1.0:
+        return "GATE_PRESSURE"
+
+    if queue_pressure and density >= 6.2 and (avg_speed < 0.95 or speed_drop):
         return "BOTTLENECK"
 
-    # 🔴 Opposing movement
-    if opposing_flow:
+    if opposing_flow and avg_speed < 1.2:
         return "OPPOSING_FLOW"
 
-    # 🟡 Flow instability
-    if flow_status == "chaotic":
+    if flow_status == "chaotic" and density >= 4.0:
         return "FLOW_CONFLICT"
 
-    # 🟡 Speed drop
-    if speed_drop:
+    if speed_drop and density >= 3.5:
         return "SPEED_DROP"
 
-    # 🟡 Unusual behavior
     if unusual_behavior:
         return "UNUSUAL_BEHAVIOR"
 
@@ -46,12 +44,13 @@ def get_risk_score(problem):
 
     risk_map = {
         "NORMAL": 20,
-        "SPEED_DROP": 45,
+        "SPEED_DROP": 42,
         "UNUSUAL_BEHAVIOR": 50,
-        "FLOW_CONFLICT": 60,
-        "OPPOSING_FLOW": 70,
-        "BOTTLENECK": 80,
-        "HIGH_COMPRESSION": 85,
+        "FLOW_CONFLICT": 58,
+        "OPPOSING_FLOW": 68,
+        "GATE_PRESSURE": 72,
+        "BOTTLENECK": 76,
+        "HIGH_COMPRESSION": 88,
         "FALL_DETECTED": 95
     }
 
@@ -66,18 +65,44 @@ def get_severity(risk):
         return "MEDIUM"
     else:
         return "HIGH"
-    
-def suggest_action(problem):
 
-    action_map = {
-        "NORMAL": "No action needed",
-        "SPEED_DROP": "Monitor crowd movement",
-        "UNUSUAL_BEHAVIOR": "Alert authorities to investigate",
-        "FLOW_CONFLICT": "Stop entry temporarily and guide crowd",
-        "OPPOSING_FLOW": "Redirect crowd to one direction",
-        "BOTTLENECK": "Open additional gates immediately",
-        "HIGH_COMPRESSION": "Disperse crowd and reduce density",
-        "FALL_DETECTED": "Emergency response required immediately"
-    }
 
-    return action_map.get(problem, "No action available")
+def suggest_action(problem, data=None, risk=None):
+
+    density = (data or {}).get("density", 0)
+    flow_status = (data or {}).get("flow_status", "smooth")
+
+    if problem == "NORMAL":
+        if risk is not None and risk >= 35:
+            return "Monitor inflow and keep stewards on standby"
+        return "No action needed"
+
+    if problem == "SPEED_DROP":
+        return "Monitor queue progression and slow new inflow if needed"
+
+    if problem == "UNUSUAL_BEHAVIOR":
+        return "Alert staff to investigate the affected area"
+
+    if problem == "FLOW_CONFLICT":
+        return "Guide pedestrians into a single direction and reinforce lane discipline"
+
+    if problem == "OPPOSING_FLOW":
+        return "Separate opposing streams and redirect one side immediately"
+
+    if problem == "GATE_PRESSURE":
+        if density >= 8.5:
+            return "Open additional gates or queue lanes and meter inflow"
+        return "Prepare extra gate capacity and deploy queue marshals"
+
+    if problem == "BOTTLENECK":
+        if flow_status == "chaotic":
+            return "Meter inflow, clear the choke point, and add queue marshals"
+        return "Reduce inflow briefly and smooth queue movement at the choke point"
+
+    if problem == "HIGH_COMPRESSION":
+        return "Stop inflow, open relief routes, and disperse the compressed zone immediately"
+
+    if problem == "FALL_DETECTED":
+        return "Dispatch emergency response and create space around the casualty"
+
+    return "No action available"

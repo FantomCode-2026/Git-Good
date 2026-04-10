@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-10T15:56:11.235088",
+  "timestamp": "2026-04-11T00:40:36.453751",
   "config": {
     "model": {
       "yolo_model_name": "yolov8n.pt",
@@ -25,6 +25,7 @@
       "frame_skip": 2,
       "max_frame_queue_size": 128,
       "detector_imgsz": 960,
+      "enable_pose_features": true,
       "max_cosine_distance": 0.35,
       "nn_budget": 200,
       "max_iou_distance": 0.85,
@@ -46,10 +47,11 @@
       "reports_dir": "/Users/chaitanya/projects/hackathon thing idk/outputs/reports",
       "yolo_weights": null,
       "resnet_weights": null,
-      "transformer_weights": null
+      "transformer_weights": null,
+      "pose_landmarker_task": "/Users/chaitanya/projects/hackathon thing idk/pose_landmarker.task"
     },
     "visualization": {
-      "show_display": false,
+      "show_display": true,
       "save_output_video": true,
       "save_annotated_frames": false,
       "bbox_color_normal": [
@@ -98,24 +100,43 @@
       "velocity_threshold_anomaly": 200.0,
       "fall_confidence_threshold": 0.8,
       "anomaly_score_threshold": 0.7,
-      "crowd_density_threshold": 0.5
+      "crowd_density_threshold": 0.5,
+      "hybrid_fall_heuristic_weight": 0.75,
+      "hybrid_fall_model_weight": 0.25,
+      "fall_probability_smoothing": 0.65,
+      "hybrid_fall_pose_weight": 0.35,
+      "hybrid_fall_motion_weight": 0.65,
+      "prediction_alert_threshold": 75.0,
+      "prediction_watch_threshold": 55.0,
+      "prediction_trend_weight": 0.35
     }
   },
   "summary": {
-    "total_frames": 5,
-    "avg_people_count": 35.4,
-    "max_people_count": 36,
-    "avg_density": 0.48987043467078184,
-    "max_density": 0.5212689686213992,
+    "total_frames": 114,
+    "avg_people_count": 30.105263157894736,
+    "max_people_count": 37,
+    "avg_density": 0.4441122115506101,
+    "max_density": 0.5685956790123456,
     "avg_anomaly_score": 0.0,
+    "avg_predicted_future_risk": 26.83143794875396,
+    "max_predicted_future_risk": 60.70670509338379,
+    "avg_fused_risk": 49.760495519471135,
+    "max_fused_risk": 72.3708955285357,
     "total_alerts": 0,
     "alerts_by_type": {},
-    "processed_frames": 5,
-    "source_frames_read": 15,
+    "processed_frames": 114,
+    "source_frames_read": 341,
     "frame_stride": 3,
-    "total_processing_time": 8.867217302322388,
-    "avg_fps": 0.5638747568180679
+    "total_processing_time": 92.01511287689209,
+    "avg_fps": 1.2389269157613456,
+    "prediction_layer": {
+      "latest_future_risk": 18.537298603057863,
+      "latest_fused_risk": 46.91507648111596,
+      "latest_problem": "OPPOSING_FLOW",
+      "latest_flow_status": "chaotic",
+      "model_loaded": true
+    }
   },
   "alerts": [],
-  "device": "cpu"
+  "device": "mps"
 }

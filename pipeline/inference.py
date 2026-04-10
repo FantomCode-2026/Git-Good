@@ -10,14 +10,23 @@ from loguru import logger
 
 from models.classifier import BehaviorAnalyzer, BehaviorClassifier
 from models.transformer import TemporalFeatureProcessor, TemporalTransformerEncoder
-from utils.checkpoint import load_state_dict_flexible
+from utils.checkpoint import load_state_dict_flexible, read_checkpoint_metadata
 
 
 class BehaviorInference:
-    def __init__(self, transformer_model, classifier_model, device: str = "cpu"):
+    def __init__(
+        self,
+        transformer_model,
+        classifier_model,
+        device: str = "cpu",
+        use_trained_classifier: bool = False,
+        demo_behavior_mode: bool = False,
+    ):
         self.device = device
         self.transformer_model = transformer_model
         self.classifier_model = classifier_model
+        self.use_trained_classifier = use_trained_classifier
+        self.demo_behavior_mode = demo_behavior_mode
 
         if device == "mps":
             self.transformer_model = self.transformer_model.float().to(device)
@@ -50,18 +59,26 @@ class BehaviorInference:
 
         results = {}
         for idx, track_id in enumerate(track_ids):
-            fall_prob = float(predictions["fall_prob"][idx])
-            anomaly_score = float(predictions["anomaly_score"][idx])
-            behavior_probs = predictions["behavior_probs"][idx]
-            behavior_label, confidence = self.classifier_model.get_behavior_label(
-                behavior_probs, anomaly_score, fall_prob
-            )
+            if self.use_trained_classifier:
+                fall_prob = float(predictions["fall_prob"][idx])
+                anomaly_score = float(predictions["anomaly_score"][idx])
+                behavior_probs = predictions["behavior_probs"][idx]
+                behavior_label, confidence = self.classifier_model.get_behavior_label(
+                    behavior_probs, anomaly_score, fall_prob
+                )
+            else:
+                fall_prob = 0.0
+                anomaly_score = 0.0
+                behavior_probs = np.array([1.0, 0.0, 0.0], dtype=np.float32)
+                behavior_label = "NORMAL"
+                confidence = 1.0
             results[track_id] = {
                 "fall_prob": fall_prob,
                 "anomaly_score": anomaly_score,
                 "behavior_probs": behavior_probs,
                 "behavior_label": behavior_label,
                 "confidence": float(confidence),
+                "model_trained": self.use_trained_classifier,
             }
             self.embedding_cache[track_id] = embeddings[idx].numpy()
 
@@ -81,11 +98,18 @@ class InferencePipeline:
         classifier_weights: str = None,
     ):
         self.device = device
+        self.transformer_weights_loaded = bool(transformer_weights)
+        self.classifier_weights_loaded = bool(classifier_weights)
+        self.demo_behavior_mode = False
         self.transformer_model = TemporalTransformerEncoder(
             d_model=feature_dim, max_sequence_length=sequence_length
         )
         self.classifier_model = BehaviorClassifier(input_dim=feature_dim)
         if transformer_weights:
+            metadata = read_checkpoint_metadata(transformer_weights)
+            self.demo_behavior_mode = self.demo_behavior_mode or bool(
+                metadata.get("demo_behavior_mode", False)
+            )
             load_result = load_state_dict_flexible(
                 self.transformer_model,
                 transformer_weights,
@@ -96,6 +120,10 @@ class InferencePipeline:
                 f"(missing={len(load_result['missing_keys'])}, unexpected={len(load_result['unexpected_keys'])})"
             )
         if classifier_weights:
+            metadata = read_checkpoint_metadata(classifier_weights)
+            self.demo_behavior_mode = self.demo_behavior_mode or bool(
+                metadata.get("demo_behavior_mode", False)
+            )
             load_result = load_state_dict_flexible(
                 self.classifier_model,
                 classifier_weights,
@@ -106,7 +134,11 @@ class InferencePipeline:
                 f"(missing={len(load_result['missing_keys'])}, unexpected={len(load_result['unexpected_keys'])})"
             )
         self.behavior_inference = BehaviorInference(
-            self.transformer_model, self.classifier_model, device=device
+            self.transformer_model,
+            self.classifier_model,
+            device=device,
+            use_trained_classifier=self.classifier_weights_loaded and not self.demo_behavior_mode,
+            demo_behavior_mode=self.demo_behavior_mode,
         )
         logger.info(f"Initialized complete InferencePipeline on {device}")
 
@@ -115,3 +147,9 @@ class InferencePipeline:
 
     def clear_cache(self):
         self.behavior_inference.clear_cache()
+
+    def has_trained_classifier(self) -> bool:
+        return self.classifier_weights_loaded
+
+    def is_demo_behavior_mode(self) -> bool:
+        return self.demo_behavior_mode

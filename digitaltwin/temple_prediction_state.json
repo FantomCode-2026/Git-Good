@@ -1,0 +1,37 @@
+{
+  "source": "prediction_layer",
+  "generatedAt": "2026-04-11T00:40:36.502154",
+  "scenario": {
+    "level": "normal",
+    "title": "OPPOSING_FLOW monitored flow",
+    "problem": "OPPOSING_FLOW",
+    "flowStatus": "chaotic",
+    "fusedRisk": 46.92,
+    "futureRisk": 18.54,
+    "trendRisk": 62.8,
+    "avgDensity": 0.4441,
+    "avgPeopleCount": 30.11,
+    "avgFusedRisk": 49.76,
+    "peakFusedRisk": 72.37,
+    "currentPeopleCount": 28.0,
+    "currentDensity": 0.4333,
+    "agentTarget": 46,
+    "rushMode": false,
+    "alertText": "No active alerts"
+  },
+  "crowdTuning": {
+    "globalSpeedScale": 0.839557398149554,
+    "pauseScale": 1.2606393137839775,
+    "pressureScale": 1.1845753824055798,
+    "queueBias": 1.3466538065843623,
+    "templeBias": 1.180442601850446
+  },
+  "zoneCounts": {
+    "entry": 6,
+    "queue": 16,
+    "courtyard": 11,
+    "temple": 8,
+    "exit": 5
+  },
+  "recentAlerts": []
+}

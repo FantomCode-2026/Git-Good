@@ -36,9 +36,14 @@ class CrowdMetrics:
         self.movement_history_length = config.metrics.movement_history_length
         self.velocity_threshold_normal = config.metrics.velocity_threshold_normal
         self.velocity_threshold_anomaly = config.metrics.velocity_threshold_anomaly
+        self.hybrid_fall_heuristic_weight = config.metrics.hybrid_fall_heuristic_weight
+        self.hybrid_fall_model_weight = config.metrics.hybrid_fall_model_weight
+        self.hybrid_fall_pose_weight = config.metrics.hybrid_fall_pose_weight
+        self.hybrid_fall_motion_weight = config.metrics.hybrid_fall_motion_weight
         
         # Store movement history for each person
         self.movement_history: Dict[int, deque] = {}
+        self.pose_history: Dict[int, deque] = {}
         
         logger.info("Initialized CrowdMetrics")
     
@@ -61,10 +66,19 @@ class CrowdMetrics:
         total_area = h * w
         
         # Calculate total area occupied by people
-        total_person_area = 0
+        total_person_area = 0.0
+        valid_boxes = []
         for det in detections:
-            bbox = det['bbox']
-            person_area = (bbox[2] - bbox[0]) * (bbox[3] - bbox[1])
+            x1, y1, x2, y2 = det['bbox']
+            x1 = float(np.clip(x1, 0, w))
+            x2 = float(np.clip(x2, 0, w))
+            y1 = float(np.clip(y1, 0, h))
+            y2 = float(np.clip(y2, 0, h))
+            if x2 <= x1 or y2 <= y1:
+                continue
+            bbox = (x1, y1, x2, y2)
+            valid_boxes.append(bbox)
+            person_area = (x2 - x1) * (y2 - y1)
             total_person_area += person_area
         
         # Compute density score
@@ -73,26 +87,34 @@ class CrowdMetrics:
         # Create density grid
         grid_h = self.density_grid_size
         grid_w = self.density_grid_size
-        density_grid = np.zeros((grid_h, grid_w))
-        
-        cell_h = h // grid_h
-        cell_w = w // grid_w
-        
-        for det in detections:
-            bbox = det['bbox']
-            # Find center of bounding box
-            cx = (bbox[0] + bbox[2]) // 2
-            cy = (bbox[1] + bbox[3]) // 2
-            
-            # Determine grid cell
-            grid_x = min(grid_w - 1, cx // cell_w)
-            grid_y = min(grid_h - 1, cy // cell_h)
-            
-            density_grid[grid_y, grid_x] += 1
-        
-        # Normalize grid
-        max_people_per_cell = max(1, np.max(density_grid))
-        density_grid = density_grid / max_people_per_cell
+        density_grid = np.zeros((grid_h, grid_w), dtype=np.float32)
+        x_edges = np.linspace(0, w, grid_w + 1)
+        y_edges = np.linspace(0, h, grid_h + 1)
+
+        for x1, y1, x2, y2 in valid_boxes:
+            x_start = max(0, np.searchsorted(x_edges, x1, side="right") - 1)
+            x_end = min(grid_w - 1, np.searchsorted(x_edges, x2, side="left"))
+            y_start = max(0, np.searchsorted(y_edges, y1, side="right") - 1)
+            y_end = min(grid_h - 1, np.searchsorted(y_edges, y2, side="left"))
+
+            for grid_y in range(y_start, y_end + 1):
+                cell_y1 = y_edges[grid_y]
+                cell_y2 = y_edges[grid_y + 1]
+                overlap_h = max(0.0, min(y2, cell_y2) - max(y1, cell_y1))
+                if overlap_h <= 0:
+                    continue
+
+                for grid_x in range(x_start, x_end + 1):
+                    cell_x1 = x_edges[grid_x]
+                    cell_x2 = x_edges[grid_x + 1]
+                    overlap_w = max(0.0, min(x2, cell_x2) - max(x1, cell_x1))
+                    if overlap_w <= 0:
+                        continue
+
+                    cell_area = max((cell_x2 - cell_x1) * (cell_y2 - cell_y1), 1.0)
+                    density_grid[grid_y, grid_x] += (overlap_w * overlap_h) / cell_area
+
+        density_grid = np.clip(density_grid / max(self.frame_area_threshold, 1e-6), 0.0, 1.0)
         
         return density_score, density_grid
     
@@ -121,6 +143,14 @@ class CrowdMetrics:
             self.movement_history[track_id] = deque(maxlen=self.movement_history_length)
         
         self.movement_history[track_id].append((center, timestamp))
+
+    def update_pose(self, track_id: int, pose_features: Dict[str, float]):
+        """
+        Store recent pose-derived features for a person.
+        """
+        if track_id not in self.pose_history:
+            self.pose_history[track_id] = deque(maxlen=self.movement_history_length)
+        self.pose_history[track_id].append(pose_features)
     
     def compute_movement_stats(self, track_id: int) -> Optional[MovementStats]:
         """
@@ -188,6 +218,167 @@ class CrowdMetrics:
             max_speed=max_speed,
             movement_pattern=pattern
         )
+
+    def estimate_fall_risk(self, track_id: int, bbox: List[int]) -> Dict[str, float]:
+        """
+        Estimate fall risk from bounding-box posture and short-term motion.
+
+        Returns:
+            Dictionary with a probability-like score and feature contributions.
+        """
+        width = max(1, bbox[2] - bbox[0])
+        height = max(1, bbox[3] - bbox[1])
+        aspect_ratio = width / height
+
+        # Horizontal posture is a strong fall cue.
+        posture_score = np.clip((aspect_ratio - 0.45) / 0.85, 0.0, 1.0)
+
+        history = self.movement_history.get(track_id, deque())
+        pose_history = self.pose_history.get(track_id, deque())
+        drop_score = 0.0
+        speed_score = 0.0
+        acceleration_score = 0.0
+        direction_change_score = 0.0
+        lean_score = 0.0
+        com_shift_score = 0.0
+        gait_score = 0.0
+
+        if len(history) >= 2:
+            (prev_center, prev_t), (curr_center, curr_t) = history[-2], history[-1]
+            dt = max(curr_t - prev_t, 1)
+            vertical_drop = curr_center[1] - prev_center[1]
+            total_speed = np.sqrt(
+                (curr_center[0] - prev_center[0]) ** 2
+                + (curr_center[1] - prev_center[1]) ** 2
+            ) / dt
+
+            # Large sudden downward motion increases risk.
+            drop_score = np.clip(vertical_drop / max(height * 0.35, 1.0), 0.0, 1.0)
+            speed_score = np.clip(total_speed / max(self.velocity_threshold_normal, 1.0), 0.0, 1.0)
+
+        movement_stats = self.compute_movement_stats(track_id)
+        if movement_stats is not None:
+            if movement_stats.accelerations:
+                acceleration_score = float(
+                    np.clip(
+                        np.max(np.abs(movement_stats.accelerations))
+                        / max(self.velocity_threshold_normal, 1.0),
+                        0.0,
+                        1.0,
+                    )
+                )
+            if len(movement_stats.positions) >= 3:
+                direction_vectors = []
+                positions = movement_stats.positions
+                for idx in range(1, len(positions)):
+                    dx = positions[idx][0] - positions[idx - 1][0]
+                    dy = positions[idx][1] - positions[idx - 1][1]
+                    norm = np.sqrt(dx ** 2 + dy ** 2)
+                    if norm > 1e-6:
+                        direction_vectors.append((dx / norm, dy / norm))
+                if len(direction_vectors) >= 2:
+                    changes = 0
+                    for idx in range(1, len(direction_vectors)):
+                        dot = (
+                            direction_vectors[idx][0] * direction_vectors[idx - 1][0]
+                            + direction_vectors[idx][1] * direction_vectors[idx - 1][1]
+                        )
+                        if dot < 0.5:
+                            changes += 1
+                    direction_change_score = float(
+                        np.clip(changes / max(len(direction_vectors) - 1, 1), 0.0, 1.0)
+                    )
+
+        if pose_history:
+            latest_pose = pose_history[-1]
+            lean_score = float(
+                np.clip(abs(latest_pose.get("body_angle_deg", 0.0)) / 35.0, 0.0, 1.0)
+            )
+            com_shift_score = float(
+                np.clip(latest_pose.get("center_of_mass_shift", 0.0) / 0.18, 0.0, 1.0)
+            )
+            gait_score = float(
+                np.clip(latest_pose.get("step_irregularity", 0.0) / 0.12, 0.0, 1.0)
+            )
+
+        motion_probability = float(
+            np.clip(
+                0.4 * posture_score
+                + 0.25 * drop_score
+                + 0.1 * speed_score
+                + 0.15 * acceleration_score
+                + 0.1 * direction_change_score,
+                0.0,
+                1.0,
+            )
+        )
+
+        pose_probability = float(
+            np.clip(0.5 * lean_score + 0.3 * com_shift_score + 0.2 * gait_score, 0.0, 1.0)
+        )
+
+        probability = float(
+            np.clip(
+                self.hybrid_fall_motion_weight * motion_probability
+                + self.hybrid_fall_pose_weight * pose_probability,
+                0.0,
+                1.0,
+            )
+        )
+
+        return {
+            "fall_risk": probability,
+            "motion_probability": motion_probability,
+            "pose_probability": pose_probability,
+            "posture_score": float(posture_score),
+            "drop_score": float(drop_score),
+            "speed_score": float(speed_score),
+            "acceleration_score": float(acceleration_score),
+            "direction_change_score": float(direction_change_score),
+            "lean_score": float(lean_score),
+            "center_of_mass_score": float(com_shift_score),
+            "gait_score": float(gait_score),
+        }
+
+    def compute_hybrid_fall_probability(
+        self,
+        heuristic_result: Dict[str, float],
+        model_fall_prob: Optional[float] = None,
+        prior_probability: Optional[float] = None,
+        smoothing: float = 0.65,
+    ) -> Dict[str, float]:
+        """
+        Combine heuristic instability and model fall signal into P(fall soon).
+        """
+        heuristic_prob = float(heuristic_result.get("fall_risk", 0.0))
+        if model_fall_prob is None:
+            combined = heuristic_prob
+            model_component = 0.0
+        else:
+            model_component = float(np.clip(model_fall_prob, 0.0, 1.0))
+            combined = float(
+                np.clip(
+                    self.hybrid_fall_heuristic_weight * heuristic_prob
+                    + self.hybrid_fall_model_weight * model_component,
+                    0.0,
+                    1.0,
+                )
+            )
+
+        if prior_probability is not None:
+            combined = float(
+                np.clip(
+                    smoothing * float(prior_probability) + (1.0 - smoothing) * combined,
+                    0.0,
+                    1.0,
+                )
+            )
+
+        return {
+            "fall_probability": combined,
+            "heuristic_probability": heuristic_prob,
+            "model_probability": model_component,
+        }
     
     def detect_crowd_anomaly(self, 
                             density_score: float, 
@@ -299,9 +490,17 @@ class CrowdMetrics:
         
         for tid in inactive_ids:
             del self.movement_history[tid]
+            if tid in self.pose_history:
+                del self.pose_history[tid]
         
         if inactive_ids:
             logger.debug(f"Cleaned up movement history for {len(inactive_ids)} tracks")
+
+    def reset(self):
+        """Reset stored movement and pose histories."""
+        self.movement_history = {}
+        self.pose_history = {}
+        logger.info("Reset CrowdMetrics histories")
 
 class MetricsAggregator:
     """
@@ -346,6 +545,8 @@ class MetricsAggregator:
         people_counts = [m['people_count'] for m in self.metrics_history]
         densities = [m['density'] for m in self.metrics_history]
         anomaly_scores = [m.get('avg_anomaly_score', 0) for m in self.metrics_history]
+        future_risks = [m.get('predicted_future_risk', 0) for m in self.metrics_history]
+        fused_risks = [m.get('fused_risk', 0) for m in self.metrics_history]
         
         summary = {
             'total_frames': len(self.metrics_history),
@@ -354,6 +555,10 @@ class MetricsAggregator:
             'avg_density': np.mean(densities),
             'max_density': np.max(densities),
             'avg_anomaly_score': np.mean(anomaly_scores),
+            'avg_predicted_future_risk': np.mean(future_risks),
+            'max_predicted_future_risk': np.max(future_risks),
+            'avg_fused_risk': np.mean(fused_risks),
+            'max_fused_risk': np.max(fused_risks),
             'total_alerts': len(self.alerts_history),
             'alerts_by_type': self._count_alerts_by_type()
         }

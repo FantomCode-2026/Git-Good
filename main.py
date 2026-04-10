@@ -5,6 +5,7 @@ Provides CLI interface and orchestrates the complete pipeline
 
 import argparse
 import sys
+import webbrowser
 import cv2
 import torch
 import numpy as np
@@ -16,11 +17,14 @@ from loguru import logger
 
 # Import all pipeline components
 from config import config
+from digitaltwin.exporter import export_temple_simulation_state
 from pipeline.detector import PersonDetector
 from pipeline.tracker import PersonTracker
 from pipeline.feature_extractor import FeatureExtractor
+from pipeline.pose_estimator import PoseEstimator
 from pipeline.sequence_manager import SequenceManager, SequenceProcessor
 from pipeline.inference import InferencePipeline
+from prediction_layer import PredictionLayerBridge
 from utils.visualization import Visualizer, VideoWriter
 from utils.metrics import CrowdMetrics, MetricsAggregator
 
@@ -69,7 +73,10 @@ class CrowdBehaviorSystem:
         self.frame_count = 0
         self.total_frames = 0
         self.video_writer = None
+        self.fall_probability_state = {}
         self.visualizer = Visualizer(config)
+        self.prediction_layer = PredictionLayerBridge()
+        self.last_prediction_alert_frame = None
         
         logger.info("CrowdBehaviorSystem initialized successfully")
 
@@ -121,6 +128,17 @@ class CrowdBehaviorSystem:
             batch_size=config.pipeline.feature_batch_size,
             device=self.device
         )
+        self.pose_estimator = PoseEstimator(
+            enabled=config.pipeline.enable_pose_features,
+            task_model_path=str(config.paths.pose_landmarker_task)
+            if config.paths.pose_landmarker_task is not None
+            else None,
+        )
+        pose_status = self.pose_estimator.get_status()
+        logger.info(
+            f"Pose Status: enabled={pose_status['enabled']} "
+            f"mode={pose_status['mode']} message={pose_status['message']}"
+        )
         
         # Sequence management
         self.sequence_manager = SequenceManager(
@@ -143,6 +161,69 @@ class CrowdBehaviorSystem:
         self.metrics = CrowdMetrics(config)
         
         logger.info("All pipeline components initialized")
+
+    def _build_demo_behavior_result(self, track_id: int, fall_risk_result: Dict) -> Dict:
+        """
+        Build believable demo behavior labels from heuristic risk signals.
+        """
+        movement_stats = self.metrics.compute_movement_stats(track_id)
+        fall_probability = float(fall_risk_result.get("fall_probability", 0.0))
+        motion_probability = float(fall_risk_result.get("motion_probability", 0.0))
+        pose_probability = float(fall_risk_result.get("pose_probability", 0.0))
+        acceleration_score = float(fall_risk_result.get("acceleration_score", 0.0))
+        direction_change_score = float(fall_risk_result.get("direction_change_score", 0.0))
+
+        if fall_probability >= 0.85:
+            return {
+                "fall_prob": fall_probability,
+                "anomaly_score": max(fall_probability, motion_probability),
+                "behavior_probs": np.array([0.0, 0.0, 1.0], dtype=np.float32),
+                "behavior_label": "FALL_DETECTED",
+                "confidence": fall_probability,
+                "model_trained": False,
+            }
+
+        if fall_probability >= 0.65:
+            return {
+                "fall_prob": fall_probability,
+                "anomaly_score": max(fall_probability, pose_probability),
+                "behavior_probs": np.array([0.0, 1.0, 0.0], dtype=np.float32),
+                "behavior_label": "FALL_RISK",
+                "confidence": fall_probability,
+                "model_trained": False,
+            }
+
+        if acceleration_score > 0.55 and direction_change_score > 0.45:
+            confidence = max(acceleration_score, direction_change_score)
+            return {
+                "fall_prob": fall_probability,
+                "anomaly_score": confidence,
+                "behavior_probs": np.array([0.0, 1.0, 0.0], dtype=np.float32),
+                "behavior_label": "ABNORMAL_BEHAVIOR",
+                "confidence": confidence,
+                "model_trained": False,
+            }
+
+        if movement_stats is not None and movement_stats.movement_pattern == "erratic":
+            confidence = max(motion_probability, 0.55)
+            return {
+                "fall_prob": fall_probability,
+                "anomaly_score": confidence,
+                "behavior_probs": np.array([0.0, 1.0, 0.0], dtype=np.float32),
+                "behavior_label": "SUSPICIOUS",
+                "confidence": confidence,
+                "model_trained": False,
+            }
+
+        return {
+            "fall_prob": fall_probability,
+            "anomaly_score": max(0.0, min(motion_probability * 0.5, 0.25)),
+            "behavior_probs": np.array([1.0, 0.0, 0.0], dtype=np.float32),
+            "behavior_label": "NORMAL",
+            "confidence": 0.95,
+            "model_trained": False,
+        }
+
     def process_frame(self, frame: np.ndarray, frame_number: int) -> Dict:
         """
         Process a single frame through the entire pipeline
@@ -159,6 +240,8 @@ class CrowdBehaviorSystem:
         
         # 2. Track persons (assign persistent IDs)
         tracked_objects = self.tracker.update(detections, frame)
+        active_track_ids = [obj['track_id'] for obj in tracked_objects]
+        self.metrics.cleanup_old_tracks(active_track_ids)
         
         # 3. Extract features for each tracked person
         features = self.feature_extractor.extract_features_per_person(frame, tracked_objects)
@@ -186,12 +269,41 @@ class CrowdBehaviorSystem:
             bbox = obj['bbox']
             center = self.metrics.get_center(bbox)
             self.metrics.update_movement(track_id, center, frame_number)
+            pose_features = self.pose_estimator.extract_pose_features(frame, bbox)
+            if pose_features is not None:
+                self.metrics.update_pose(track_id, pose_features)
+                obj['pose_features'] = pose_features
         
         # 7. Compute crowd metrics
         people_count = self.metrics.compute_people_count(tracked_objects)
         density_score, density_grid = self.metrics.compute_density(
             frame.shape[:2], tracked_objects
         )
+
+        fall_risk_results = {}
+        for obj in tracked_objects:
+            track_id = obj['track_id']
+            heuristic_result = self.metrics.estimate_fall_risk(track_id, obj['bbox'])
+            model_fall_prob = None
+            if track_id in behavior_results:
+                model_fall_prob = behavior_results[track_id].get('fall_prob')
+            fall_probability_result = self.metrics.compute_hybrid_fall_probability(
+                heuristic_result,
+                model_fall_prob=model_fall_prob,
+                prior_probability=self.fall_probability_state.get(track_id),
+                smoothing=config.metrics.fall_probability_smoothing,
+            )
+            combined_result = {**heuristic_result, **fall_probability_result}
+            fall_risk_results[track_id] = combined_result
+            self.fall_probability_state[track_id] = combined_result['fall_probability']
+            obj['fall_probability'] = combined_result['fall_probability']
+            obj['fall_risk'] = combined_result['heuristic_probability']
+
+        if self.inference_pipeline.is_demo_behavior_mode():
+            behavior_results = {
+                track_id: self._build_demo_behavior_result(track_id, result)
+                for track_id, result in fall_risk_results.items()
+            }
         
         # 8. Compute average anomaly score
         avg_anomaly = 0
@@ -204,7 +316,30 @@ class CrowdBehaviorSystem:
         crowd_anomaly, anomaly_desc = self.metrics.detect_crowd_anomaly(
             density_score, people_count, historical_densities
         )
-        
+
+        prediction_result = self.prediction_layer.evaluate(
+            people_count=people_count,
+            density_score=density_score,
+            density_grid=density_grid,
+            tracked_objects=tracked_objects,
+            behavior_results=behavior_results,
+            fall_risk_results=fall_risk_results,
+            metrics=self.metrics,
+        )
+
+        prediction_threshold = config.metrics.prediction_alert_threshold
+        if prediction_result['fused_risk'] >= prediction_threshold:
+            prediction_desc = (
+                f"Future crowd risk {prediction_result['fused_risk']:.1f}/100 "
+                f"({prediction_result['problem']}, flow={prediction_result['flow_status']}, "
+                f"action={prediction_result['recommended_action']})"
+            )
+            if anomaly_desc:
+                anomaly_desc = f"{anomaly_desc} | {prediction_desc}"
+            else:
+                anomaly_desc = prediction_desc
+            crowd_anomaly = True
+
         # 10. Prepare frame results
         frame_results = {
             'frame_number': frame_number,
@@ -213,7 +348,9 @@ class CrowdBehaviorSystem:
             'avg_anomaly_score': avg_anomaly,
             'tracked_objects': tracked_objects,
             'behavior_results': behavior_results,
+            'fall_risk_results': fall_risk_results,
             'density_grid': density_grid,
+            'prediction_result': prediction_result,
             'crowd_anomaly': crowd_anomaly,
             'anomaly_description': anomaly_desc
         }
@@ -224,6 +361,15 @@ class CrowdBehaviorSystem:
             'people_count': people_count,
             'density': density_score,
             'avg_anomaly_score': avg_anomaly,
+            'avg_fall_probability': np.mean(
+                [r['fall_probability'] for r in fall_risk_results.values()]
+            ) if fall_risk_results else 0.0,
+            'base_prediction_risk': prediction_result['base_risk'],
+            'predicted_future_risk': prediction_result['predicted_future_risk'],
+            'trend_risk': prediction_result['trend_risk'],
+            'fused_risk': prediction_result['fused_risk'],
+            'flow_status': prediction_result['flow_status'],
+            'predicted_problem': prediction_result['problem'],
             'num_tracks': len(tracked_objects),
             'num_inferences': len(behavior_results)
         })
@@ -238,6 +384,25 @@ class CrowdBehaviorSystem:
             }
             self.metrics_aggregator.add_alert(alert)
             logger.warning(f"Frame {frame_number}: {anomaly_desc}")
+
+        if prediction_result['fused_risk'] >= prediction_threshold:
+            prediction_desc = (
+                f"Future crowd risk {prediction_result['fused_risk']:.1f}/100 "
+                f"({prediction_result['problem']})"
+            )
+            if self.last_prediction_alert_frame != frame_number:
+                alert = {
+                    'frame': frame_number,
+                    'type': 'prediction_alert',
+                    'description': prediction_desc,
+                    'fused_risk': prediction_result['fused_risk'],
+                    'predicted_future_risk': prediction_result['predicted_future_risk'],
+                    'trend_risk': prediction_result['trend_risk'],
+                    'problem': prediction_result['problem']
+                }
+                self.metrics_aggregator.add_alert(alert)
+                self.last_prediction_alert_frame = frame_number
+                logger.warning(f"Frame {frame_number}: {prediction_desc}")
         
         for track_id, behavior in behavior_results.items():
             if behavior['anomaly_score'] > config.model.anomaly_threshold:
@@ -252,6 +417,20 @@ class CrowdBehaviorSystem:
                 self.metrics_aggregator.add_alert(alert)
                 logger.warning(f"Frame {frame_number}: Person {track_id} - {behavior['behavior_label']} "
                              f"(anomaly: {behavior['anomaly_score']:.2f})")
+
+        for track_id, fall_risk in fall_risk_results.items():
+            if fall_risk['fall_probability'] > config.metrics.fall_confidence_threshold:
+                alert = {
+                    'frame': frame_number,
+                    'track_id': track_id,
+                    'type': 'fall_risk',
+                    'fall_risk': fall_risk['fall_probability']
+                }
+                self.metrics_aggregator.add_alert(alert)
+                logger.warning(
+                    f"Frame {frame_number}: Person {track_id} high fall risk "
+                    f"({fall_risk['fall_probability']:.2f})"
+                )
         
         return frame_results
     
@@ -277,32 +456,44 @@ class CrowdBehaviorSystem:
             behavior_label = "NORMAL"
             confidence = 1.0
             anomaly_score = None
+            fall_probability = obj.get('fall_probability')
             
             if track_id in results['behavior_results']:
                 behavior = results['behavior_results'][track_id]
                 behavior_label = behavior['behavior_label']
                 confidence = behavior['confidence']
                 anomaly_score = behavior['anomaly_score']
+
+            if fall_probability is not None and fall_probability > 0.7 and behavior_label == "NORMAL":
+                behavior_label = "FALL_RISK"
+                confidence = fall_probability
             
             frame = self.visualizer.draw_tracked_person(
-                frame, track_id, bbox, behavior_label, confidence, anomaly_score
+                frame,
+                track_id,
+                bbox,
+                behavior_label,
+                confidence,
+                anomaly_score,
+                fall_probability=fall_probability,
             )
         
         # Draw crowd statistics
         frame = self.visualizer.draw_crowd_stats(
-            frame,
-            results['people_count'],
-            results['density'],
-            len(results['tracked_objects']),
-            fps=30  # Will be updated with actual FPS
-        )
+                frame,
+                results['people_count'],
+                results['density'],
+                len(results['tracked_objects']),
+                fps=30,  # Will be updated with actual FPS
+                prediction_result=results.get('prediction_result'),
+            )
         
         # Draw density heatmap
         if config.visualization.show_density_map:
             frame = self.visualizer.draw_density_heatmap(
                 frame, results['density_grid'], alpha=0.3
             )
-        
+
         # Draw anomaly indicator if high anomaly
         if results['avg_anomaly_score'] > 0.5:
             frame = self.visualizer.draw_anomaly_indicator(
@@ -313,6 +504,20 @@ class CrowdBehaviorSystem:
         if results['crowd_anomaly']:
             frame = self.visualizer.draw_alert(
                 frame, results['anomaly_description'], (50, 200), 'warning'
+            )
+
+        prediction_result = results.get('prediction_result')
+        if prediction_result and prediction_result['severity'] in {'MEDIUM', 'HIGH'}:
+            alert_type = 'danger' if prediction_result['severity'] == 'HIGH' else 'warning'
+            frame = self.visualizer.draw_alert(
+                frame,
+                (
+                    f"{prediction_result['problem']} | "
+                    f"risk {prediction_result['fused_risk']:.1f} | "
+                    f"{prediction_result['recommended_action']}"
+                ),
+                (50, 250),
+                alert_type,
             )
         
         return frame
@@ -419,6 +624,16 @@ class CrowdBehaviorSystem:
         summary['frame_stride'] = frame_stride
         summary['total_processing_time'] = sum(processing_times)
         summary['avg_fps'] = self.frame_count / sum(processing_times) if processing_times else 0
+
+        if self.metrics_aggregator.metrics_history:
+            final_metrics = self.metrics_aggregator.metrics_history[-1]
+            summary['prediction_layer'] = {
+                'latest_future_risk': final_metrics.get('predicted_future_risk', 0.0),
+                'latest_fused_risk': final_metrics.get('fused_risk', 0.0),
+                'latest_problem': final_metrics.get('predicted_problem', 'NORMAL'),
+                'latest_flow_status': final_metrics.get('flow_status', 'smooth'),
+                'model_loaded': self.prediction_layer.predictor.model is not None,
+            }
         
         logger.info(f"Video processing completed. Summary: {summary}")
         
@@ -465,15 +680,41 @@ class CrowdBehaviorSystem:
         # Also export metrics to CSV
         csv_path = str(report_path).replace('.json', '_metrics.csv')
         self.metrics_aggregator.export_to_csv(csv_path)
+
+        digital_twin_export = export_temple_simulation_state(
+            output_dir=config.paths.base_dir / "digitaltwin",
+            summary=self._make_json_safe(summary),
+            metrics_history=self._make_json_safe(self.metrics_aggregator.metrics_history),
+            alerts_history=self._make_json_safe(self.metrics_aggregator.alerts_history),
+        )
+        logger.info(
+            "Temple digital twin state exported to "
+            f"{digital_twin_export['js_path']}"
+        )
+
+        digital_twin_pages = [
+            config.paths.base_dir / "digitaltwin" / "temple_simulation (3).html",
+            config.paths.base_dir / "digitaltwin" / "digital-twin-stadium-enhanced.html",
+        ]
+        for page in digital_twin_pages:
+            if page.exists():
+                webbrowser.open(page.resolve().as_uri())
+                logger.info(f"Opened digital twin: {page}")
+            else:
+                logger.warning(f"Digital twin page not found: {page}")
     
     def reset(self):
         """Reset system state for new video"""
         self.frame_count = 0
         self.total_frames = 0
+        self.fall_probability_state = {}
+        self.last_prediction_alert_frame = None
         self.tracker.reset()
         self.sequence_manager.reset()
+        self.metrics.reset()
         self.metrics_aggregator.reset()
         self.inference_pipeline.clear_cache()
+        self.prediction_layer.reset()
         logger.info("System reset")
 
 def main():
@@ -515,7 +756,7 @@ def main():
     config_override = {}
     if args.no_display:
         config_override['visualization'] = {'show_display': False}
-    
+
     if args.confidence:
         config_override['model'] = {'yolo_confidence_threshold': args.confidence}
     
@@ -576,12 +817,12 @@ def main():
             report_path = config.paths.reports_dir / f"{input_path.stem}_report.json"
         else:
             report_path = Path(args.report)
-        
+
         # Process video
         summary = system.process_video(
             str(input_path),
             str(output_path),
-            args.max_frames
+            args.max_frames,
         )
         
         # Save report
