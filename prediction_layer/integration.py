@@ -23,6 +23,8 @@ class PredictionLayerBridge:
         self.risk_history: Deque[float] = deque(maxlen=20)
         self.density_history: Deque[float] = deque(maxlen=20)
         self.people_history: Deque[float] = deque(maxlen=20)
+        self.males_history: Deque[float] = deque(maxlen=20)
+        self.females_history: Deque[float] = deque(maxlen=20)
 
     def evaluate(
         self,
@@ -33,6 +35,8 @@ class PredictionLayerBridge:
         behavior_results: Dict[int, Dict],
         fall_risk_results: Dict[int, Dict],
         metrics,
+        males: int = 0,
+        females: int = 0,
     ) -> Dict[str, object]:
         avg_speed = self._compute_average_speed(tracked_objects, metrics)
         flow_snapshot = self._compute_flow_snapshot(tracked_objects, metrics)
@@ -41,6 +45,8 @@ class PredictionLayerBridge:
         )
         density_trend = self._compute_trend(self.density_history, density_score)
         people_trend = self._compute_trend(self.people_history, float(people_count))
+        males_trend = self._compute_trend(self.males_history, float(males))
+        females_trend = self._compute_trend(self.females_history, float(females))
         speed_for_model = avg_speed if avg_speed is not None else 1.35
         speed_trend = self._compute_trend(self.speed_history, speed_for_model)
 
@@ -107,6 +113,12 @@ class PredictionLayerBridge:
                 100.0,
             )
         )
+        predicted_males, predicted_females = self.predictor.predict_future_people_count(
+            current_males=males,
+            current_females=females,
+            trend_males=males_trend,
+            trend_females=females_trend,
+        )
         trend_risk = self._estimate_trend_risk(
             density_score=density_score,
             density_trend=density_trend,
@@ -126,8 +138,17 @@ class PredictionLayerBridge:
 
         self.density_history.append(density_score)
         self.people_history.append(float(people_count))
+        self.males_history.append(float(males))
+        self.females_history.append(float(females))
         self.speed_history.append(speed_for_model)
         self.risk_history.append(fused_risk)
+
+        # Claustrophobia alerts based on predicted gender counts
+        claustrophobia_alerts = []
+        if predicted_females > 15:  # Threshold for female claustrophobia
+            claustrophobia_alerts.append("FEMALE_CLAUSTROPHOBIA")
+        if predicted_males > 25:  # Threshold for male claustrophobia
+            claustrophobia_alerts.append("MALE_CLAUSTROPHOBIA")
 
         return {
             "problem": problem,
@@ -144,6 +165,11 @@ class PredictionLayerBridge:
             "flow_status": data["flow_status"],
             "density_trend": density_trend,
             "people_trend": people_trend,
+            "males_trend": males_trend,
+            "females_trend": females_trend,
+            "predicted_males": predicted_males,
+            "predicted_females": predicted_females,
+            "claustrophobia_alerts": claustrophobia_alerts,
             "speed_trend": speed_trend,
             "speed_drop": speed_drop,
             "opposing_flow": data["opposing_flow"],
@@ -156,6 +182,8 @@ class PredictionLayerBridge:
     def reset(self):
         self.density_history.clear()
         self.people_history.clear()
+        self.males_history.clear()
+        self.females_history.clear()
         self.speed_history.clear()
         self.risk_history.clear()
 

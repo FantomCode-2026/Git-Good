@@ -378,6 +378,8 @@ class CrowdBehaviorSystem(DashboardPushMixin):
             behavior_results=behavior_results,
             fall_risk_results=fall_risk_results,
             metrics=self.metrics,
+            males=self.demographic_estimator.get_demographic_summary().get('male', 0),
+            females=self.demographic_estimator.get_demographic_summary().get('female', 0),
         )
 
         self._maybe_push_dashboard_evaluation(prediction_result)

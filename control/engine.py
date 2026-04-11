@@ -64,6 +64,20 @@ class ControlEngine:
                 severity = "WARNING", source="risk_engine")
             self._record("WARNING_ANNOUNCEMENT", zone, fused_risk)
 
+        # Check for claustrophobia alerts
+        claustrophobia_alerts = eval_result.get("claustrophobia_alerts", [])
+        for alert in claustrophobia_alerts:
+            if alert == "FEMALE_CLAUSTROPHOBIA":
+                self.announcer.broadcast(
+                    message=f"Zone {zone}: Predicted high female density may cause claustrophobia. "
+                            f"Predicted females: {eval_result.get('predicted_females', 0)}",
+                    severity="WARNING", source="prediction_layer")
+            elif alert == "MALE_CLAUSTROPHOBIA":
+                self.announcer.broadcast(
+                    message=f"Zone {zone}: Predicted high male density may cause claustrophobia. "
+                            f"Predicted males: {eval_result.get('predicted_males', 0)}",
+                    severity="WARNING", source="prediction_layer")
+
     def process_simulation_state(self, sim_state: Dict) -> None:
         scenario   = sim_state.get("scenario", {})
         fused_risk = scenario.get("fusedRisk", 0.0)

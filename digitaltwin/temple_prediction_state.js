@@ -1,6 +1,6 @@
 window.__TEMPLE_SIMULATION_STATE__ = {
   "source": "prediction_layer",
-  "generatedAt": "2026-04-11T06:08:33.004351",
+  "generatedAt": "2026-04-11T06:40:50.906137",
   "behaviorModel": {
     "baseline": {
       "label": "normal_operations",

@@ -19,3 +19,12 @@ class CrowdPredictor:
         chaotic = 1 if flow_status == "chaotic" else 0
         features = np.array([[density, speed, chaotic]], dtype=np.float32)
         return float(self.model.predict(features)[0])
+
+    def predict_future_people_count(self, current_males, current_females, trend_males, trend_females, time_steps=5):
+        """
+        Predict future people count based on current gender counts and trends.
+        Uses simple linear extrapolation.
+        """
+        predicted_males = max(0, int(current_males + trend_males * time_steps))
+        predicted_females = max(0, int(current_females + trend_females * time_steps))
+        return predicted_males, predicted_females

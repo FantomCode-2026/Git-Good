@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-11T06:08:32.973080",
+  "timestamp": "2026-04-11T06:40:50.862417",
   "config": {
     "model": {
       "yolo_model_name": "yolov8n.pt",
@@ -161,8 +161,8 @@
     "processed_frames": 114,
     "source_frames_read": 341,
     "frame_stride": 3,
-    "total_processing_time": 82.72505855560303,
-    "avg_fps": 1.3780588613711982,
+    "total_processing_time": 80.99182486534119,
+    "avg_fps": 1.4075494679807368,
     "prediction_layer": {
       "latest_future_risk": 19.360723152160645,
       "latest_fused_risk": 47.244446300757076,
