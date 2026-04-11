@@ -1,0 +1,924 @@
+{
+  "timestamp": "2026-04-11T05:55:18.090754",
+  "config": {
+    "model": {
+      "yolo_model_name": "yolov8n.pt",
+      "yolo_confidence_threshold": 0.5,
+      "yolo_iou_threshold": 0.45,
+      "detection_classes": [
+        0
+      ],
+      "resnet_feature_dim": 512,
+      "resnet_pretrained": true,
+      "transformer_d_model": 512,
+      "transformer_nhead": 8,
+      "transformer_num_layers": 4,
+      "transformer_dim_feedforward": 2048,
+      "transformer_dropout": 0.1,
+      "transformer_weights": null,
+      "classifier_weights": null,
+      "num_classes": 3,
+      "anomaly_threshold": 0.7
+    },
+    "pipeline": {
+      "target_fps": 30,
+      "frame_skip": 2,
+      "max_frame_queue_size": 128,
+      "detector_imgsz": 960,
+      "enable_pose_features": true,
+      "max_cosine_distance": 0.35,
+      "nn_budget": 200,
+      "max_iou_distance": 0.85,
+      "max_age": 60,
+      "n_init": 1,
+      "tracker_type": "iou",
+      "sequence_length": 30,
+      "min_sequence_length": 10,
+      "overlap_threshold": 0.5,
+      "feature_batch_size": 64
+    },
+    "paths": {
+      "base_dir": "/Users/chaitanya/projects/Git-Good",
+      "data_dir": "/Users/chaitanya/projects/Git-Good/data",
+      "sample_videos_dir": "/Users/chaitanya/projects/Git-Good/data/sample_videos",
+      "output_dir": "/Users/chaitanya/projects/Git-Good/outputs",
+      "logs_dir": "/Users/chaitanya/projects/Git-Good/outputs/logs",
+      "videos_dir": "/Users/chaitanya/projects/Git-Good/outputs/videos",
+      "reports_dir": "/Users/chaitanya/projects/Git-Good/outputs/reports",
+      "yolo_weights": null,
+      "resnet_weights": null,
+      "transformer_weights": null,
+      "pose_landmarker_task": "/Users/chaitanya/projects/Git-Good/pose_landmarker.task"
+    },
+    "visualization": {
+      "show_display": true,
+      "save_output_video": true,
+      "save_annotated_frames": false,
+      "bbox_color_normal": [
+        0,
+        255,
+        0
+      ],
+      "bbox_color_abnormal": [
+        0,
+        0,
+        255
+      ],
+      "bbox_color_fall": [
+        0,
+        0,
+        255
+      ],
+      "text_color": [
+        255,
+        255,
+        255
+      ],
+      "background_color": [
+        0,
+        0,
+        0
+      ],
+      "font_scale": 0.6,
+      "font_thickness": 2,
+      "show_confidence": true,
+      "show_density_map": true,
+      "opacity": 0.6
+    },
+    "logging": {
+      "log_level": "INFO",
+      "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+      "log_file_name": "crowd_ai.log",
+      "max_log_file_size_mb": 10,
+      "backup_count": 5
+    },
+    "metrics": {
+      "frame_area_threshold": 0.3,
+      "density_grid_size": 10,
+      "movement_history_length": 10,
+      "velocity_threshold_normal": 50.0,
+      "velocity_threshold_anomaly": 200.0,
+      "fall_confidence_threshold": 0.8,
+      "anomaly_score_threshold": 0.7,
+      "crowd_density_threshold": 0.5,
+      "hybrid_fall_heuristic_weight": 0.75,
+      "hybrid_fall_model_weight": 0.25,
+      "fall_probability_smoothing": 0.3,
+      "hybrid_fall_pose_weight": 0.35,
+      "hybrid_fall_motion_weight": 0.65,
+      "prediction_alert_threshold": 75.0,
+      "prediction_watch_threshold": 55.0,
+      "prediction_trend_weight": 0.35
+    },
+    "stampede": {
+      "propagation_radius": 120.0,
+      "propagation_factor": 0.35,
+      "density_fall_boost": 0.25,
+      "cascade_decay": 0.7,
+      "max_cascade_hops": 3,
+      "fallen_threshold": 0.85,
+      "high_density_threshold": 0.55,
+      "pressure_speed_threshold": 15.0
+    },
+    "demographics": {
+      "enabled": true,
+      "gender_method": "heuristic",
+      "male_ratio": 0.5,
+      "age_estimation_enabled": false,
+      "male_speed_multiplier": 1.0,
+      "male_reaction_factor": 1.0,
+      "male_space_radius": 1.0,
+      "male_fall_susceptibility": 1.0,
+      "male_panic_spread": 1.0,
+      "male_crowd_tolerance": 1.0,
+      "female_speed_multiplier": 0.88,
+      "female_reaction_factor": 0.92,
+      "female_space_radius": 1.15,
+      "female_fall_susceptibility": 1.12,
+      "female_panic_spread": 1.1,
+      "female_crowd_tolerance": 0.85,
+      "elderly_speed_multiplier": 0.68,
+      "elderly_reaction_factor": 1.35,
+      "elderly_space_radius": 1.1,
+      "elderly_fall_susceptibility": 1.6,
+      "elderly_panic_spread": 0.9,
+      "elderly_crowd_tolerance": 0.7
+    }
+  },
+  "summary": {
+    "total_frames": 81,
+    "avg_people_count": 13.358024691358025,
+    "max_people_count": 17,
+    "avg_density": 0.8864297156810445,
+    "max_density": 1.0,
+    "avg_anomaly_score": 0.0,
+    "avg_predicted_future_risk": 67.11567747728326,
+    "max_predicted_future_risk": 87.96217292785644,
+    "avg_fused_risk": 75.78219392848578,
+    "max_fused_risk": 90.69617310784221,
+    "total_alerts": 119,
+    "alerts_by_type": {
+      "crowd_anomaly": 64,
+      "prediction_alert": 55
+    },
+    "processed_frames": 81,
+    "source_frames_read": 241,
+    "frame_stride": 3,
+    "total_processing_time": 29.613027095794678,
+    "avg_fps": 2.7352826760322233,
+    "prediction_layer": {
+      "latest_future_risk": 14.205730867385864,
+      "latest_fused_risk": 42.891332275929585,
+      "latest_problem": "BOTTLENECK",
+      "latest_flow_status": "chaotic",
+      "model_loaded": true
+    },
+    "demographic_distribution": {
+      "male": 4,
+      "female": 4,
+      "unknown": 0
+    },
+    "stampede_events": 0
+  },
+  "alerts": [
+    {
+      "frame": 30,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 87.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 30,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 87.7/100 (HIGH_COMPRESSION)",
+      "fused_risk": 87.72444953432324,
+      "predicted_future_risk": 82.43633346557617,
+      "trend_risk": 95.79966459237113,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 33,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 96.4%) | Future crowd risk 84.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9638390560699589
+    },
+    {
+      "frame": 33,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.1/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.08651054843017,
+      "predicted_future_risk": 77.78612182617188,
+      "trend_risk": 88.68824727184568,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 36,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 92.5%) | Future crowd risk 82.3/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9253227076903292
+    },
+    {
+      "frame": 36,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 82.3/100 (HIGH_COMPRESSION)",
+      "fused_risk": 82.32772636436599,
+      "predicted_future_risk": 76.49218955993652,
+      "trend_risk": 83.7234021615655,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 39,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 93.2%) | Future crowd risk 82.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9318154417438271
+    },
+    {
+      "frame": 39,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 82.7/100 (HIGH_COMPRESSION)",
+      "fused_risk": 82.74304484458162,
+      "predicted_future_risk": 77.27730339050294,
+      "trend_risk": 84.12849395352177,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 42,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 87.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 42,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 87.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 87.77811543085508,
+      "predicted_future_risk": 87.58754722595215,
+      "trend_risk": 87.77238616189689,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 45,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 87.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 45,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 87.6/100 (HIGH_COMPRESSION)",
+      "fused_risk": 87.60560735331984,
+      "predicted_future_risk": 84.8335873413086,
+      "trend_risk": 91.48868966718564,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 48,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 90.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 48,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 90.0/100 (HIGH_COMPRESSION)",
+      "fused_risk": 90.01463784790039,
+      "predicted_future_risk": 85.53659461975097,
+      "trend_risk": 100.0,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 51,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 90.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 51,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 90.6/100 (HIGH_COMPRESSION)",
+      "fused_risk": 90.6490689086914,
+      "predicted_future_risk": 87.12267227172852,
+      "trend_risk": 100.0,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 54,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 90.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 54,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 90.7/100 (HIGH_COMPRESSION)",
+      "fused_risk": 90.69617310784221,
+      "predicted_future_risk": 87.80605079650879,
+      "trend_risk": 99.09501115695478,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 57,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 87.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 57,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 87.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 87.49673531581459,
+      "predicted_future_risk": 86.37966789245606,
+      "trend_risk": 88.57947263532867,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 60,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 86.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 60,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 86.9/100 (HIGH_COMPRESSION)",
+      "fused_risk": 86.88534171638638,
+      "predicted_future_risk": 87.74605514526367,
+      "trend_risk": 83.94767863312364,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 63,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 86.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 63,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 86.1/100 (HIGH_COMPRESSION)",
+      "fused_risk": 86.05579605448685,
+      "predicted_future_risk": 86.37966789245606,
+      "trend_risk": 82.81571559001767,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 66,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 84.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 66,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.18035010704685,
+      "predicted_future_risk": 82.42132835388183,
+      "trend_risk": 81.6472750619765,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 69,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 83.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 69,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 83.7/100 (HIGH_COMPRESSION)",
+      "fused_risk": 83.69935237731738,
+      "predicted_future_risk": 81.16754608154297,
+      "trend_risk": 81.72933577880076,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 72,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 83.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 72,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 83.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 83.48442858602422,
+      "predicted_future_risk": 80.65698181152344,
+      "trend_risk": 81.6865434456594,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 75,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 84.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 75,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.0/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.03856908421879,
+      "predicted_future_risk": 82.12748619079589,
+      "trend_risk": 81.55029843160176,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 78,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 83.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 78,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 83.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 83.75264410659119,
+      "predicted_future_risk": 81.34702140808105,
+      "trend_risk": 81.65534217343509,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 81,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 85.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 81,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 85.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 85.83345017251426,
+      "predicted_future_risk": 86.37966789245606,
+      "trend_risk": 81.92633206212733,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 84,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 86.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 84,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 86.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 86.83763611600625,
+      "predicted_future_risk": 87.80605079650879,
+      "trend_risk": 83.66086318961092,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 87,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 87.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 87,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 87.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 87.20589663916732,
+      "predicted_future_risk": 87.96217292785644,
+      "trend_risk": 84.88410987209897,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 90,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 86.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 90,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 86.4/100 (HIGH_COMPRESSION)",
+      "fused_risk": 86.36522234959727,
+      "predicted_future_risk": 86.3673461151123,
+      "trend_risk": 84.07313561420946,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 93,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 85.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 93,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 85.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 85.16565498088246,
+      "predicted_future_risk": 83.87010215759277,
+      "trend_risk": 83.27045647138141,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 96,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 98.2%) | Future crowd risk 80.3/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9822571051954733
+    },
+    {
+      "frame": 96,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 80.3/100 (HIGH_COMPRESSION)",
+      "fused_risk": 80.32605750274276,
+      "predicted_future_risk": 76.25893676757812,
+      "trend_risk": 76.08993118284604,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 99,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 80.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 99,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 80.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 80.46413302064714,
+      "predicted_future_risk": 81.25857872009277,
+      "trend_risk": 68.64280613044012,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 102,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 80.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 102,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 80.4/100 (HIGH_COMPRESSION)",
+      "fused_risk": 80.35455365923197,
+      "predicted_future_risk": 81.12465629577636,
+      "trend_risk": 68.4187645636857,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 105,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 105,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.82627308182649,
+      "predicted_future_risk": 84.15679153442383,
+      "trend_risk": 69.4542258722278,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 108,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 84.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 108,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.4/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.44347088684114,
+      "predicted_future_risk": 83.95444366455078,
+      "trend_risk": 80.24677368408335,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 111,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 82.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 111,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 82.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 82.4811533326975,
+      "predicted_future_risk": 81.98033409118652,
+      "trend_risk": 75.55607878489157,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 114,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 114,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.15765089479768,
+      "predicted_future_risk": 80.8751268005371,
+      "trend_risk": 72.03040069833136,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 117,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 117,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.1/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.07752269122835,
+      "predicted_future_risk": 81.23809547424317,
+      "trend_risk": 71.12913800612434,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 120,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 120,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.9/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.8841009491793,
+      "predicted_future_risk": 83.01872703552246,
+      "trend_risk": 71.5064405398813,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 123,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 123,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.77242961732499,
+      "predicted_future_risk": 81.93182395935058,
+      "trend_risk": 72.79880013433902,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 126,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 84.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 126,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.1/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.11990245379232,
+      "predicted_future_risk": 81.93182395935058,
+      "trend_risk": 82.18869148020838,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 129,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 83.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 129,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 83.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 83.75388778699892,
+      "predicted_future_risk": 86.75017936706543,
+      "trend_risk": 73.01526416069098,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 132,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 132,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.48159823713145,
+      "predicted_future_risk": 82.45385833740234,
+      "trend_risk": 70.80021960868207,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 135,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 100.0%) | Future crowd risk 81.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 1.0
+    },
+    {
+      "frame": 135,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.1/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.11482948023809,
+      "predicted_future_risk": 81.23397354125977,
+      "trend_risk": 71.28496025493675,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 138,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 99.5%) | Future crowd risk 83.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9947354038065843
+    },
+    {
+      "frame": 138,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 83.6/100 (HIGH_COMPRESSION)",
+      "fused_risk": 83.57057899910863,
+      "predicted_future_risk": 81.77807472229004,
+      "trend_risk": 80.23739644077048,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 141,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 93.1%) | Future crowd risk 78.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9307500643004115
+    },
+    {
+      "frame": 141,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 78.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 78.18223302322271,
+      "predicted_future_risk": 76.4095034790039,
+      "trend_risk": 67.27372652648462,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 144,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 86.3%) | Future crowd risk 77.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.8634637024176954
+    },
+    {
+      "frame": 144,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 77.4/100 (HIGH_COMPRESSION)",
+      "fused_risk": 77.36777012312437,
+      "predicted_future_risk": 75.8854069519043,
+      "trend_risk": 64.8544293694506,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 147,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 93.2%) | Future crowd risk 78.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9316145029578189
+    },
+    {
+      "frame": 147,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 78.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 78.78169574491662,
+      "predicted_future_risk": 77.33421089172363,
+      "trend_risk": 68.19204555290864,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 150,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 84.4%) | Future crowd risk 77.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.8443287037037037
+    },
+    {
+      "frame": 150,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 77.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 77.51583976538338,
+      "predicted_future_risk": 76.31902732849122,
+      "trend_risk": 64.75291533594756,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 153,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 84.0%) | Future crowd risk 77.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.8403424800668724
+    },
+    {
+      "frame": 153,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 77.4/100 (HIGH_COMPRESSION)",
+      "fused_risk": 77.44452006500714,
+      "predicted_future_risk": 76.00663658142089,
+      "trend_risk": 64.96746172975514,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 156,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 73.0%)",
+      "density": 0.7300624517746913
+    },
+    {
+      "frame": 162,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 76.1%)",
+      "density": 0.7605299961419754
+    },
+    {
+      "frame": 165,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 84.3%)",
+      "density": 0.8432255497685185
+    },
+    {
+      "frame": 168,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 82.8%)",
+      "density": 0.8278043016975308
+    },
+    {
+      "frame": 171,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 88.8%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.8881502379115226
+    },
+    {
+      "frame": 171,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 81.8/100 (HIGH_COMPRESSION)",
+      "fused_risk": 81.80251177580686,
+      "predicted_future_risk": 76.32012535095215,
+      "trend_risk": 81.89784654170398,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 174,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 93.0%) | Future crowd risk 82.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.9298972800925925
+    },
+    {
+      "frame": 174,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 82.2/100 (HIGH_COMPRESSION)",
+      "fused_risk": 82.20268799480631,
+      "predicted_future_risk": 75.88430892944336,
+      "trend_risk": 84.19585769211584,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 177,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 93.2%) | Future crowd risk 84.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.932397360468107
+    },
+    {
+      "frame": 177,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 84.5/100 (HIGH_COMPRESSION)",
+      "fused_risk": 84.54376960076418,
+      "predicted_future_risk": 76.22129745483399,
+      "trend_risk": 93.02100247532235,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 180,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 86.7%) | Future crowd risk 80.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)",
+      "density": 0.8666546103395062
+    },
+    {
+      "frame": 180,
+      "type": "prediction_alert",
+      "description": "Future crowd risk 80.9/100 (HIGH_COMPRESSION)",
+      "fused_risk": 80.85111825559925,
+      "predicted_future_risk": 70.21893676757813,
+      "trend_risk": 87.85417419427198,
+      "problem": "HIGH_COMPRESSION"
+    },
+    {
+      "frame": 183,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 82.4%)",
+      "density": 0.8241387763631687
+    },
+    {
+      "frame": 186,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 81.0%)",
+      "density": 0.8099882651748971
+    },
+    {
+      "frame": 189,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 82.1%)",
+      "density": 0.8212436503343621
+    },
+    {
+      "frame": 195,
+      "type": "crowd_anomaly",
+      "description": "Overcrowding detected (density: 73.0%)",
+      "density": 0.7298410172325103
+    }
+  ],
+  "device": "mps"
+}

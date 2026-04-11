@@ -19,7 +19,7 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.set_capability('goog:loggingPrefs', {'browser': 'ALL'})
 
 driver = webdriver.Chrome(options=chrome_options)
-driver.get(f'http://localhost:{PORT}/digitaltwin/temple_simulation (3).html')
+driver.get(f'http://localhost:{PORT}/digitaltwin/temple_simulation.html')
 time.sleep(2)
 
 logs = driver.get_log('browser')

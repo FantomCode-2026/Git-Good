@@ -1,33 +1,84 @@
 window.__TEMPLE_SIMULATION_STATE__ = {
   "source": "prediction_layer",
-  "generatedAt": "2026-04-11T02:17:35.839112",
+  "generatedAt": "2026-04-11T06:08:33.004351",
+  "behaviorModel": {
+    "baseline": {
+      "label": "normal_operations",
+      "fusedRisk": 26.0,
+      "futureRisk": 28.0,
+      "flowStatus": "smooth",
+      "agentTarget": 35,
+      "zoneCounts": {
+        "entry": 6,
+        "queue": 11,
+        "courtyard": 6,
+        "temple": 8,
+        "exit": 4
+      }
+    },
+    "prediction": {
+      "fusedRisk": 47.24,
+      "futureRisk": 19.36,
+      "flowStatus": "chaotic",
+      "agentTarget": 46,
+      "zoneCounts": {
+        "entry": 6,
+        "queue": 16,
+        "courtyard": 11,
+        "temple": 8,
+        "exit": 5
+      }
+    },
+    "riskDeviation": 43.33,
+    "interpretation": "Substantial deviation \u2014 future risk diverges from typical patterns."
+  },
+  "venueSimulation": {
+    "temple": {
+      "mode": "queue_and_sanctuary",
+      "linkedTo": "zoneCounts"
+    },
+    "stadium": {
+      "directionalFlow": {
+        "angleRadians": 1.3143,
+        "strength": 0.4333,
+        "narrative": "Elevated directional shear while flow is chaotic."
+      },
+      "circulationBias": 0.7249735538131289
+    },
+    "concert": {
+      "forwardSurge": 0.9232,
+      "lateralSpread": 0.3446,
+      "pitIntensity": 0.4499,
+      "narrative": "Aggressive forward surge toward stage / pit \u2014 high deviation from normal spread."
+    }
+  },
   "scenario": {
     "level": "normal",
     "title": "OPPOSING_FLOW monitored flow",
     "problem": "OPPOSING_FLOW",
     "flowStatus": "chaotic",
-    "fusedRisk": 47.71,
-    "futureRisk": 19.99,
-    "trendRisk": 63.67,
-    "avgDensity": 0.487,
-    "avgPeopleCount": 33.0,
-    "avgFusedRisk": 54.76,
-    "peakFusedRisk": 72.58,
-    "currentPeopleCount": 29.0,
-    "currentDensity": 0.4194,
-    "agentTarget": 47,
+    "fusedRisk": 47.24,
+    "futureRisk": 19.36,
+    "trendRisk": 62.8,
+    "avgDensity": 0.4441,
+    "avgPeopleCount": 30.11,
+    "avgFusedRisk": 50.3,
+    "peakFusedRisk": 74.81,
+    "currentPeopleCount": 28.0,
+    "currentDensity": 0.4333,
+    "agentTarget": 46,
     "rushMode": false,
     "alertText": "No active alerts"
   },
   "crowdTuning": {
-    "globalSpeedScale": 0.8364914631010941,
-    "pauseScale": 1.265067886631753,
-    "pressureScale": 1.1885610979685777,
-    "queueBias": 1.3354809670781893,
-    "templeBias": 1.183508536898906
+    "globalSpeedScale": 0.8382905911509344,
+    "pauseScale": 1.262469146115317,
+    "pressureScale": 1.1862222315037854,
+    "queueBias": 1.3466538065843623,
+    "templeBias": 1.1817094088490656
   },
   "zoneCounts": {
-    "entry": 7,
+    "entry": 6,
     "queue": 16,
     "courtyard": 11,
     "temple": 8,
@@ -35,8 +86,8 @@ window.__TEMPLE_SIMULATION_STATE__ = {
   },
   "recentAlerts": [],
   "demographics": {
-    "male": 26,
-    "female": 3,
+    "male": 21,
+    "female": 7,
     "unknown": 0
   },
   "stampede": {

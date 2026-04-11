@@ -5,7 +5,7 @@ Serves the dashboard UI and all REST + SSE endpoints.
 Usage:
     python app.py --demo            # demo simulator, no camera
     python app.py --demo --port 5001
-    python app.py                   # real mode: pipeline POSTs to /api/notify
+    python app.py                   # real mode: pipeline POSTs to /api/notify, /api/pipeline_alert, /api/ingest_pipeline_alerts
 """
 
 from __future__ import annotations
@@ -14,8 +14,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Iterator
 
-from flask import (Flask, Response, jsonify, render_template,
-                   request, send_from_directory)
+from flask import (Flask, Response, jsonify, redirect, render_template,
+                   request, send_from_directory, url_for)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -52,12 +52,14 @@ def dashboard():
 
 
 @app.route("/twin")
+@app.route("/twin/")
 def digital_twin():
-    return send_from_directory(ROOT / "digitaltwin", "temple_simulation (3).html")
+    # Redirect to HTML under /twin/ so relative assets (./temple_prediction_state.js) resolve correctly.
+    return redirect(url_for("twin_files", filename="temple_simulation.html"))
 
 
-@app.route("/twin/<path:filename>")
-def twin_assets(filename):
+@app.route("/twin/<path:filename>", endpoint="twin_files")
+def twin_files(filename):
     return send_from_directory(ROOT / "digitaltwin", filename)
 
 
@@ -143,7 +145,42 @@ def api_notify():
     data = request.get_json(force=True) or {}
     zone = str(data.pop("zone", "A"))
     _engine.process_evaluation(data, zone=zone)
+    _push("state_update", _engine.get_dashboard_state())
     return jsonify({"success": True})
+
+
+@app.route("/api/pipeline_alert", methods=["POST"])
+def api_pipeline_alert():
+    """Pipeline POSTs detection / metrics alerts so they appear in the Alerts feed."""
+    data = request.get_json(force=True) or {}
+    message = str(data.get("message", "")).strip()
+    if not message:
+        return jsonify({"success": False, "error": "message required"}), 400
+    severity = str(data.get("severity", "WARNING")).strip().upper()
+    source = str(data.get("source", "pipeline")).strip() or "pipeline"
+    _engine.announcer.broadcast(message, severity=severity, source=source)
+    _push("state_update", _engine.get_dashboard_state())
+    return jsonify({"success": True})
+
+
+@app.route("/api/ingest_pipeline_alerts", methods=["POST"])
+def api_ingest_pipeline_alerts():
+    """Batch ingest (e.g. after video run) so the Alerts feed fills even if live push missed."""
+    data = request.get_json(force=True) or {}
+    items = data.get("alerts") or []
+    ingested = 0
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        message = str(item.get("message", "")).strip()
+        if not message:
+            continue
+        severity = str(item.get("severity", "WARNING")).strip().upper()
+        source = str(item.get("source", "pipeline")).strip() or "pipeline"
+        _engine.announcer.broadcast(message, severity=severity, source=source)
+        ingested += 1
+    _push("state_update", _engine.get_dashboard_state())
+    return jsonify({"success": True, "ingested": ingested})
 
 
 # ══════════════════════════════════════════════════════════════════════
@@ -249,7 +286,7 @@ if __name__ == "__main__":
     print("  🧠  CrowdGuard – Crowd Monitoring Dashboard")
     print("═"*55)
     print(f"  Dashboard  → http://localhost:{args.port}/")
-    print(f"  Twin       → http://localhost:{args.port}/twin")
+    print(f"  Twins      → http://localhost:{args.port}/twin/temple_simulation.html (etc.)")
     print(f"  API State  → http://localhost:{args.port}/api/state")
     print(f"  Demo mode  → {args.demo}")
     print("═"*55 + "\n")

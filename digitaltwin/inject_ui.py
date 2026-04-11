@@ -1,6 +1,6 @@
 import re
 
-with open('digitaltwin/temple_simulation (3).html', 'r', encoding='utf-8') as f:
+with open('digitaltwin/temple_simulation.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 heatmap_class = """
@@ -202,7 +202,7 @@ content = re.sub(r'  _updatePredictionPanel\(\) \{.*?\n  \}', app_update_logic, 
 
 content = content.replace('// ── Bootstrap ────────────────────────────────────────────────────────', heatmap_class + '\n\n// ── Bootstrap ────────────────────────────────────────────────────────')
 
-with open('digitaltwin/temple_simulation (3).html', 'w', encoding='utf-8') as f:
+with open('digitaltwin/temple_simulation.html', 'w', encoding='utf-8') as f:
     f.write(content)
 
 print('Injected Heatmap and UI logic')

@@ -3455,3 +3455,766 @@ NotImplementedError: The operator 'aten::_nested_tensor_from_mask_left_aligned' 
 2026-04-11 04:02:37.519 | INFO     | __main__:process_video:650 - Processing video: data\sample_videos\video.mp4
 2026-04-11 04:02:37.519 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
 2026-04-11 04:02:37.527 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to outputs\final_annotated.mp4
+2026-04-11 04:30:24.154 | INFO     | __main__:main:909 - Starting Crowd Behavior Analysis System
+2026-04-11 04:30:24.155 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 04:30:24.155 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:30:24.291 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 04:30:24.291 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:30:24.479 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:30:24.507 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 04:30:26.680 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 04:30:26.680 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 04:30:26.681 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:30:26.735 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:30:26.736 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:30:26.759 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 04:30:26.760 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 04:30:26.760 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 04:30:26.760 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 04:30:26.760 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:30:26.760 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:30:26.760 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:30:26.760 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:30:53.580 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:30:53.580 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:30:53.614 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 04:30:53.614 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 04:30:53.620 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:32:13.787 | INFO     | __main__:process_video:703 - Processed 100 frames out of 298 read (stride 3, ~1.4 FPS)
+2026-04-11 04:32:23.288 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:32:23.304 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 114, 'avg_people_count': np.float64(30.105263157894736), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4441122115506101), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(26.83143794875396), 'max_predicted_future_risk': np.float64(60.70670509338379), 'avg_fused_risk': np.float64(49.760495519471135), 'max_fused_risk': np.float64(72.3708955285357), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 114, 'source_frames_read': 341, 'frame_stride': 3, 'total_processing_time': 81.71453547477722, 'avg_fps': 1.395100630966547, 'prediction_layer': {'latest_future_risk': 18.537298603057863, 'latest_fused_risk': 46.91507648111596, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 21, 'female': 7, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 04:32:23.309 | INFO     | __main__:save_report:778 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:32:23.384 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 04:32:23.385 | INFO     | __main__:save_report:793 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 04:32:25.785 | INFO     | __main__:save_report:806 - Opened digital twin: /Users/chaitanya/projects/Git-Good/digitaltwin/temple_simulation (3).html
+2026-04-11 04:32:26.262 | INFO     | __main__:save_report:806 - Opened digital twin: /Users/chaitanya/projects/Git-Good/digitaltwin/digital-twin-stadium-enhanced.html
+2026-04-11 04:32:26.263 | INFO     | __main__:main:940 - ==================================================
+2026-04-11 04:32:26.263 | INFO     | __main__:main:941 - Processing Complete!
+2026-04-11 04:32:26.263 | INFO     | __main__:main:942 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:32:26.263 | INFO     | __main__:main:943 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:32:26.263 | INFO     | __main__:main:944 - Average FPS: 1.40
+2026-04-11 04:32:26.263 | INFO     | __main__:main:945 - Total alerts: 0
+2026-04-11 04:32:26.263 | INFO     | __main__:main:946 - ==================================================
+2026-04-11 04:42:12.837 | INFO     | __main__:main:909 - Starting Crowd Behavior Analysis System
+2026-04-11 04:42:12.838 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 04:42:12.838 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:42:12.971 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 04:42:12.971 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:42:13.167 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:42:13.208 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 04:42:13.580 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 04:42:13.580 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 04:42:13.580 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:42:13.641 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:42:13.643 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:42:13.670 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 04:42:13.670 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 04:42:13.670 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 04:42:13.670 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 04:42:13.670 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:42:13.670 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:42:13.670 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:42:13.670 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:42:15.014 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:42:15.014 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:42:15.058 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 04:42:15.058 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 300, Frame stride: 3
+2026-04-11 04:42:15.064 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:43:45.323 | INFO     | __main__:process_video:703 - Processed 100 frames out of 298 read (stride 3, ~1.2 FPS)
+2026-04-11 04:43:45.340 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:43:45.361 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 100, 'avg_people_count': np.float64(30.51), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4509998392489713), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(28.158297907209395), 'max_predicted_future_risk': np.float64(60.70670509338379), 'avg_fused_risk': np.float64(50.531054836816374), 'max_fused_risk': np.float64(72.3708955285357), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 100, 'source_frames_read': 300, 'frame_stride': 3, 'total_processing_time': 81.9910569190979, 'avg_fps': 1.2196452120219874, 'prediction_layer': {'latest_future_risk': 16.171524124145506, 'latest_fused_risk': 43.02975955281531, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 17, 'female': 9, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 04:43:45.366 | INFO     | __main__:save_report:778 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:43:45.403 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 04:43:45.405 | INFO     | __main__:save_report:793 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 04:43:47.237 | INFO     | __main__:save_report:806 - Opened digital twin: /Users/chaitanya/projects/Git-Good/digitaltwin/temple_simulation (3).html
+2026-04-11 04:43:47.742 | INFO     | __main__:save_report:806 - Opened digital twin: /Users/chaitanya/projects/Git-Good/digitaltwin/digital-twin-stadium-enhanced.html
+2026-04-11 04:43:47.744 | INFO     | __main__:main:940 - ==================================================
+2026-04-11 04:43:47.744 | INFO     | __main__:main:941 - Processing Complete!
+2026-04-11 04:43:47.745 | INFO     | __main__:main:942 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:43:47.745 | INFO     | __main__:main:943 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:43:47.745 | INFO     | __main__:main:944 - Average FPS: 1.22
+2026-04-11 04:43:47.745 | INFO     | __main__:main:945 - Total alerts: 0
+2026-04-11 04:43:47.746 | INFO     | __main__:main:946 - ==================================================
+2026-04-11 04:49:06.669 | INFO     | __main__:main:925 - Starting Crowd Behavior Analysis System
+2026-04-11 04:49:06.669 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 04:49:06.669 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:49:06.786 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 04:49:06.786 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:49:06.975 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:49:07.002 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 04:49:07.288 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 04:49:07.288 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 04:49:07.288 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:49:07.347 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:49:07.348 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:49:07.369 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 04:49:07.369 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 04:49:07.369 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 04:49:07.369 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 04:49:07.369 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:49:07.369 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:49:07.369 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:49:07.369 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:49:08.522 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:49:08.523 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:49:08.556 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 04:49:08.556 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 300, Frame stride: 3
+2026-04-11 04:49:08.563 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:50:26.272 | INFO     | __main__:process_video:703 - Processed 100 frames out of 298 read (stride 3, ~1.4 FPS)
+2026-04-11 04:50:26.282 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:50:26.318 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 100, 'avg_people_count': np.float64(30.51), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4509998392489713), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(28.158297907209395), 'max_predicted_future_risk': np.float64(60.70670509338379), 'avg_fused_risk': np.float64(50.531054836816374), 'max_fused_risk': np.float64(72.3708955285357), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 100, 'source_frames_read': 300, 'frame_stride': 3, 'total_processing_time': 71.02387189865112, 'avg_fps': 1.4079773085688276, 'prediction_layer': {'latest_future_risk': 16.171524124145506, 'latest_fused_risk': 43.02975955281531, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 17, 'female': 9, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 04:50:26.325 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:50:26.366 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 04:50:26.369 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 04:50:27.482 | INFO     | __main__:save_report:810 - Opened dashboard: http://127.0.0.1:5000/
+2026-04-11 04:50:27.483 | INFO     | __main__:save_report:813 - If the page does not load, start the dashboard server: python app.py
+2026-04-11 04:50:27.484 | INFO     | __main__:main:961 - ==================================================
+2026-04-11 04:50:27.484 | INFO     | __main__:main:962 - Processing Complete!
+2026-04-11 04:50:27.484 | INFO     | __main__:main:963 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:50:27.484 | INFO     | __main__:main:964 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:50:27.484 | INFO     | __main__:main:965 - Average FPS: 1.41
+2026-04-11 04:50:27.484 | INFO     | __main__:main:966 - Total alerts: 0
+2026-04-11 04:50:27.484 | INFO     | __main__:main:967 - ==================================================
+2026-04-11 04:52:52.824 | INFO     | __main__:main:925 - Starting Crowd Behavior Analysis System
+2026-04-11 04:52:52.825 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 04:52:52.825 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:52:52.929 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 04:52:52.929 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:52:53.141 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:52:53.169 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 04:52:53.458 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 04:52:53.459 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 04:52:53.459 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:52:53.513 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:52:53.514 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:52:53.532 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 04:52:53.532 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 04:52:53.532 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 04:52:53.532 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 04:52:53.532 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:52:53.532 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:52:53.532 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:52:53.532 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:52:54.695 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:52:54.696 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:52:54.732 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 04:52:54.732 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 200, Frame stride: 3
+2026-04-11 04:52:54.736 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:53:49.692 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:53:49.746 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 67, 'avg_people_count': np.float64(32.17910447761194), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4724826628815798), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(32.31557129689118), 'max_predicted_future_risk': np.float64(60.70670509338379), 'avg_fused_risk': np.float64(52.94783524228358), 'max_fused_risk': np.float64(72.3708955285357), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 67, 'source_frames_read': 200, 'frame_stride': 3, 'total_processing_time': 50.579429626464844, 'avg_fps': 1.3246491804040306, 'prediction_layer': {'latest_future_risk': 33.34622079849243, 'latest_fused_risk': 52.612808744521566, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 26, 'female': 7, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 04:53:49.753 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:53:49.787 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 04:53:49.789 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 04:53:50.735 | INFO     | __main__:save_report:810 - Opened dashboard: http://127.0.0.1:5001/
+2026-04-11 04:53:50.736 | INFO     | __main__:save_report:813 - If the page does not load, start the dashboard server: python app.py
+2026-04-11 04:53:50.737 | INFO     | __main__:main:961 - ==================================================
+2026-04-11 04:53:50.737 | INFO     | __main__:main:962 - Processing Complete!
+2026-04-11 04:53:50.737 | INFO     | __main__:main:963 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:53:50.737 | INFO     | __main__:main:964 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:53:50.737 | INFO     | __main__:main:965 - Average FPS: 1.32
+2026-04-11 04:53:50.737 | INFO     | __main__:main:966 - Total alerts: 0
+2026-04-11 04:53:50.737 | INFO     | __main__:main:967 - ==================================================
+2026-04-11 04:56:04.465 | INFO     | __main__:main:934 - Starting Crowd Behavior Analysis System
+2026-04-11 04:56:04.465 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 04:56:04.465 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 04:56:04.615 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 04:56:04.615 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 04:56:04.817 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 04:56:04.850 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 04:56:05.140 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 04:56:05.140 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 04:56:05.140 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 04:56:05.198 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 04:56:05.199 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 04:56:05.223 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 04:56:05.223 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 04:56:05.223 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 04:56:05.223 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 04:56:05.223 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 04:56:05.223 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 04:56:05.223 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 04:56:05.223 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 04:56:06.410 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 04:56:06.411 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 04:56:06.434 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 04:56:06.434 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 50, Frame stride: 3
+2026-04-11 04:56:06.437 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:56:22.974 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:56:22.981 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 17, 'avg_people_count': np.float64(33.8235294117647), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.47783385151900265), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(31.552727487227497), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(52.494046295761976), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 17, 'source_frames_read': 50, 'frame_stride': 3, 'total_processing_time': 14.892011165618896, 'avg_fps': 1.1415516555109633, 'prediction_layer': {'latest_future_risk': 34.315055255889895, 'latest_fused_risk': 59.06602991609524, 'latest_problem': 'BOTTLENECK', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 28, 'female': 6, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 04:56:22.983 | INFO     | __main__:save_report:788 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:56:23.001 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 04:56:23.002 | INFO     | __main__:save_report:803 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 04:56:23.424 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/
+2026-04-11 04:56:23.729 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/twin
+2026-04-11 04:56:23.886 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/twin/digital-twin-stadium-enhanced.html
+2026-04-11 04:56:23.886 | INFO     | __main__:save_report:821 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 04:56:23.886 | INFO     | __main__:main:970 - ==================================================
+2026-04-11 04:56:23.886 | INFO     | __main__:main:971 - Processing Complete!
+2026-04-11 04:56:23.886 | INFO     | __main__:main:972 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 04:56:23.886 | INFO     | __main__:main:973 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 04:56:23.886 | INFO     | __main__:main:974 - Average FPS: 1.14
+2026-04-11 04:56:23.886 | INFO     | __main__:main:975 - Total alerts: 0
+2026-04-11 04:56:23.886 | INFO     | __main__:main:976 - ==================================================
+2026-04-11 05:04:58.564 | INFO     | __main__:main:934 - Starting Crowd Behavior Analysis System
+2026-04-11 05:04:58.565 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:04:58.565 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:04:58.661 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:04:58.661 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:04:58.876 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:04:58.904 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:04:59.207 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:04:59.207 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:04:59.207 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:04:59.260 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:04:59.261 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:04:59.279 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:04:59.280 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:04:59.280 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:04:59.280 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:04:59.280 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:04:59.280 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:04:59.280 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:04:59.280 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:05:00.465 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:05:00.465 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:05:00.500 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:05:00.501 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 50, Frame stride: 3
+2026-04-11 05:05:00.504 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:05:16.267 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:05:16.275 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 17, 'avg_people_count': np.float64(33.8235294117647), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.47783385151900265), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(31.552727487227497), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(52.494046295761976), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 17, 'source_frames_read': 50, 'frame_stride': 3, 'total_processing_time': 14.339509725570679, 'avg_fps': 1.1855356511725814, 'prediction_layer': {'latest_future_risk': 34.315055255889895, 'latest_fused_risk': 59.06602991609524, 'latest_problem': 'BOTTLENECK', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 28, 'female': 6, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:05:16.278 | INFO     | __main__:save_report:788 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:05:16.309 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:05:16.310 | INFO     | __main__:save_report:803 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:05:17.003 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:05:17.201 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/twin
+2026-04-11 05:05:17.412 | INFO     | __main__:save_report:818 - Opened: http://127.0.0.1:5001/twin/stadium_simulation.html
+2026-04-11 05:05:17.412 | INFO     | __main__:save_report:821 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:05:17.413 | INFO     | __main__:main:970 - ==================================================
+2026-04-11 05:05:17.413 | INFO     | __main__:main:971 - Processing Complete!
+2026-04-11 05:05:17.413 | INFO     | __main__:main:972 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:05:17.413 | INFO     | __main__:main:973 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:05:17.413 | INFO     | __main__:main:974 - Average FPS: 1.19
+2026-04-11 05:05:17.413 | INFO     | __main__:main:975 - Total alerts: 0
+2026-04-11 05:05:17.413 | INFO     | __main__:main:976 - ==================================================
+2026-04-11 05:09:48.723 | INFO     | __main__:main:935 - Starting Crowd Behavior Analysis System
+2026-04-11 05:09:48.723 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:09:48.723 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:09:48.843 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:09:48.844 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:09:49.058 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:09:49.085 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:09:49.386 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:09:49.386 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:09:49.386 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:09:49.444 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:09:49.445 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:09:49.468 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:09:49.468 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:09:49.468 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:09:49.468 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:09:49.468 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:09:49.468 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:09:49.468 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:09:49.468 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:09:50.668 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:09:50.668 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:09:50.691 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:09:50.692 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 50, Frame stride: 3
+2026-04-11 05:09:50.694 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:10:06.093 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:10:06.102 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 17, 'avg_people_count': np.float64(33.8235294117647), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.47783385151900265), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(31.552727487227497), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(52.494046295761976), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 17, 'source_frames_read': 50, 'frame_stride': 3, 'total_processing_time': 14.05618691444397, 'avg_fps': 1.2094318397638126, 'prediction_layer': {'latest_future_risk': 34.315055255889895, 'latest_fused_risk': 59.06602991609524, 'latest_problem': 'BOTTLENECK', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 28, 'female': 6, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:10:06.105 | INFO     | __main__:save_report:788 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:10:06.129 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:10:06.130 | INFO     | __main__:save_report:803 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:10:06.616 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:10:06.820 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/temple_simulation.html
+2026-04-11 05:10:07.044 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/stadium_simulation.html
+2026-04-11 05:10:07.196 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/concert_arena_simulation.html
+2026-04-11 05:10:07.197 | INFO     | __main__:save_report:822 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:10:07.197 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:10:07.197 | INFO     | __main__:main:972 - Processing Complete!
+2026-04-11 05:10:07.197 | INFO     | __main__:main:973 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:10:07.197 | INFO     | __main__:main:974 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:10:07.197 | INFO     | __main__:main:975 - Average FPS: 1.21
+2026-04-11 05:10:07.197 | INFO     | __main__:main:976 - Total alerts: 0
+2026-04-11 05:10:07.197 | INFO     | __main__:main:977 - ==================================================
+2026-04-11 05:12:31.963 | INFO     | __main__:main:935 - Starting Crowd Behavior Analysis System
+2026-04-11 05:12:31.963 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:12:31.963 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:12:32.084 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:12:32.084 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:12:32.272 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:12:32.301 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:12:32.587 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:12:32.587 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:12:32.587 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:12:32.645 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:12:32.646 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:12:32.669 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:12:32.670 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:12:32.670 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:12:32.670 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:12:32.670 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:12:32.670 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:12:32.670 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:12:32.670 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:12:33.848 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:12:33.849 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:12:33.873 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:12:33.874 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 50, Frame stride: 3
+2026-04-11 05:12:33.879 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:12:49.620 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:12:49.627 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 17, 'avg_people_count': np.float64(33.8235294117647), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.47783385151900265), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(31.552727487227497), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(52.494046295761976), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 17, 'source_frames_read': 50, 'frame_stride': 3, 'total_processing_time': 14.307440757751465, 'avg_fps': 1.188192933162401, 'prediction_layer': {'latest_future_risk': 34.315055255889895, 'latest_fused_risk': 59.06602991609524, 'latest_problem': 'BOTTLENECK', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 28, 'female': 6, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:12:49.630 | INFO     | __main__:save_report:788 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:12:49.647 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:12:49.648 | INFO     | __main__:save_report:803 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:12:50.088 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:12:50.333 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/temple_simulation.html
+2026-04-11 05:12:50.550 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/stadium_simulation.html
+2026-04-11 05:12:50.699 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/concert_arena_simulation.html
+2026-04-11 05:12:50.699 | INFO     | __main__:save_report:822 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:12:50.699 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:12:50.699 | INFO     | __main__:main:972 - Processing Complete!
+2026-04-11 05:12:50.699 | INFO     | __main__:main:973 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:12:50.699 | INFO     | __main__:main:974 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:12:50.699 | INFO     | __main__:main:975 - Average FPS: 1.19
+2026-04-11 05:12:50.699 | INFO     | __main__:main:976 - Total alerts: 0
+2026-04-11 05:12:50.699 | INFO     | __main__:main:977 - ==================================================
+2026-04-11 05:14:01.739 | INFO     | __main__:main:935 - Starting Crowd Behavior Analysis System
+2026-04-11 05:14:01.739 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:14:01.739 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:14:01.847 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:14:01.847 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:14:02.069 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:14:02.099 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:14:02.367 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:14:02.367 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:14:02.367 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:14:02.420 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:14:02.421 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:14:02.446 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:14:02.446 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:14:02.446 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:14:02.446 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:14:02.446 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:14:02.446 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:14:02.446 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:14:02.446 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:14:03.637 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:14:03.638 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:14:03.660 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:14:03.661 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 20, Frame stride: 3
+2026-04-11 05:14:03.669 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:14:11.385 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:14:11.390 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 7, 'avg_people_count': np.float64(34.714285714285715), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.4878192056143444), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(33.4532996395656), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(51.76787747636194), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 7, 'source_frames_read': 20, 'frame_stride': 3, 'total_processing_time': 6.8712499141693115, 'avg_fps': 1.0187375059034298, 'prediction_layer': {'latest_future_risk': 31.73092321395874, 'latest_fused_risk': 52.05352418995149, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 30, 'female': 3, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:14:11.392 | INFO     | __main__:save_report:788 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:14:11.411 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:14:11.412 | INFO     | __main__:save_report:803 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:14:11.728 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:14:12.016 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/temple_simulation.html
+2026-04-11 05:14:12.200 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/stadium_simulation.html
+2026-04-11 05:14:12.423 | INFO     | __main__:save_report:819 - Opened: http://127.0.0.1:5001/twin/concert_arena_simulation.html
+2026-04-11 05:14:12.424 | INFO     | __main__:save_report:822 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:14:12.424 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:14:12.424 | INFO     | __main__:main:972 - Processing Complete!
+2026-04-11 05:14:12.424 | INFO     | __main__:main:973 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:14:12.424 | INFO     | __main__:main:974 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:14:12.424 | INFO     | __main__:main:975 - Average FPS: 1.02
+2026-04-11 05:14:12.424 | INFO     | __main__:main:976 - Total alerts: 0
+2026-04-11 05:14:12.424 | INFO     | __main__:main:977 - ==================================================
+2026-04-11 05:21:26.200 | INFO     | __main__:main:929 - Starting Crowd Behavior Analysis System
+2026-04-11 05:21:26.200 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:21:26.200 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:21:26.304 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:21:26.304 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:21:26.522 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:21:26.553 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:21:26.847 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:21:26.847 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:21:26.847 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:21:26.912 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:21:26.913 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:21:26.949 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:21:26.949 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:21:26.959 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:21:26.959 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:21:26.959 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:21:26.959 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:21:26.959 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:21:26.959 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:21:28.136 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:21:28.137 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:21:28.174 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:21:28.174 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 20, Frame stride: 3
+2026-04-11 05:21:28.177 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:21:35.670 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:21:35.675 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 7, 'avg_people_count': np.float64(34.714285714285715), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.4878192056143444), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(33.4532996395656), 'max_predicted_future_risk': np.float64(46.716336212158204), 'avg_fused_risk': np.float64(51.76787747636194), 'max_fused_risk': np.float64(64.91702957383116), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 7, 'source_frames_read': 20, 'frame_stride': 3, 'total_processing_time': 6.637595891952515, 'avg_fps': 1.0545987001840331, 'prediction_layer': {'latest_future_risk': 31.73092321395874, 'latest_fused_risk': 52.05352418995149, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 30, 'female': 3, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:21:35.678 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:21:35.695 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:21:35.695 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:21:36.129 | INFO     | __main__:save_report:813 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:21:36.130 | INFO     | __main__:save_report:816 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:21:36.130 | INFO     | __main__:main:965 - ==================================================
+2026-04-11 05:21:36.130 | INFO     | __main__:main:966 - Processing Complete!
+2026-04-11 05:21:36.130 | INFO     | __main__:main:967 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:21:36.130 | INFO     | __main__:main:968 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:21:36.130 | INFO     | __main__:main:969 - Average FPS: 1.05
+2026-04-11 05:21:36.130 | INFO     | __main__:main:970 - Total alerts: 0
+2026-04-11 05:21:36.130 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:39:10.895 | INFO     | __main__:main:929 - Starting Crowd Behavior Analysis System
+2026-04-11 05:39:10.895 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:39:10.895 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:39:10.993 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:39:10.993 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:39:11.191 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:39:11.218 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:39:11.532 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:39:11.532 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:39:11.532 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:39:11.589 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:39:11.590 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:39:11.609 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:39:11.609 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:39:11.609 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:39:11.609 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:39:11.609 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:39:11.609 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:39:11.609 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:39:11.609 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:39:12.824 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:39:12.824 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:39:12.877 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:39:12.877 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 20, Frame stride: 3
+2026-04-11 05:39:12.885 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:39:20.441 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:39:20.445 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 7, 'avg_people_count': np.float64(34.714285714285715), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.4878192056143444), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(35.18875450134278), 'max_predicted_future_risk': np.float64(53.58017406463623), 'avg_fused_risk': np.float64(52.4620594210728), 'max_fused_risk': np.float64(67.66256471482237), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 7, 'source_frames_read': 20, 'frame_stride': 3, 'total_processing_time': 6.605621814727783, 'avg_fps': 1.0597034157167335, 'prediction_layer': {'latest_future_risk': 27.18156545639038, 'latest_fused_risk': 50.23378108692414, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 30, 'female': 3, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:39:20.449 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:39:20.468 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:39:20.470 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:39:20.988 | INFO     | __main__:save_report:813 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:39:20.989 | INFO     | __main__:save_report:816 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:39:20.989 | INFO     | __main__:main:965 - ==================================================
+2026-04-11 05:39:20.989 | INFO     | __main__:main:966 - Processing Complete!
+2026-04-11 05:39:20.990 | INFO     | __main__:main:967 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:39:20.990 | INFO     | __main__:main:968 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:39:20.990 | INFO     | __main__:main:969 - Average FPS: 1.06
+2026-04-11 05:39:20.990 | INFO     | __main__:main:970 - Total alerts: 0
+2026-04-11 05:39:20.990 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:44:44.863 | INFO     | __main__:main:929 - Starting Crowd Behavior Analysis System
+2026-04-11 05:44:44.863 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:44:44.863 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:44:44.966 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:44:44.966 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:44:45.160 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:44:45.188 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:44:45.514 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:44:45.514 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:44:45.514 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:44:45.578 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:44:45.579 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:44:45.601 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:44:45.601 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:44:45.601 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:44:45.601 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:44:45.601 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:44:45.601 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:44:45.602 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:44:45.602 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:44:46.859 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:44:46.859 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:44:46.892 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:44:46.892 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 20, Frame stride: 3
+2026-04-11 05:44:46.898 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:44:54.310 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:44:54.314 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 7, 'avg_people_count': np.float64(34.714285714285715), 'max_people_count': np.int64(36), 'avg_density': np.float64(0.4878192056143444), 'max_density': np.float64(0.5212689686213992), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(35.18875450134278), 'max_predicted_future_risk': np.float64(53.58017406463623), 'avg_fused_risk': np.float64(52.4620594210728), 'max_fused_risk': np.float64(67.66256471482237), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 7, 'source_frames_read': 20, 'frame_stride': 3, 'total_processing_time': 6.489418029785156, 'avg_fps': 1.0786791616553861, 'prediction_layer': {'latest_future_risk': 27.18156545639038, 'latest_fused_risk': 50.23378108692414, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 30, 'female': 3, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:44:54.315 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:44:54.339 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:44:54.340 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:44:54.710 | INFO     | __main__:save_report:813 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:44:54.711 | INFO     | __main__:save_report:816 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:44:54.711 | INFO     | __main__:main:965 - ==================================================
+2026-04-11 05:44:54.711 | INFO     | __main__:main:966 - Processing Complete!
+2026-04-11 05:44:54.711 | INFO     | __main__:main:967 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:44:54.711 | INFO     | __main__:main:968 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:44:54.711 | INFO     | __main__:main:969 - Average FPS: 1.08
+2026-04-11 05:44:54.712 | INFO     | __main__:main:970 - Total alerts: 0
+2026-04-11 05:44:54.712 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:48:17.285 | INFO     | __main__:main:929 - Starting Crowd Behavior Analysis System
+2026-04-11 05:48:17.285 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:48:17.285 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:48:17.405 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:48:17.405 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:48:17.598 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:48:17.626 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:48:17.921 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:48:17.921 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:48:17.921 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:48:17.975 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:48:17.976 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:48:17.995 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:48:17.995 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:48:17.995 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:48:17.995 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:48:17.995 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:48:17.995 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:48:17.995 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:48:17.995 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:48:19.200 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:48:19.200 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:48:19.229 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:48:19.229 | INFO     | __main__:process_video:651 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 05:48:19.233 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:49:38.578 | INFO     | __main__:process_video:703 - Processed 100 frames out of 298 read (stride 3, ~1.4 FPS)
+2026-04-11 05:49:48.204 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:49:48.315 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 114, 'avg_people_count': np.float64(30.105263157894736), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4441122115506101), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(28.18858571843097), 'max_predicted_future_risk': np.float64(62.23503406524658), 'avg_fused_risk': np.float64(50.30335462734194), 'max_fused_risk': np.float64(74.81304020821497), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 114, 'source_frames_read': 341, 'frame_stride': 3, 'total_processing_time': 80.86266708374023, 'avg_fps': 1.4097976743945784, 'prediction_layer': {'latest_future_risk': 19.360723152160645, 'latest_fused_risk': 47.244446300757076, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 21, 'female': 7, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:49:48.321 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:49:48.347 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 05:49:48.348 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:49:48.884 | INFO     | __main__:save_report:813 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:49:48.885 | INFO     | __main__:save_report:816 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:49:48.885 | INFO     | __main__:main:965 - ==================================================
+2026-04-11 05:49:48.885 | INFO     | __main__:main:966 - Processing Complete!
+2026-04-11 05:49:48.885 | INFO     | __main__:main:967 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:49:48.885 | INFO     | __main__:main:968 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 05:49:48.885 | INFO     | __main__:main:969 - Average FPS: 1.41
+2026-04-11 05:49:48.885 | INFO     | __main__:main:970 - Total alerts: 0
+2026-04-11 05:49:48.885 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:54:25.357 | INFO     | __main__:main:929 - Starting Crowd Behavior Analysis System
+2026-04-11 05:54:25.357 | INFO     | __main__:__init__:63 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:54:25.357 | INFO     | __main__:_initialize_components:112 - Initializing pipeline components...
+2026-04-11 05:54:25.448 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:54:25.448 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:54:25.668 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:54:25.693 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:54:26.021 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:54:26.021 | INFO     | __main__:_initialize_components:148 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:54:26.021 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:54:26.092 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:54:26.093 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:54:26.116 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:54:26.117 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:54:26.117 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:54:26.117 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:54:26.117 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:54:26.117 | INFO     | __main__:_initialize_components:173 - All pipeline components initialized
+2026-04-11 05:54:26.117 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:54:26.117 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:54:27.500 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:54:27.500 | INFO     | __main__:__init__:91 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:54:27.578 | INFO     | __main__:process_video:650 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video2.mp4
+2026-04-11 05:54:27.578 | INFO     | __main__:process_video:651 - Resolution: 3840x2160, FPS: 25, Total frames: 241, Frame stride: 3
+2026-04-11 05:54:27.584 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:54:29.352 | WARNING  | __main__:process_frame:457 - Frame 0: Overcrowding detected (density: 100.0%)
+2026-04-11 05:54:31.184 | WARNING  | __main__:process_frame:457 - Frame 3: Overcrowding detected (density: 99.1%) | Future crowd risk 84.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:31.283 | WARNING  | __main__:process_frame:476 - Frame 3: Future crowd risk 84.0/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:32.045 | WARNING  | __main__:process_frame:457 - Frame 6: Overcrowding detected (density: 97.3%) | Future crowd risk 82.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:32.045 | WARNING  | __main__:process_frame:476 - Frame 6: Future crowd risk 82.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:33.155 | WARNING  | __main__:process_frame:457 - Frame 9: Overcrowding detected (density: 100.0%) | Future crowd risk 86.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:33.156 | WARNING  | __main__:process_frame:476 - Frame 9: Future crowd risk 86.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:33.886 | WARNING  | __main__:process_frame:457 - Frame 12: Overcrowding detected (density: 97.1%) | Future crowd risk 84.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:33.887 | WARNING  | __main__:process_frame:476 - Frame 12: Future crowd risk 84.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:34.455 | WARNING  | __main__:process_frame:457 - Frame 15: Overcrowding detected (density: 96.5%) | Future crowd risk 85.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:34.455 | WARNING  | __main__:process_frame:476 - Frame 15: Future crowd risk 85.0/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:34.975 | WARNING  | __main__:process_frame:457 - Frame 18: Overcrowding detected (density: 94.5%) | Future crowd risk 82.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:34.975 | WARNING  | __main__:process_frame:476 - Frame 18: Future crowd risk 82.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:35.498 | WARNING  | __main__:process_frame:457 - Frame 21: Overcrowding detected (density: 98.5%) | Future crowd risk 84.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:35.498 | WARNING  | __main__:process_frame:476 - Frame 21: Future crowd risk 84.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:36.021 | WARNING  | __main__:process_frame:457 - Frame 24: Overcrowding detected (density: 100.0%) | Future crowd risk 85.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:36.021 | WARNING  | __main__:process_frame:476 - Frame 24: Future crowd risk 85.0/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:36.748 | WARNING  | __main__:process_frame:457 - Frame 27: Overcrowding detected (density: 97.9%) | Future crowd risk 85.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:36.748 | WARNING  | __main__:process_frame:476 - Frame 27: Future crowd risk 85.6/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:37.340 | WARNING  | __main__:process_frame:457 - Frame 30: Overcrowding detected (density: 100.0%) | Future crowd risk 87.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:37.340 | WARNING  | __main__:process_frame:476 - Frame 30: Future crowd risk 87.7/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:38.001 | WARNING  | __main__:process_frame:457 - Frame 33: Overcrowding detected (density: 96.4%) | Future crowd risk 84.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:38.001 | WARNING  | __main__:process_frame:476 - Frame 33: Future crowd risk 84.1/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:38.530 | WARNING  | __main__:process_frame:457 - Frame 36: Overcrowding detected (density: 92.5%) | Future crowd risk 82.3/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:38.531 | WARNING  | __main__:process_frame:476 - Frame 36: Future crowd risk 82.3/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:39.049 | WARNING  | __main__:process_frame:457 - Frame 39: Overcrowding detected (density: 93.2%) | Future crowd risk 82.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:39.049 | WARNING  | __main__:process_frame:476 - Frame 39: Future crowd risk 82.7/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:39.629 | WARNING  | __main__:process_frame:457 - Frame 42: Overcrowding detected (density: 100.0%) | Future crowd risk 87.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:39.629 | WARNING  | __main__:process_frame:476 - Frame 42: Future crowd risk 87.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:40.209 | WARNING  | __main__:process_frame:457 - Frame 45: Overcrowding detected (density: 100.0%) | Future crowd risk 87.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:40.209 | WARNING  | __main__:process_frame:476 - Frame 45: Future crowd risk 87.6/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:40.811 | WARNING  | __main__:process_frame:457 - Frame 48: Overcrowding detected (density: 100.0%) | Future crowd risk 90.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:40.811 | WARNING  | __main__:process_frame:476 - Frame 48: Future crowd risk 90.0/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:41.380 | WARNING  | __main__:process_frame:457 - Frame 51: Overcrowding detected (density: 100.0%) | Future crowd risk 90.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:41.380 | WARNING  | __main__:process_frame:476 - Frame 51: Future crowd risk 90.6/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:42.121 | WARNING  | __main__:process_frame:457 - Frame 54: Overcrowding detected (density: 100.0%) | Future crowd risk 90.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:42.121 | WARNING  | __main__:process_frame:476 - Frame 54: Future crowd risk 90.7/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:42.717 | WARNING  | __main__:process_frame:457 - Frame 57: Overcrowding detected (density: 100.0%) | Future crowd risk 87.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:42.717 | WARNING  | __main__:process_frame:476 - Frame 57: Future crowd risk 87.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:43.347 | WARNING  | __main__:process_frame:457 - Frame 60: Overcrowding detected (density: 100.0%) | Future crowd risk 86.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:43.347 | WARNING  | __main__:process_frame:476 - Frame 60: Future crowd risk 86.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:43.922 | WARNING  | __main__:process_frame:457 - Frame 63: Overcrowding detected (density: 100.0%) | Future crowd risk 86.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:43.922 | WARNING  | __main__:process_frame:476 - Frame 63: Future crowd risk 86.1/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:44.622 | WARNING  | __main__:process_frame:457 - Frame 66: Overcrowding detected (density: 100.0%) | Future crowd risk 84.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:44.622 | WARNING  | __main__:process_frame:476 - Frame 66: Future crowd risk 84.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:45.391 | WARNING  | __main__:process_frame:457 - Frame 69: Overcrowding detected (density: 100.0%) | Future crowd risk 83.7/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:45.391 | WARNING  | __main__:process_frame:476 - Frame 69: Future crowd risk 83.7/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:45.984 | WARNING  | __main__:process_frame:457 - Frame 72: Overcrowding detected (density: 100.0%) | Future crowd risk 83.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:45.984 | WARNING  | __main__:process_frame:476 - Frame 72: Future crowd risk 83.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:46.561 | WARNING  | __main__:process_frame:457 - Frame 75: Overcrowding detected (density: 100.0%) | Future crowd risk 84.0/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:46.562 | WARNING  | __main__:process_frame:476 - Frame 75: Future crowd risk 84.0/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:47.108 | WARNING  | __main__:process_frame:457 - Frame 78: Overcrowding detected (density: 100.0%) | Future crowd risk 83.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:47.108 | WARNING  | __main__:process_frame:476 - Frame 78: Future crowd risk 83.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:47.708 | WARNING  | __main__:process_frame:457 - Frame 81: Overcrowding detected (density: 100.0%) | Future crowd risk 85.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:47.708 | WARNING  | __main__:process_frame:476 - Frame 81: Future crowd risk 85.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:48.328 | WARNING  | __main__:process_frame:457 - Frame 84: Overcrowding detected (density: 100.0%) | Future crowd risk 86.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:48.328 | WARNING  | __main__:process_frame:476 - Frame 84: Future crowd risk 86.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:48.928 | WARNING  | __main__:process_frame:457 - Frame 87: Overcrowding detected (density: 100.0%) | Future crowd risk 87.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:48.929 | WARNING  | __main__:process_frame:476 - Frame 87: Future crowd risk 87.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:49.512 | WARNING  | __main__:process_frame:457 - Frame 90: Overcrowding detected (density: 100.0%) | Future crowd risk 86.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:49.512 | WARNING  | __main__:process_frame:476 - Frame 90: Future crowd risk 86.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:50.167 | WARNING  | __main__:process_frame:457 - Frame 93: Overcrowding detected (density: 100.0%) | Future crowd risk 85.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:50.167 | WARNING  | __main__:process_frame:476 - Frame 93: Future crowd risk 85.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:50.749 | WARNING  | __main__:process_frame:457 - Frame 96: Overcrowding detected (density: 98.2%) | Future crowd risk 80.3/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:50.749 | WARNING  | __main__:process_frame:476 - Frame 96: Future crowd risk 80.3/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:51.352 | WARNING  | __main__:process_frame:457 - Frame 99: Overcrowding detected (density: 100.0%) | Future crowd risk 80.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:51.352 | WARNING  | __main__:process_frame:476 - Frame 99: Future crowd risk 80.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:51.920 | WARNING  | __main__:process_frame:457 - Frame 102: Overcrowding detected (density: 100.0%) | Future crowd risk 80.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:51.920 | WARNING  | __main__:process_frame:476 - Frame 102: Future crowd risk 80.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:52.493 | WARNING  | __main__:process_frame:457 - Frame 105: Overcrowding detected (density: 100.0%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:52.493 | WARNING  | __main__:process_frame:476 - Frame 105: Future crowd risk 81.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:53.089 | WARNING  | __main__:process_frame:457 - Frame 108: Overcrowding detected (density: 100.0%) | Future crowd risk 84.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:53.089 | WARNING  | __main__:process_frame:476 - Frame 108: Future crowd risk 84.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:53.680 | WARNING  | __main__:process_frame:457 - Frame 111: Overcrowding detected (density: 100.0%) | Future crowd risk 82.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:53.680 | WARNING  | __main__:process_frame:476 - Frame 111: Future crowd risk 82.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:54.242 | WARNING  | __main__:process_frame:457 - Frame 114: Overcrowding detected (density: 100.0%) | Future crowd risk 81.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:54.242 | WARNING  | __main__:process_frame:476 - Frame 114: Future crowd risk 81.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:54.823 | WARNING  | __main__:process_frame:457 - Frame 117: Overcrowding detected (density: 100.0%) | Future crowd risk 81.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:54.823 | WARNING  | __main__:process_frame:476 - Frame 117: Future crowd risk 81.1/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:55.427 | WARNING  | __main__:process_frame:457 - Frame 120: Overcrowding detected (density: 100.0%) | Future crowd risk 81.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:55.427 | WARNING  | __main__:process_frame:476 - Frame 120: Future crowd risk 81.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:56.013 | WARNING  | __main__:process_frame:457 - Frame 123: Overcrowding detected (density: 100.0%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:56.013 | WARNING  | __main__:process_frame:476 - Frame 123: Future crowd risk 81.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:56.580 | WARNING  | __main__:process_frame:457 - Frame 126: Overcrowding detected (density: 100.0%) | Future crowd risk 84.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:56.580 | WARNING  | __main__:process_frame:476 - Frame 126: Future crowd risk 84.1/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:57.143 | WARNING  | __main__:process_frame:457 - Frame 129: Overcrowding detected (density: 100.0%) | Future crowd risk 83.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:57.143 | WARNING  | __main__:process_frame:476 - Frame 129: Future crowd risk 83.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:57.691 | WARNING  | __main__:process_frame:457 - Frame 132: Overcrowding detected (density: 100.0%) | Future crowd risk 81.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:57.691 | WARNING  | __main__:process_frame:476 - Frame 132: Future crowd risk 81.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:58.235 | WARNING  | __main__:process_frame:457 - Frame 135: Overcrowding detected (density: 100.0%) | Future crowd risk 81.1/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:58.235 | WARNING  | __main__:process_frame:476 - Frame 135: Future crowd risk 81.1/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:58.778 | WARNING  | __main__:process_frame:457 - Frame 138: Overcrowding detected (density: 99.5%) | Future crowd risk 83.6/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:58.778 | WARNING  | __main__:process_frame:476 - Frame 138: Future crowd risk 83.6/100 (HIGH_COMPRESSION)
+2026-04-11 05:54:59.419 | WARNING  | __main__:process_frame:457 - Frame 141: Overcrowding detected (density: 93.1%) | Future crowd risk 78.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:54:59.419 | WARNING  | __main__:process_frame:476 - Frame 141: Future crowd risk 78.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:00.014 | WARNING  | __main__:process_frame:457 - Frame 144: Overcrowding detected (density: 86.3%) | Future crowd risk 77.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:00.031 | WARNING  | __main__:process_frame:476 - Frame 144: Future crowd risk 77.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:00.851 | WARNING  | __main__:process_frame:457 - Frame 147: Overcrowding detected (density: 93.2%) | Future crowd risk 78.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:00.852 | WARNING  | __main__:process_frame:476 - Frame 147: Future crowd risk 78.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:01.523 | WARNING  | __main__:process_frame:457 - Frame 150: Overcrowding detected (density: 84.4%) | Future crowd risk 77.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:01.523 | WARNING  | __main__:process_frame:476 - Frame 150: Future crowd risk 77.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:02.115 | WARNING  | __main__:process_frame:457 - Frame 153: Overcrowding detected (density: 84.0%) | Future crowd risk 77.4/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:02.116 | WARNING  | __main__:process_frame:476 - Frame 153: Future crowd risk 77.4/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:02.635 | WARNING  | __main__:process_frame:457 - Frame 156: Overcrowding detected (density: 73.0%)
+2026-04-11 05:55:03.802 | WARNING  | __main__:process_frame:457 - Frame 162: Overcrowding detected (density: 76.1%)
+2026-04-11 05:55:04.396 | WARNING  | __main__:process_frame:457 - Frame 165: Overcrowding detected (density: 84.3%)
+2026-04-11 05:55:04.968 | WARNING  | __main__:process_frame:457 - Frame 168: Overcrowding detected (density: 82.8%)
+2026-04-11 05:55:05.566 | WARNING  | __main__:process_frame:457 - Frame 171: Overcrowding detected (density: 88.8%) | Future crowd risk 81.8/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:05.566 | WARNING  | __main__:process_frame:476 - Frame 171: Future crowd risk 81.8/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:06.131 | WARNING  | __main__:process_frame:457 - Frame 174: Overcrowding detected (density: 93.0%) | Future crowd risk 82.2/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:06.131 | WARNING  | __main__:process_frame:476 - Frame 174: Future crowd risk 82.2/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:06.700 | WARNING  | __main__:process_frame:457 - Frame 177: Overcrowding detected (density: 93.2%) | Future crowd risk 84.5/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:06.700 | WARNING  | __main__:process_frame:476 - Frame 177: Future crowd risk 84.5/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:07.245 | WARNING  | __main__:process_frame:457 - Frame 180: Overcrowding detected (density: 86.7%) | Future crowd risk 80.9/100 (HIGH_COMPRESSION, flow=chaotic, action=Stop inflow, open relief routes, and disperse the compressed zone immediately)
+2026-04-11 05:55:07.245 | WARNING  | __main__:process_frame:476 - Frame 180: Future crowd risk 80.9/100 (HIGH_COMPRESSION)
+2026-04-11 05:55:07.809 | WARNING  | __main__:process_frame:457 - Frame 183: Overcrowding detected (density: 82.4%)
+2026-04-11 05:55:08.359 | WARNING  | __main__:process_frame:457 - Frame 186: Overcrowding detected (density: 81.0%)
+2026-04-11 05:55:08.916 | WARNING  | __main__:process_frame:457 - Frame 189: Overcrowding detected (density: 82.1%)
+2026-04-11 05:55:10.063 | WARNING  | __main__:process_frame:457 - Frame 195: Overcrowding detected (density: 73.0%)
+2026-04-11 05:55:18.070 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:55:18.088 | INFO     | __main__:process_video:738 - Video processing completed. Summary: {'total_frames': 81, 'avg_people_count': np.float64(13.358024691358025), 'max_people_count': np.int64(17), 'avg_density': np.float64(0.8864297156810445), 'max_density': np.float64(1.0), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(67.11567747728326), 'max_predicted_future_risk': np.float64(87.96217292785644), 'avg_fused_risk': np.float64(75.78219392848578), 'max_fused_risk': np.float64(90.69617310784221), 'total_alerts': 119, 'alerts_by_type': {'crowd_anomaly': 64, 'prediction_alert': 55}, 'processed_frames': 81, 'source_frames_read': 241, 'frame_stride': 3, 'total_processing_time': 29.613027095794678, 'avg_fps': 2.7352826760322233, 'prediction_layer': {'latest_future_risk': 14.205730867385864, 'latest_fused_risk': 42.891332275929585, 'latest_problem': 'BOTTLENECK', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 4, 'female': 4, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 05:55:18.094 | INFO     | __main__:save_report:787 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video2_report.json
+2026-04-11 05:55:18.120 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video2_report_metrics.csv
+2026-04-11 05:55:18.121 | INFO     | __main__:save_report:802 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 05:55:18.681 | INFO     | __main__:save_report:813 - Opened: http://127.0.0.1:5001/
+2026-04-11 05:55:18.681 | INFO     | __main__:save_report:816 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 05:55:18.682 | INFO     | __main__:main:965 - ==================================================
+2026-04-11 05:55:18.682 | INFO     | __main__:main:966 - Processing Complete!
+2026-04-11 05:55:18.682 | INFO     | __main__:main:967 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 05:55:18.682 | INFO     | __main__:main:968 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video2_report.json
+2026-04-11 05:55:18.682 | INFO     | __main__:main:969 - Average FPS: 2.74
+2026-04-11 05:55:18.682 | INFO     | __main__:main:970 - Total alerts: 119
+2026-04-11 05:55:18.682 | INFO     | __main__:main:971 - ==================================================
+2026-04-11 05:59:52.195 | INFO     | __main__:main:953 - Starting Crowd Behavior Analysis System
+2026-04-11 05:59:52.195 | INFO     | __main__:__init__:66 - Using MPS (Apple Silicon GPU)
+2026-04-11 05:59:52.195 | INFO     | __main__:_initialize_components:116 - Initializing pipeline components...
+2026-04-11 05:59:52.292 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 05:59:52.292 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 05:59:52.481 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 05:59:52.506 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 05:59:52.794 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 05:59:52.794 | INFO     | __main__:_initialize_components:152 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 05:59:52.794 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 05:59:52.852 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 05:59:52.853 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 05:59:52.877 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 05:59:52.877 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 05:59:52.878 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 05:59:52.878 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 05:59:52.878 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 05:59:52.878 | INFO     | __main__:_initialize_components:177 - All pipeline components initialized
+2026-04-11 05:59:52.878 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 05:59:52.878 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 05:59:54.083 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 05:59:54.083 | INFO     | __main__:__init__:95 - CrowdBehaviorSystem initialized successfully
+2026-04-11 05:59:54.109 | INFO     | __main__:process_video:661 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 05:59:54.109 | INFO     | __main__:process_video:662 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 05:59:54.112 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:01:14.003 | INFO     | __main__:process_video:714 - Processed 100 frames out of 298 read (stride 3, ~1.4 FPS)
+2026-04-11 06:01:23.650 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:01:23.705 | INFO     | __main__:process_video:749 - Video processing completed. Summary: {'total_frames': 114, 'avg_people_count': np.float64(30.105263157894736), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4441122115506101), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(28.18858571843097), 'max_predicted_future_risk': np.float64(62.23503406524658), 'avg_fused_risk': np.float64(50.30335462734194), 'max_fused_risk': np.float64(74.81304020821497), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 114, 'source_frames_read': 341, 'frame_stride': 3, 'total_processing_time': 81.1673104763031, 'avg_fps': 1.4045063133301976, 'prediction_layer': {'latest_future_risk': 19.360723152160645, 'latest_fused_risk': 47.244446300757076, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 21, 'female': 7, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 06:01:23.712 | INFO     | __main__:save_report:798 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 06:01:23.748 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 06:01:23.750 | INFO     | __main__:save_report:813 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 06:01:24.388 | INFO     | __main__:save_report:824 - Opened: http://127.0.0.1:5001/
+2026-04-11 06:01:24.389 | INFO     | __main__:save_report:827 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 06:01:24.389 | INFO     | __main__:main:998 - ==================================================
+2026-04-11 06:01:24.389 | INFO     | __main__:main:999 - Processing Complete!
+2026-04-11 06:01:24.389 | INFO     | __main__:main:1000 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:01:24.389 | INFO     | __main__:main:1001 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 06:01:24.389 | INFO     | __main__:main:1002 - Average FPS: 1.40
+2026-04-11 06:01:24.389 | INFO     | __main__:main:1003 - Total alerts: 0
+2026-04-11 06:01:24.390 | INFO     | __main__:main:1004 - ==================================================
+2026-04-11 06:06:59.282 | INFO     | __main__:main:967 - Starting Crowd Behavior Analysis System
+2026-04-11 06:06:59.283 | INFO     | __main__:__init__:70 - Using MPS (Apple Silicon GPU)
+2026-04-11 06:06:59.283 | INFO     | __main__:_initialize_components:120 - Initializing pipeline components...
+2026-04-11 06:06:59.398 | INFO     | pipeline.detector:__init__:41 - Loaded YOLOv8 model from yolov8n.pt on mps
+2026-04-11 06:06:59.398 | INFO     | pipeline.tracker:_build_tracker:180 - Initialized IoU tracker with max_age=60
+2026-04-11 06:06:59.618 | INFO     | models.cnn:__init__:41 - Initialized ResNetFeatureExtractor with output dimension 512
+2026-04-11 06:06:59.646 | INFO     | pipeline.feature_extractor:__init__:38 - Initialized FeatureExtractor on mps
+2026-04-11 06:06:59.940 | INFO     | pipeline.pose_estimator:_try_init_tasks_api:122 - Initialized MediaPipe Tasks pose estimator using /Users/chaitanya/projects/Git-Good/pose_landmarker.task
+2026-04-11 06:06:59.940 | INFO     | __main__:_initialize_components:156 - Pose Status: enabled=True mode=tasks message=Pose enabled via MediaPipe Tasks using model /Users/chaitanya/projects/Git-Good/pose_landmarker.task.
+2026-04-11 06:06:59.940 | INFO     | pipeline.sequence_manager:__init__:57 - Initialized SequenceManager with seq_len=30, min_len=10
+2026-04-11 06:06:59.998 | INFO     | models.transformer:__init__:102 - Initialized TemporalTransformerEncoder with 4 layers, 8 heads, 512 dimensions
+2026-04-11 06:06:59.999 | INFO     | models.classifier:__init__:77 - Initialized BehaviorClassifier with input_dim=512
+2026-04-11 06:07:00.028 | INFO     | models.transformer:__init__:213 - TemporalFeatureProcessor initialized on mps
+2026-04-11 06:07:00.028 | INFO     | models.classifier:__init__:183 - BehaviorAnalyzer initialized on mps
+2026-04-11 06:07:00.028 | INFO     | pipeline.inference:__init__:49 - Initialized BehaviorInference pipeline on mps
+2026-04-11 06:07:00.028 | INFO     | pipeline.inference:__init__:143 - Initialized complete InferencePipeline on mps
+2026-04-11 06:07:00.029 | INFO     | utils.metrics:__init__:50 - Initialized CrowdMetrics
+2026-04-11 06:07:00.029 | INFO     | __main__:_initialize_components:181 - All pipeline components initialized
+2026-04-11 06:07:00.029 | INFO     | utils.metrics:__init__:720 - Initialized MetricsAggregator
+2026-04-11 06:07:00.029 | INFO     | utils.visualization:__init__:35 - Initialized Visualizer
+2026-04-11 06:07:01.268 | INFO     | pipeline.demographic_estimator:__init__:51 - DemographicEstimator initialised  enabled=True  method=heuristic  male_ratio=0.5
+2026-04-11 06:07:01.268 | INFO     | __main__:__init__:99 - CrowdBehaviorSystem initialized successfully
+2026-04-11 06:07:01.268 | INFO     | utils.dashboard_push:configure_dashboard_push:140 - Dashboard live push → %s
+2026-04-11 06:07:01.300 | INFO     | __main__:process_video:665 - Processing video: /Users/chaitanya/projects/Git-Good/data/sample_videos/video.mp4
+2026-04-11 06:07:01.301 | INFO     | __main__:process_video:666 - Resolution: 1920x1080, FPS: 25, Total frames: 341, Frame stride: 3
+2026-04-11 06:07:01.304 | INFO     | utils.visualization:__init__:456 - Initialized VideoWriter to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:08:23.338 | INFO     | __main__:process_video:718 - Processed 100 frames out of 298 read (stride 3, ~1.4 FPS)
+2026-04-11 06:08:32.946 | INFO     | utils.visualization:release:467 - Released VideoWriter, saved to /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:08:32.971 | INFO     | __main__:process_video:753 - Video processing completed. Summary: {'total_frames': 114, 'avg_people_count': np.float64(30.105263157894736), 'max_people_count': np.int64(37), 'avg_density': np.float64(0.4441122115506101), 'max_density': np.float64(0.5685956790123456), 'avg_anomaly_score': np.float64(0.0), 'avg_predicted_future_risk': np.float64(28.18858571843097), 'max_predicted_future_risk': np.float64(62.23503406524658), 'avg_fused_risk': np.float64(50.30335462734194), 'max_fused_risk': np.float64(74.81304020821497), 'total_alerts': 0, 'alerts_by_type': {}, 'processed_frames': 114, 'source_frames_read': 341, 'frame_stride': 3, 'total_processing_time': 82.72505855560303, 'avg_fps': 1.3780588613711982, 'prediction_layer': {'latest_future_risk': 19.360723152160645, 'latest_fused_risk': 47.244446300757076, 'latest_problem': 'OPPOSING_FLOW', 'latest_flow_status': 'chaotic', 'model_loaded': True}, 'demographic_distribution': {'male': 21, 'female': 7, 'unknown': 0}, 'stampede_events': 0}
+2026-04-11 06:08:32.975 | INFO     | __main__:save_report:802 - Report saved to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 06:08:33.003 | INFO     | utils.metrics:export_to_csv:792 - Exported metrics to /Users/chaitanya/projects/Git-Good/outputs/reports/video_report_metrics.csv
+2026-04-11 06:08:33.005 | INFO     | __main__:save_report:827 - Temple digital twin state exported to /Users/chaitanya/projects/Git-Good/digitaltwin/temple_prediction_state.js
+2026-04-11 06:08:33.818 | INFO     | __main__:save_report:838 - Opened: http://127.0.0.1:5001/
+2026-04-11 06:08:33.819 | INFO     | __main__:save_report:841 - If pages do not load, start the server: python app.py (match --dashboard_port / --port)
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1011 - ==================================================
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1012 - Processing Complete!
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1013 - Output video: /Users/chaitanya/projects/Git-Good/outputs/videos
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1014 - Report: /Users/chaitanya/projects/Git-Good/outputs/reports/video_report.json
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1015 - Average FPS: 1.38
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1016 - Total alerts: 0
+2026-04-11 06:08:33.819 | INFO     | __main__:main:1017 - ==================================================

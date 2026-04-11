@@ -3,185 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CrowdGuard — Live Crowd Monitoring</title>
+  <title>CrowdGuard</title>
   <style>
-    /* ── Reset & Variables ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:         #060d1a;
-      --surface:    #0c1829;
-      --surface2:   #0f1f33;
-      --border:     rgba(56, 139, 253, 0.15);
-      --text:       #c9d9ec;
-      --text-dim:   #5a7a9a;
-      --accent:     #38bdf8;
-
-      --low:        #22c55e;
-      --low-bg:     rgba(34, 197, 94, 0.10);
-      --low-border: rgba(34, 197, 94, 0.30);
-
-      --med:        #f59e0b;
-      --med-bg:     rgba(245, 158, 11, 0.10);
-      --med-border: rgba(245, 158, 11, 0.35);
-
-      --high:       #ef4444;
-      --high-bg:    rgba(239, 68, 68, 0.10);
-      --high-border:rgba(239, 68, 68, 0.40);
-
-      --font-mono:  'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      --bg: #0b1220;
+      --panel: #111827;
+      --line: rgba(255, 255, 255, 0.08);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --bad: #ef4444;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --mono: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: var(--font);
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      line-height: 1.5;
     }
 
-    /* ── Header ────────────────────────────────────────────────────── */
+    /* Header */
     header {
-      background: linear-gradient(90deg, #060d1a 0%, #0a1525 60%, #060d1a 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 0 28px;
-      height: 64px;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
+      flex-wrap: wrap;
       gap: 12px;
     }
 
-    .brand-icon {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    .brand {
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand span { color: var(--muted); font-weight: 400; font-size: 0.85rem; margin-left: 8px; }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 0.8125rem;
+      color: var(--muted);
+    }
+
+    .conn-ok { color: var(--ok); }
+    .conn-warn { color: var(--warn); }
+
+    .twins {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .twins a {
+      color: var(--accent);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      font-size: 0.75rem;
+    }
+
+    .twins a:hover { background: rgba(56, 189, 248, 0.08); }
+
+    .twins-open-all {
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      background: rgba(56, 189, 248, 0.14);
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    .twins-open-all:hover { background: rgba(56, 189, 248, 0.22); }
+
+    .twin-digital-btn {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8125rem;
+      padding: 7px 14px;
       border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
-    }
-
-    .brand-name {
-      font-size: 18px;
-      font-weight: 700;
-      color: #f0f8ff;
-      letter-spacing: -0.3px;
-    }
-
-    .brand-sub {
-      font-size: 11px;
-      color: var(--text-dim);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .live-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: rgba(34, 197, 94, 0.12);
-      border: 1px solid rgba(34, 197, 94, 0.30);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 12px;
+      border: 1px solid rgba(56, 189, 248, 0.45);
+      background: rgba(56, 189, 248, 0.18);
+      color: var(--accent);
+      text-decoration: none;
       font-weight: 600;
-      color: var(--low);
     }
 
-    .live-dot {
-      width: 8px; height: 8px;
-      background: var(--low);
-      border-radius: 50%;
-      animation: pulse 1.4s ease-in-out infinite;
-    }
+    .twin-digital-btn:hover { background: rgba(56, 189, 248, 0.28); }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
-    }
+    #clock { font-family: var(--mono); }
 
-    .clock {
-      font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-dim);
-    }
-
-    /* ── Layout ────────────────────────────────────────────────────── */
-    main {
-      flex: 1;
-      padding: 24px 28px;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: auto auto auto;
-      gap: 18px;
-    }
-
-    /* ── Card base ─────────────────────────────────────────────────── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
+    /* Page shell */
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
       padding: 20px;
-      position: relative;
-      overflow: hidden;
     }
 
-    .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      opacity: 0.4;
-    }
-
-    .card-title {
-      font-size: 11px;
+    h2 {
+      font-size: 0.6875rem;
       font-weight: 600;
-      color: var(--text-dim);
-      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 10px;
     }
 
-    .card-title .icon { font-size: 14px; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+    }
 
-    /* ── Overall Risk Card (spans 2 cols) ──────────────────────────── */
-    .card-overall {
-      grid-column: 1 / 3;
-      display: flex;
+    /* Overview */
+    .overview {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 20px;
       align-items: center;
-      gap: 28px;
+    }
+
+    @media (max-width: 560px) {
+      .overview { grid-template-columns: 1fr; justify-items: start; }
     }
 
     .risk-gauge {
-      width: 110px;
-      height: 110px;
-      flex-shrink: 0;
+      width: 88px;
+      height: 88px;
       position: relative;
+      flex-shrink: 0;
     }
 
-    .risk-gauge svg {
-      transform: rotate(-90deg);
-    }
+    .risk-gauge svg { transform: rotate(-90deg); }
 
     .risk-gauge-val {
       position: absolute;
@@ -193,407 +164,371 @@
     }
 
     .risk-gauge-num {
-      font-size: 26px;
-      font-weight: 800;
-      font-family: var(--font-mono);
-      color: #f0f8ff;
-      line-height: 1;
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-family: var(--mono);
     }
 
-    .risk-gauge-pct { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-
-    .risk-meta { flex: 1; }
+    .risk-gauge-pct { font-size: 0.65rem; color: var(--muted); }
 
     .risk-level-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
+      display: inline-block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      padding: 4px 10px;
       border-radius: 6px;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
-    .risk-level-badge.LOW    { background: var(--low-bg);  border: 1px solid var(--low-border);  color: var(--low); }
-    .risk-level-badge.MEDIUM { background: var(--med-bg);  border: 1px solid var(--med-border);  color: var(--med); }
-    .risk-level-badge.HIGH   { background: var(--high-bg); border: 1px solid var(--high-border); color: var(--high); animation: pulse 0.8s infinite; }
+    .risk-level-badge.LOW    { background: rgba(34, 197, 94, 0.15); color: var(--ok); }
+    .risk-level-badge.MEDIUM { background: rgba(245, 158, 11, 0.15); color: var(--warn); }
+    .risk-level-badge.HIGH   { background: rgba(239, 68, 68, 0.15); color: var(--bad); }
 
     .risk-action {
-      font-size: 13px;
-      color: var(--text);
-      line-height: 1.5;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 10px 14px;
+      font-size: 0.875rem;
+      color: var(--muted);
+      max-width: 52ch;
     }
 
-    .risk-action-label {
-      font-size: 10px;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 4px;
-    }
-
-    /* ── Status Card ───────────────────────────────────────────────── */
-    .card-status {
-      grid-column: 3 / 4;
-    }
-
-    .status-items { display: flex; flex-direction: column; gap: 10px; }
-
-    .status-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: var(--surface2);
-      border-radius: 7px;
-      border: 1px solid var(--border);
-    }
-
-    .status-label { font-size: 12px; color: var(--text-dim); }
-    .status-val   { font-size: 13px; font-weight: 600; color: var(--text); font-family: var(--font-mono); }
-
-    /* ── Zone Cards ────────────────────────────────────────────────── */
-    .zones-section {
-      grid-column: 1 / 4;
-    }
-
-    .zones-grid {
+    /* Metrics row */
+    .metrics {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      gap: 10px;
+    }
+
+    @media (max-width: 640px) {
+      .metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .metric {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+    }
+
+    .metric label {
+      display: block;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .metric b {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    /* Zones */
+    .zones-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
     }
 
     .zone-card {
-      background: var(--surface2);
-      border-radius: 10px;
-      padding: 16px;
-      border: 1px solid var(--border);
-      transition: border-color 0.3s, background 0.3s;
-      position: relative;
-      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.15);
     }
 
-    .zone-card.LOW    { border-color: var(--low-border);  }
-    .zone-card.MEDIUM { border-color: var(--med-border);  }
-    .zone-card.HIGH   { border-color: var(--high-border); background: rgba(239, 68, 68, 0.06); }
+    .zone-card.HIGH { border-left: 3px solid var(--bad); }
+    .zone-card.MEDIUM { border-left: 3px solid var(--warn); }
+    .zone-card.LOW { border-left: 3px solid var(--ok); }
 
     .zone-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 12px;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 8px;
     }
 
-    .zone-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #f0f8ff;
-    }
-
-    .zone-label { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
-
+    .zone-name { font-weight: 600; font-size: 0.875rem; }
+    .zone-label { font-size: 0.7rem; color: var(--muted); }
     .zone-pill {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 12px;
-      letter-spacing: 0.5px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
     }
 
-    .zone-pill.LOW    { background: var(--low-bg);  color: var(--low);  border: 1px solid var(--low-border); }
-    .zone-pill.MEDIUM { background: var(--med-bg);  color: var(--med);  border: 1px solid var(--med-border); }
-    .zone-pill.HIGH   { background: var(--high-bg); color: var(--high); border: 1px solid var(--high-border); }
+    .zone-pill.LOW { background: rgba(34, 197, 94, 0.12); color: var(--ok); }
+    .zone-pill.MEDIUM { background: rgba(245, 158, 11, 0.12); color: var(--warn); }
+    .zone-pill.HIGH { background: rgba(239, 68, 68, 0.12); color: var(--bad); }
 
-    .zone-risk-bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.07); margin-bottom: 10px; }
-    .zone-risk-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
-    .zone-risk-fill.LOW    { background: var(--low); }
-    .zone-risk-fill.MEDIUM { background: var(--med); }
-    .zone-risk-fill.HIGH   { background: linear-gradient(90deg, #ef4444, #ff6b6b); }
+    .zone-risk-bar {
+      height: 3px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      margin-bottom: 8px;
+    }
+
+    .zone-risk-fill {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .zone-risk-fill.LOW { background: var(--ok); }
+    .zone-risk-fill.MEDIUM { background: var(--warn); }
+    .zone-risk-fill.HIGH { background: var(--bad); }
 
     .zone-stats {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      font-size: 11px;
+      gap: 4px 12px;
+      font-size: 0.7rem;
+      color: var(--muted);
     }
 
-    .zone-stat-item { color: var(--text-dim); }
-    .zone-stat-val  { color: var(--text); font-weight: 600; font-family: var(--font-mono); }
+    .zone-stat-val { color: var(--text); font-family: var(--mono); font-weight: 500; }
 
     .zone-problem {
-      margin-top: 10px;
-      font-size: 10px;
-      color: var(--text-dim);
-      background: rgba(0,0,0,0.2);
-      border-radius: 5px;
-      padding: 5px 8px;
-      font-family: var(--font-mono);
+      margin-top: 8px;
+      font-size: 0.65rem;
+      color: var(--muted);
+      font-family: var(--mono);
     }
 
-    /* ── Actions section ───────────────────────────────────────────── */
-    .card-actions { grid-column: 1 / 3; }
-
-    .active-schedules { display: flex; flex-direction: column; gap: 8px; }
-
-    .schedule-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 14px;
-      background: var(--surface2);
-      border-radius: 8px;
-      border: 1px solid var(--med-border);
-      font-size: 12px;
+    /* Split: alerts + schedules */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
     }
 
-    .sched-badge {
-      font-size: 10px;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 10px;
-      background: var(--med-bg);
-      color: var(--med);
-      border: 1px solid var(--med-border);
-      flex-shrink: 0;
+    @media (max-width: 720px) {
+      .split { grid-template-columns: 1fr; }
     }
 
-    .sched-badge.REDIRECT { background: rgba(56,189,248,0.1); color: var(--accent); border-color: rgba(56,189,248,0.3); }
-
-    .sched-text { color: var(--text); flex: 1; }
-    .sched-time { color: var(--text-dim); font-family: var(--font-mono); font-size: 11px; }
-
-    .empty-state {
-      color: var(--text-dim);
-      font-size: 12px;
-      padding: 14px;
-      text-align: center;
-      background: var(--surface2);
-      border-radius: 8px;
-      border: 1px dashed var(--border);
-    }
-
-    /* ── Alerts Feed ───────────────────────────────────────────────── */
-    .card-alerts { grid-column: 3 / 4; }
-
-    .alerts-feed {
+    .alerts-feed, .active-schedules {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      max-height: 220px;
+      max-height: 200px;
       overflow-y: auto;
     }
 
-    .alerts-feed::-webkit-scrollbar { width: 4px; }
-    .alerts-feed::-webkit-scrollbar-track { background: transparent; }
-    .alerts-feed::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .empty-state {
+      color: var(--muted);
+      font-size: 0.8125rem;
+      padding: 16px;
+      text-align: center;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+    }
 
     .alert-item {
-      padding: 9px 12px;
+      padding: 10px 12px;
       border-radius: 8px;
-      font-size: 11px;
-      line-height: 1.5;
-      border-left: 3px solid;
-      background: var(--surface2);
-      animation: slideIn 0.25s ease;
+      font-size: 0.75rem;
+      border: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.12);
     }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(8px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    .alert-item.INFO     { border-left-color: var(--accent); }
-    .alert-item.WARNING  { border-left-color: var(--med); }
-    .alert-item.CRITICAL { border-left-color: var(--high); background: rgba(239,68,68,0.06); }
+    .alert-item.CRITICAL { border-color: rgba(239, 68, 68, 0.35); }
+    .alert-item.WARNING { border-color: rgba(245, 158, 11, 0.3); }
 
     .alert-meta {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
+      font-size: 0.65rem;
+      color: var(--muted);
     }
 
-    .alert-sev {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 1px;
+    .alert-sev { font-weight: 600; }
+    .alert-sev.INFO { color: var(--accent); }
+    .alert-sev.WARNING { color: var(--warn); }
+    .alert-sev.CRITICAL { color: var(--bad); }
+
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      font-size: 0.8125rem;
     }
 
-    .alert-sev.INFO     { color: var(--accent); }
-    .alert-sev.WARNING  { color: var(--med); }
-    .alert-sev.CRITICAL { color: var(--high); }
+    .sched-badge {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(245, 158, 11, 0.12);
+      color: var(--warn);
+    }
 
-    .alert-ts  { font-size: 9px; color: var(--text-dim); font-family: var(--font-mono); }
-    .alert-msg { color: var(--text); }
+    .sched-badge.REDIRECT { background: rgba(56, 189, 248, 0.12); color: var(--accent); }
 
-    /* ── Manual Controls ───────────────────────────────────────────── */
-    .card-controls { grid-column: 1 / 4; }
+    .sched-text { flex: 1; }
+    .sched-time { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); }
 
+    .action-log {
+      margin-top: 12px;
+      max-height: 72px;
+      overflow-y: auto;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 6px;
+    }
+
+    .log-line { padding: 2px 0; border-bottom: 1px solid var(--line); }
+    .log-line:last-child { border-bottom: none; }
+    .log-ts { color: var(--accent); margin-right: 6px; }
+    .log-high { color: var(--bad); }
+    .log-med { color: var(--warn); }
+    .log-low { color: var(--ok); }
+
+    /* Controls */
     .controls-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
 
-    .ctrl-group { display: flex; flex-direction: column; gap: 10px; }
-    .ctrl-label { font-size: 11px; color: var(--text-dim); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px; }
-
-    .ctrl-row { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .ctrl-input, .ctrl-select {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text);
-      padding: 8px 12px;
-      font-size: 12px;
-      flex: 1;
-      min-width: 80px;
-      outline: none;
-      transition: border-color 0.2s;
+    @media (max-width: 640px) {
+      .controls-grid { grid-template-columns: 1fr; }
     }
 
-    .ctrl-input:focus, .ctrl-select:focus { border-color: var(--accent); }
-    .ctrl-select option { background: var(--surface); }
+    .ctrl-group { display: flex; flex-direction: column; gap: 8px; }
 
-    .ctrl-btn {
-      padding: 8px 18px;
-      border-radius: 7px;
-      border: none;
-      font-size: 12px;
+    .ctrl-label {
+      font-size: 0.6875rem;
       font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
     }
 
-    .ctrl-btn:active { transform: scale(0.97); }
-    .ctrl-btn:hover  { opacity: 0.85; }
+    .ctrl-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
-    .ctrl-btn-primary { background: linear-gradient(135deg, #0ea5e9, #38bdf8); color: #000; }
-    .ctrl-btn-warn    { background: linear-gradient(135deg, #d97706, #f59e0b); color: #000; }
-    .ctrl-btn-danger  { background: linear-gradient(135deg, #dc2626, #ef4444); color: #fff; }
+    .ctrl-input, .ctrl-select, .ctrl-textarea {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 8px 10px;
+      font-size: 0.8125rem;
+      outline: none;
+    }
+
+    .ctrl-input:focus, .ctrl-select:focus, .ctrl-textarea:focus {
+      border-color: rgba(56, 189, 248, 0.45);
+    }
+
+    .ctrl-select { flex: 1; min-width: 140px; }
+    .ctrl-select option { background: var(--panel); }
 
     .ctrl-textarea {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--text);
-      padding: 8px 12px;
-      font-size: 12px;
       width: 100%;
+      min-height: 64px;
       resize: vertical;
-      min-height: 60px;
-      outline: none;
       font-family: inherit;
     }
 
-    .ctrl-textarea:focus { border-color: var(--accent); }
-
-    /* ── Twin link button ──────────────────────────────────────────── */
-    .twin-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(14,165,233,0.08));
-      border: 1px solid rgba(56,189,248,0.35);
+    .ctrl-btn {
+      padding: 8px 14px;
       border-radius: 8px;
-      padding: 6px 14px;
-      color: var(--accent);
-      font-size: 12px;
+      border: 1px solid var(--line);
+      font-size: 0.8125rem;
       font-weight: 600;
-      text-decoration: none;
-      transition: background 0.2s;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
     }
 
-    .twin-btn:hover { background: rgba(56,189,248,0.22); }
+    .ctrl-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
-    /* ── Toast notifications ───────────────────────────────────────── */
+    .ctrl-btn-primary {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.35);
+      color: var(--accent);
+    }
+
+    .ctrl-btn-warn {
+      background: rgba(245, 158, 11, 0.15);
+      border-color: rgba(245, 158, 11, 0.35);
+      color: var(--warn);
+    }
+
+    .ctrl-btn-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.35);
+      color: var(--bad);
+    }
+
     #toast-container {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 16px;
+      right: 16px;
       z-index: 999;
       display: flex;
       flex-direction: column;
       gap: 8px;
       pointer-events: none;
+      max-width: min(360px, calc(100vw - 32px));
     }
 
     .toast {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-size: 12px;
-      color: var(--text);
-      max-width: 320px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-      animation: toastIn 0.3s ease;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      font-size: 0.8125rem;
       pointer-events: auto;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     }
 
-    .toast.CRITICAL { border-color: var(--high-border); }
-    .toast.WARNING  { border-color: var(--med-border); }
-
-    @keyframes toastIn {
-      from { opacity: 0; transform: translateX(20px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-
-    /* ── Log ───────────────────────────────────────────────────────── */
-    .action-log {
-      margin-top: 10px;
-      max-height: 100px;
-      overflow-y: auto;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-dim);
-      background: rgba(0,0,0,0.3);
-      border-radius: 7px;
-      padding: 8px 10px;
-    }
-
-    .log-line { padding: 2px 0; border-bottom: 1px solid rgba(255,255,255,0.03); }
-    .log-line:last-child { border-bottom: none; }
-    .log-ts { color: var(--accent); margin-right: 6px; }
-    .log-high { color: var(--high); }
-    .log-med  { color: var(--med); }
-    .log-low  { color: var(--low); }
+    .toast.CRITICAL { border-color: rgba(239, 68, 68, 0.4); }
+    .toast.WARNING { border-color: rgba(245, 158, 11, 0.35); }
   </style>
 </head>
 <body>
 
-<!-- ── Header ──────────────────────────────────────────────────────── -->
 <header>
-  <div class="brand">
-    <div class="brand-icon">👁</div>
-    <div>
-      <div class="brand-name">CrowdGuard</div>
-      <div class="brand-sub">Real-Time Crowd Intelligence</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <a href="/twin" target="_blank" class="twin-btn">🧊 Digital Twin</a>
-    <div class="live-badge"><div class="live-dot"></div> LIVE</div>
-    <div class="clock" id="clock">--:--:--</div>
+  <div class="brand">CrowdGuard <span>crowd monitoring</span></div>
+  <div class="header-meta">
+    <nav class="twins" aria-label="Digital twins">
+      <a class="twin-digital-btn" href="{{ url_for('twin_files', filename='temple_simulation.html') }}" target="_blank" rel="noopener">Digital twin</a>
+      <button type="button" class="twins-open-all" onclick="openAllTwins()" title="Opens three tabs">Open all</button>
+      <a href="{{ url_for('twin_files', filename='temple_simulation.html') }}" target="_blank" rel="noopener">Temple</a>
+      <a href="{{ url_for('twin_files', filename='stadium_simulation.html') }}" target="_blank" rel="noopener">Stadium</a>
+      <a href="{{ url_for('twin_files', filename='concert_arena_simulation.html') }}" target="_blank" rel="noopener">Arena</a>
+    </nav>
+    <span id="clock">--:--:--</span>
+    <span id="stat-connection" class="conn-ok">Live</span>
   </div>
 </header>
 
-<!-- ── Main Grid ────────────────────────────────────────────────────── -->
-<main>
+<script type="application/json" id="cfg-twin-urls">{{ {
+  "paths": [
+    url_for('twin_files', filename='temple_simulation.html'),
+    url_for('twin_files', filename='stadium_simulation.html'),
+    url_for('twin_files', filename='concert_arena_simulation.html')
+  ]
+} | tojson }}</script>
 
-  <!-- Overall Risk -->
-  <div class="card card-overall">
-    <div style="display:flex;align-items:center;gap:28px;width:100%">
+<div class="wrap">
+
+  <section class="panel">
+    <h2>Overview</h2>
+    <div class="overview">
       <div class="risk-gauge">
-        <svg viewBox="0 0 110 110" width="110" height="110">
-          <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
+        <svg viewBox="0 0 110 110" width="88" height="88">
+          <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
           <circle id="gauge-arc" cx="55" cy="55" r="48" fill="none"
                   stroke="#22c55e" stroke-width="8" stroke-linecap="round"
                   stroke-dasharray="301.6" stroke-dashoffset="301.6"
@@ -601,131 +536,106 @@
         </svg>
         <div class="risk-gauge-val">
           <div class="risk-gauge-num" id="overall-risk-num">0</div>
-          <div class="risk-gauge-pct">risk %</div>
+          <div class="risk-gauge-pct">%</div>
         </div>
       </div>
-      <div class="risk-meta">
-        <div class="risk-level-badge LOW" id="overall-severity-badge">
-          🟢 LOW RISK
-        </div>
-        <div class="risk-action">
-          <div class="risk-action-label">⚡ Recommended Action</div>
-          <div id="overall-action">Monitoring all zones. No immediate action required.</div>
-        </div>
+      <div>
+        <div class="risk-level-badge LOW" id="overall-severity-badge">Low risk</div>
+        <p class="risk-action" id="overall-action">Loading…</p>
       </div>
     </div>
+  </section>
+
+  <section class="panel">
+    <h2>At a glance</h2>
+    <div class="metrics">
+      <div class="metric">
+        <label>Zones</label>
+        <b id="stat-zones">—</b>
+      </div>
+      <div class="metric">
+        <label>Schedules</label>
+        <b id="stat-schedules">0</b>
+      </div>
+      <div class="metric">
+        <label>Alerts</label>
+        <b id="stat-alerts">0</b>
+      </div>
+      <div class="metric">
+        <label>Updated</label>
+        <b id="stat-updated" style="font-size:0.8rem;font-weight:500">—</b>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Zones</h2>
+    <div class="zones-grid" id="zones-grid"></div>
+  </section>
+
+  <div class="split">
+    <section class="panel">
+      <h2>Alerts</h2>
+      <div class="alerts-feed" id="alerts-feed">
+        <div class="empty-state">No alerts yet</div>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Schedules</h2>
+      <div id="schedules-list" class="active-schedules">
+        <div class="empty-state">None active</div>
+      </div>
+      <div class="action-log" id="action-log"></div>
+    </section>
   </div>
 
-  <!-- System Status -->
-  <div class="card card-status">
-    <div class="card-title"><span class="icon">📡</span> System Status</div>
-    <div class="status-items">
-      <div class="status-row">
-        <span class="status-label">Active Zones</span>
-        <span class="status-val" id="stat-zones">4</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Schedules Active</span>
-        <span class="status-val" id="stat-schedules">0</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Alerts Today</span>
-        <span class="status-val" id="stat-alerts">0</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Last Update</span>
-        <span class="status-val" id="stat-updated" style="font-size:10px">--:--:--</span>
-      </div>
-      <div class="status-row">
-        <span class="status-label">Connection</span>
-        <span class="status-val" id="stat-connection" style="color:var(--low)">● SSE</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Zone Cards -->
-  <div class="zones-section">
-    <div class="card-title" style="margin-bottom:12px">
-      <span class="icon">🗺</span> ZONE RISK MONITOR
-    </div>
-    <div class="zones-grid" id="zones-grid">
-      <!-- Injected by JS -->
-    </div>
-  </div>
-
-  <!-- Recommended Actions / Active Schedules -->
-  <div class="card card-actions">
-    <div class="card-title"><span class="icon">📋</span> Active Schedules &amp; Actions</div>
-    <div id="schedules-list" class="active-schedules">
-      <div class="empty-state">No active scheduling actions</div>
-    </div>
-    <div class="action-log" id="action-log"></div>
-  </div>
-
-  <!-- Live Alerts Feed -->
-  <div class="card card-alerts">
-    <div class="card-title"><span class="icon">🔔</span> Live Alerts Feed</div>
-    <div class="alerts-feed" id="alerts-feed">
-      <div class="empty-state">Monitoring... alerts will appear here</div>
-    </div>
-  </div>
-
-  <!-- Manual Controls -->
-  <div class="card card-controls">
-    <div class="card-title"><span class="icon">🎛</span> Operator Controls</div>
+  <section class="panel">
+    <h2>Operator</h2>
     <div class="controls-grid">
-
-      <!-- Schedule Control -->
       <div class="ctrl-group">
-        <div class="ctrl-label">Schedule Control</div>
+        <div class="ctrl-label">Schedule</div>
         <div class="ctrl-row">
           <select class="ctrl-select" id="ctrl-zone">
-            <option value="A">Zone A – Main Entrance</option>
-            <option value="B">Zone B – North Stand</option>
-            <option value="C">Zone C – South Stand</option>
-            <option value="D">Zone D – Food Court</option>
+            <option value="A">Zone A — entrance</option>
+            <option value="B">Zone B — north</option>
+            <option value="C">Zone C — south</option>
+            <option value="D">Zone D — food court</option>
           </select>
         </div>
         <div class="ctrl-row">
           <select class="ctrl-select" id="ctrl-action">
-            <option value="DELAY">DELAY</option>
-            <option value="REDIRECT">REDIRECT</option>
+            <option value="DELAY">Delay</option>
+            <option value="REDIRECT">Redirect</option>
           </select>
-          <input class="ctrl-input" type="number" id="ctrl-minutes" value="10" min="1" max="120" style="max-width:80px"/>
-          <span style="color:var(--text-dim);font-size:12px;padding:8px 0;">min</span>
-          <button class="ctrl-btn ctrl-btn-warn" onclick="submitSchedule()">Apply</button>
+          <input class="ctrl-input" type="number" id="ctrl-minutes" value="10" min="1" max="120" style="width:4.5rem"/>
+          <span style="color:var(--muted);font-size:0.8125rem">min</span>
+          <button type="button" class="ctrl-btn ctrl-btn-warn" onclick="submitSchedule()">Apply</button>
         </div>
       </div>
-
-      <!-- Announcement -->
       <div class="ctrl-group">
-        <div class="ctrl-label">Broadcast Announcement</div>
-        <textarea class="ctrl-textarea" id="ctrl-msg" placeholder="Enter announcement message..."></textarea>
+        <div class="ctrl-label">Announcement</div>
+        <textarea class="ctrl-textarea" id="ctrl-msg" placeholder="Message to broadcast…"></textarea>
         <div class="ctrl-row">
           <select class="ctrl-select" id="ctrl-sev">
-            <option value="INFO">ℹ INFO</option>
-            <option value="WARNING">⚠ WARNING</option>
-            <option value="CRITICAL">🚨 CRITICAL</option>
+            <option value="INFO">Info</option>
+            <option value="WARNING">Warning</option>
+            <option value="CRITICAL">Critical</option>
           </select>
-          <button class="ctrl-btn ctrl-btn-primary" onclick="submitAnnouncement()">Broadcast</button>
-          <button class="ctrl-btn ctrl-btn-danger" onclick="triggerHighRisk()">⚠ Simulate HIGH</button>
+          <button type="button" class="ctrl-btn ctrl-btn-primary" onclick="submitAnnouncement()">Send</button>
+          <button type="button" class="ctrl-btn ctrl-btn-danger" onclick="triggerHighRisk()">Test high risk</button>
         </div>
       </div>
-
     </div>
-  </div>
+  </section>
 
-</main>
+</div>
 
-<!-- Toast Container -->
 <div id="toast-container"></div>
 
 <script>
-// ── State ───────────────────────────────────────────────────────────
 let state = {};
 let sseConnected = false;
 
-// ── Clock ───────────────────────────────────────────────────────────
 function updateClock() {
   document.getElementById('clock').textContent =
     new Date().toLocaleTimeString('en-GB', { hour12: false });
@@ -733,7 +643,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ── SSE connection ──────────────────────────────────────────────────
 function connectSSE() {
   const es = new EventSource('/stream');
 
@@ -743,28 +652,27 @@ function connectSSE() {
   });
 
   es.addEventListener('announcement', e => {
-    const ann = JSON.parse(e.data);
-    showToast(ann);
+    showToast(JSON.parse(e.data));
   });
 
   es.addEventListener('ping', () => {});
 
   es.onopen = () => {
     sseConnected = true;
-    document.getElementById('stat-connection').textContent = '● SSE';
-    document.getElementById('stat-connection').style.color = 'var(--low)';
+    const el = document.getElementById('stat-connection');
+    el.textContent = 'Live';
+    el.className = 'conn-ok';
   };
 
   es.onerror = () => {
     sseConnected = false;
-    document.getElementById('stat-connection').textContent = '● Reconnecting';
-    document.getElementById('stat-connection').style.color = 'var(--med)';
-    // Fallback polling
+    const el = document.getElementById('stat-connection');
+    el.textContent = 'Reconnecting…';
+    el.className = 'conn-warn';
     setTimeout(pollFallback, 3000);
   };
 }
 
-// Fallback polling every 2s if SSE breaks
 function pollFallback() {
   if (!sseConnected) {
     fetch('/api/state').then(r => r.json()).then(d => { state = d; renderAll(); });
@@ -772,9 +680,10 @@ function pollFallback() {
   }
 }
 
-// ── Render all ──────────────────────────────────────────────────────
 function renderAll() {
-  if (!state || !state.zones) return;
+  if (!state) return;
+  // Do not require zones — pipeline may send alerts before zone snapshots exist.
+  if (!state.zones) state.zones = [];
 
   renderOverall();
   renderZones();
@@ -786,45 +695,46 @@ function renderAll() {
     new Date().toLocaleTimeString('en-GB', { hour12: false });
 }
 
-// Overall risk gauge
 function renderOverall() {
-  const risk     = state.overall_risk || 0;
+  const risk = state.overall_risk || 0;
   const severity = state.overall_severity || 'LOW';
 
-  // Gauge arc
   const arc = document.getElementById('gauge-arc');
   const circumference = 301.6;
-  const offset = circumference - (risk / 100) * circumference;
-  arc.style.strokeDashoffset = offset;
-  arc.style.stroke = severity === 'HIGH' ? 'var(--high)' : severity === 'MEDIUM' ? 'var(--med)' : 'var(--low)';
+  arc.style.strokeDashoffset = circumference - (risk / 100) * circumference;
+  arc.style.stroke = severity === 'HIGH' ? 'var(--bad)' : severity === 'MEDIUM' ? 'var(--warn)' : 'var(--ok)';
 
   document.getElementById('overall-risk-num').textContent = Math.round(risk);
 
-  // Badge
   const badge = document.getElementById('overall-severity-badge');
-  badge.className = `risk-level-badge ${severity}`;
-  const icons = { LOW: '🟢', MEDIUM: '🟡', HIGH: '🔴' };
-  badge.textContent = `${icons[severity] || '⚪'} ${severity} RISK`;
+  badge.className = 'risk-level-badge ' + severity;
+  const labels = { LOW: 'Low risk', MEDIUM: 'Medium risk', HIGH: 'High risk' };
+  badge.textContent = labels[severity] || severity;
 
-  // Action
-  const worst = (state.zones || []).reduce((a, b) => b.fused_risk > a.fused_risk ? b : a, { fused_risk: 0, recommended_action: '' });
+  const worst = (state.zones || []).reduce(
+    (a, b) => (b.fused_risk > a.fused_risk ? b : a),
+    { fused_risk: 0, recommended_action: '' }
+  );
   document.getElementById('overall-action').textContent =
     worst.recommended_action || 'Monitor all zones. No immediate action required.';
 
-  // Stat
+  document.getElementById('stat-zones').textContent = (state.zones || []).length;
   document.getElementById('stat-schedules').textContent = (state.active_schedules || []).length;
-  document.getElementById('stat-alerts').textContent     = (state.alerts || []).length;
+  document.getElementById('stat-alerts').textContent = (state.alerts || []).length;
 }
 
-// Zone cards
 function renderZones() {
   const zones = state.zones || [];
-  const grid  = document.getElementById('zones-grid');
+  const grid = document.getElementById('zones-grid');
+
+  if (!zones.length) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">No zone data</div>';
+    return;
+  }
 
   grid.innerHTML = zones.map(z => {
-    const sev  = z.severity || 'LOW';
+    const sev = z.severity || 'LOW';
     const risk = z.fused_risk || 0;
-    const icons = { LOW: '🟢', MEDIUM: '🟡', HIGH: '🔴' };
     return `
       <div class="zone-card ${sev}">
         <div class="zone-header">
@@ -832,16 +742,16 @@ function renderZones() {
             <div class="zone-name">Zone ${z.zone}</div>
             <div class="zone-label">${z.label}</div>
           </div>
-          <div class="zone-pill ${sev}">${icons[sev] || ''} ${sev}</div>
+          <div class="zone-pill ${sev}">${sev}</div>
         </div>
         <div class="zone-risk-bar">
-          <div class="zone-risk-fill ${sev}" style="width:${Math.min(100,risk)}%"></div>
+          <div class="zone-risk-fill ${sev}" style="width:${Math.min(100, risk)}%"></div>
         </div>
         <div class="zone-stats">
-          <div class="zone-stat-item">Risk <span class="zone-stat-val">${risk.toFixed(1)}%</span></div>
-          <div class="zone-stat-item">Speed <span class="zone-stat-val">${(z.avg_speed||0).toFixed(2)}</span></div>
-          <div class="zone-stat-item">Density <span class="zone-stat-val">${(z.density_index||0).toFixed(1)}</span></div>
-          <div class="zone-stat-item">Flow <span class="zone-stat-val">${z.flow_status||'smooth'}</span></div>
+          <div>Risk <span class="zone-stat-val">${risk.toFixed(1)}%</span></div>
+          <div>Speed <span class="zone-stat-val">${(z.avg_speed || 0).toFixed(2)}</span></div>
+          <div>Density <span class="zone-stat-val">${(z.density_index || 0).toFixed(1)}</span></div>
+          <div>Flow <span class="zone-stat-val">${z.flow_status || 'smooth'}</span></div>
         </div>
         <div class="zone-problem">${z.problem || 'NORMAL'}</div>
       </div>
@@ -849,13 +759,12 @@ function renderZones() {
   }).join('');
 }
 
-// Alerts feed
 function renderAlerts() {
   const alerts = (state.alerts || []).slice().reverse();
-  const feed   = document.getElementById('alerts-feed');
+  const feed = document.getElementById('alerts-feed');
 
   if (!alerts.length) {
-    feed.innerHTML = '<div class="empty-state">Monitoring... no alerts yet</div>';
+    feed.innerHTML = '<div class="empty-state">No alerts yet</div>';
     return;
   }
 
@@ -863,55 +772,55 @@ function renderAlerts() {
     <div class="alert-item ${a.severity}">
       <div class="alert-meta">
         <span class="alert-sev ${a.severity}">${a.severity}</span>
-        <span class="alert-ts">${formatTs(a.timestamp)}</span>
+        <span>${formatTs(a.timestamp)}</span>
       </div>
-      <div class="alert-msg">${escHtml(a.message)}</div>
+      <div>${escHtml(a.message)}</div>
     </div>
   `).join('');
 }
 
-// Schedules
 function renderSchedules() {
   const schedules = state.active_schedules || [];
-  const list      = document.getElementById('schedules-list');
+  const list = document.getElementById('schedules-list');
 
   if (!schedules.length) {
-    list.innerHTML = '<div class="empty-state">No active scheduling actions</div>';
+    list.innerHTML = '<div class="empty-state">None active</div>';
     return;
   }
 
   list.innerHTML = schedules.map(s => `
     <div class="schedule-item">
       <span class="sched-badge ${s.action}">${s.action}</span>
-      <span class="sched-text">Zone ${s.zone} — ${s.minutes} min</span>
+      <span class="sched-text">Zone ${s.zone} · ${s.minutes} min</span>
       <span class="sched-time">${formatTs(s.timestamp)}</span>
     </div>
   `).join('');
 }
 
-// Action log
 function renderActionLog() {
   const log = state.action_log || [];
-  const el  = document.getElementById('action-log');
-  if (!log.length) return;
+  const el = document.getElementById('action-log');
+  if (!log.length) {
+    el.innerHTML = '';
+    return;
+  }
 
   el.innerHTML = log.slice().reverse().slice(0, 15).map(l => {
     const cls = l.risk > 70 ? 'log-high' : l.risk > 40 ? 'log-med' : 'log-low';
     return `<div class="log-line">
       <span class="log-ts">${formatTs(l.timestamp)}</span>
       <span class="${cls}">[${l.action}]</span> Zone ${l.zone}
-      ${l.risk !== null ? `· risk ${l.risk}%` : ''}
+      ${l.risk !== null ? ` · ${l.risk}%` : ''}
     </div>`;
   }).join('');
 }
 
-// ── Operator Actions ────────────────────────────────────────────────
 async function submitSchedule() {
-  const zone    = document.getElementById('ctrl-zone').value;
-  const action  = document.getElementById('ctrl-action').value;
-  const minutes = parseInt(document.getElementById('ctrl-minutes').value);
+  const zone = document.getElementById('ctrl-zone').value;
+  const action = document.getElementById('ctrl-action').value;
+  const minutes = parseInt(document.getElementById('ctrl-minutes').value, 10);
 
-  const res  = await fetch('/control/schedule', {
+  const res = await fetch('/control/schedule', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ zone, action, minutes })
@@ -921,7 +830,7 @@ async function submitSchedule() {
 }
 
 async function submitAnnouncement() {
-  const message  = document.getElementById('ctrl-msg').value.trim();
+  const message = document.getElementById('ctrl-msg').value.trim();
   const severity = document.getElementById('ctrl-sev').value;
   if (!message) return;
 
@@ -934,12 +843,11 @@ async function submitAnnouncement() {
 }
 
 async function triggerHighRisk() {
-  // Broadcast a CRITICAL announcement + apply schedule
   await fetch('/control/announcement', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      message:  '🚨 SIMULATED HIGH RISK EVENT — Zone A: Extreme crowd compression. Immediate action required!',
+      message: 'Simulated high risk — Zone A: extreme compression. Immediate action required.',
       severity: 'CRITICAL'
     })
   });
@@ -950,18 +858,17 @@ async function triggerHighRisk() {
   });
 }
 
-// ── Toast ───────────────────────────────────────────────────────────
 function showToast(ann) {
   const sev = ann.severity || 'INFO';
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
-  el.className = `toast ${sev}`;
-  el.innerHTML = `<strong style="color:${sev==='CRITICAL'?'var(--high)':sev==='WARNING'?'var(--med)':'var(--accent)'}">${sev}</strong> — ${escHtml(ann.message || '')}`;
+  el.className = 'toast ' + sev;
+  const col = sev === 'CRITICAL' ? 'var(--bad)' : sev === 'WARNING' ? 'var(--warn)' : 'var(--accent)';
+  el.innerHTML = `<strong style="color:${col}">${sev}</strong> — ${escHtml(ann.message || '')}`;
   container.appendChild(el);
   setTimeout(() => el.remove(), 5000);
 }
 
-// ── Helpers ─────────────────────────────────────────────────────────
 function formatTs(ts) {
   if (!ts) return '—';
   try { return new Date(ts).toLocaleTimeString('en-GB', { hour12: false }); }
@@ -969,12 +876,24 @@ function formatTs(ts) {
 }
 
 function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-// ── Boot ─────────────────────────────────────────────────────────────
+function openAllTwins() {
+  const el = document.getElementById('cfg-twin-urls');
+  if (!el) return;
+  let paths;
+  try {
+    paths = JSON.parse(el.textContent).paths;
+  } catch (e) {
+    return;
+  }
+  paths.forEach((p, i) => {
+    setTimeout(() => window.open(p, '_blank', 'noopener'), i * 250);
+  });
+}
+
 connectSSE();
-// Initial fetch so we don't wait for first SSE push
 fetch('/api/state').then(r => r.json()).then(d => { state = d; renderAll(); });
 </script>
 </body>

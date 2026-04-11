@@ -598,6 +598,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="./temple_prediction_state.js"></script>
 
     <script>
         // ==================== SceneManager.js ====================
@@ -1719,11 +1720,110 @@
                 this.isRunning = false;
                 this.updateInterval = 2000;
                 this.intervalId = null;
+                this._lastCrowdSnapshotKey = null;
+                this._mockSeeded = false;
+            }
+
+            _crowdSnapshotKey(state) {
+                if (!state || !state.scenario) return '';
+                const z = state.zoneCounts || {};
+                const s = state.scenario;
+                const vc = state.venueSimulation && state.venueSimulation.concert;
+                return [
+                    z.entry | 0, z.queue | 0, z.courtyard | 0, z.temple | 0, z.exit | 0,
+                    Number((s.fusedRisk ?? 0).toFixed(2)),
+                    String(s.problem || ''),
+                    String(s.flowStatus || ''),
+                    s.agentTarget | 0,
+                    vc ? Number((vc.forwardSurge ?? 0).toFixed(3)) : '',
+                    vc ? Number((vc.pitIntensity ?? 0).toFixed(3)) : '',
+                ].join('|');
+            }
+
+            /** Same gate ring as stadium + concert forward-surge weighting on corridors / pit proxies. */
+            _buildConcertZonesFromState(state) {
+                const counts = state.zoneCounts || {};
+                const gateTotal = (counts.entry || 0) + (counts.queue || 0);
+                const corrTotal = counts.courtyard || 0;
+                const standTotal = counts.temple || 0;
+                const base = Math.floor(gateTotal / 8) || 0;
+                const vst = state.venueSimulation && state.venueSimulation.stadium;
+                const GATE_IDS = ['GateA', 'GateB', 'GateC', 'GateD', 'GateE', 'GateF', 'GateG', 'GateH'];
+                let gates = [];
+                if (vst && vst.directionalFlow && gateTotal > 0) {
+                    const df = vst.directionalFlow;
+                    const angle = (df.angleRadians != null ? df.angleRadians : df.angle) || 0;
+                    const str = Math.min(1, Math.max(0, df.strength || 0));
+                    const w = [];
+                    for (let i = 0; i < 8; i++) {
+                        const ga = (i / 8) * Math.PI * 2;
+                        const align = (Math.cos(ga - angle) + 1) / 2;
+                        w.push(1 + str * (align - 0.5) * 1.45);
+                    }
+                    const ws = w.reduce((a, b) => a + b, 0);
+                    GATE_IDS.forEach((id, i) => {
+                        gates.push({ id, people: Math.max(0, Math.floor(gateTotal * w[i] / ws)) });
+                    });
+                    let diff = gateTotal - gates.reduce((s, z) => s + z.people, 0);
+                    let idx = 0;
+                    while (diff !== 0 && idx < 80) {
+                        const j = idx % 8;
+                        if (diff > 0) { gates[j].people++; diff--; }
+                        else if (gates[j].people > 0) { gates[j].people--; diff++; }
+                        idx++;
+                    }
+                } else {
+                    GATE_IDS.forEach((id) => gates.push({ id, people: base }));
+                }
+                const vc = state.venueSimulation && state.venueSimulation.concert;
+                const surge = vc && vc.forwardSurge != null ? vc.forwardSurge : 0;
+                const pit = vc && vc.pitIntensity != null ? vc.pitIntensity : 0;
+                const cBase = corrTotal / 4;
+                let c1 = Math.max(0, Math.floor(cBase * (1 + 0.55 * surge + 0.25 * pit)));
+                let c2 = Math.max(0, Math.floor(cBase * (1 + 0.48 * surge + 0.2 * pit)));
+                let c3 = Math.max(0, Math.floor(cBase * Math.max(0.35, 1 - 0.32 * surge)));
+                let c4 = Math.max(0, corrTotal - c1 - c2 - c3);
+                const sBase = standTotal / 4;
+                let pav = Math.max(0, Math.floor(sBase * (1 + 0.65 * surge + 0.35 * pit)));
+                let a = Math.max(0, Math.floor(sBase * (1 - 0.12 * surge)));
+                let b = Math.max(0, Math.floor(sBase * (1 - 0.12 * surge)));
+                let cs = Math.max(0, standTotal - pav - a - b);
+                return gates.concat([
+                    { id: 'Corridor1', people: c1 }, { id: 'Corridor2', people: c2 },
+                    { id: 'Corridor3', people: c3 }, { id: 'Corridor4', people: c4 },
+                    { id: 'Pavilion', people: pav }, { id: 'AStand', people: a },
+                    { id: 'BStand', people: b }, { id: 'CStand', people: cs },
+                ]);
             }
 
             startLiveMode() {
                 this.isRunning = true;
-                this.intervalId = setInterval(() => this.fetchMockData(), this.updateInterval);
+                this.intervalId = setInterval(() => this.fetchRealData(), this.updateInterval);
+            }
+
+            fetchRealData() {
+                const state = window.__TEMPLE_SIMULATION_STATE__;
+                if (!state) {
+                    if (!this._mockSeeded) {
+                        this._mockSeeded = true;
+                        this.fetchMockData();
+                    }
+                    return;
+                }
+                const zoneRows = this._buildConcertZonesFromState(state);
+                const realMappedData = {
+                    timestamp: Date.now(),
+                    zones: zoneRows,
+                    metadata: { source: 'Python-AI-Backend', confidence: 0.99, venue: 'concert' },
+                    demographics: state.demographics,
+                    stampede: state.stampede,
+                    fusedRisk: state.scenario?.fusedRisk || 0
+                };
+                const snap = this._crowdSnapshotKey(state);
+                if (snap !== this._lastCrowdSnapshotKey) {
+                    this._lastCrowdSnapshotKey = snap;
+                    this.onDataReceived(realMappedData);
+                }
             }
 
             startDemoMode() {
@@ -1824,6 +1924,7 @@
                 this.currentMode = mode;
                 document.getElementById('btn-live-mode').classList.toggle('active', mode === 'live');
                 document.getElementById('btn-demo-mode').classList.toggle('active', mode === 'demo');
+                if (mode === 'live') this.dataConnector._lastCrowdSnapshotKey = null;
                 if (this.isRunning) { this.dataConnector.stop(); this.start(); }
             }
 
@@ -1851,6 +1952,17 @@
                 this.crowdManager.updateCrowdData(data);
             }
 
+            _effectiveZoneCap(zone) {
+                if (!zone) return 300;
+                const t = zone.type;
+                if (t === 'gate') return Math.min(zone.capacity || 400, 340);
+                if (t === 'corridor') return Math.min(zone.capacity || 700, 520);
+                if (t === 'stand') return Math.min(zone.capacity || 2000, 880);
+                if (t === 'standing') return Math.min(zone.capacity || 1200, 500);
+                if (t === 'stage') return Math.min(zone.capacity || 200, 120);
+                return Math.min(zone.capacity || 500, 420);
+            }
+
             updateStats() {
                 const people = this.crowdManager.getPeople();
                 this.stats.totalPeople = people.length;
@@ -1860,14 +1972,18 @@
 
                 for (const [zoneId, zone] of zones) {
                     const pop = people.filter(p => p.zoneId === zoneId).length;
-                    const density = Math.min(1, pop / zone.capacity);
+                    const cap = this._effectiveZoneCap(zone);
+                    const density = Math.min(1, pop / cap);
                     if (pop > 0) { activeZones++; totalDensity += density; }
                     this.stats.zoneStats.set(zoneId, {
-                        population: pop, capacity: zone.capacity,
+                        population: pop, capacity: cap,
                         density, densityPercent: Math.round(density * 100)
                     });
                 }
-                this.stats.avgDensity = activeZones > 0 ? totalDensity / activeZones : 0;
+                const maxPop = this.crowdManager.MAX_PEOPLE || 1000;
+                const overall = Math.min(1, people.length / maxPop);
+                this.stats.avgDensity = overall;
+                this.stats.zoneAvgDensity = activeZones > 0 ? totalDensity / activeZones : 0;
             }
 
             updateUI() {
@@ -1878,6 +1994,23 @@
 
                 const zoneList = document.getElementById('zone-list');
                 let html = '';
+
+                if (window.__TEMPLE_SIMULATION_STATE__) {
+                    const st = window.__TEMPLE_SIMULATION_STATE__;
+                    const stampede = st.stampede || {};
+                    const d = st.demographics || {};
+                    html += `<div style="background: rgba(255,40,40,0.1); padding: 8px; border: 1px solid rgba(255,40,40,0.3); border-radius: 4px; margin-bottom: 15px;">
+                        <h3 style="color:#ff6666; font-size:12px; margin-bottom:5px;">AI alerts (pipeline)</h3>
+                        <p style="color:#ddd; font-size:11px; margin-bottom:3px;">Male: ${d.male || 0} | Female: ${d.female || 0}</p>
+                        <p style="color:#ddd; font-size:11px;">Stampede: <b style="color:${stampede.active ? '#ff3333' : '#66cc66'}">${stampede.active ? 'YES' : 'NO'}</b> (${stampede.latestFallenCount || 0} fallen)</p>
+                    </div>`;
+                    if (stampede.active && !window._stampedeActive) {
+                        triggerStampede();
+                    } else if (!stampede.active && window._stampedeActive) {
+                        triggerStampede();
+                    }
+                }
+
                 for (const [zoneId, stat] of this.stats.zoneStats) {
                     if (stat.population > 0) {
                         const dc = stat.density > 0.7 ? '#ef4444' : stat.density > 0.4 ? '#f59e0b' : '#22c55e';
@@ -2195,7 +2328,7 @@
 
             // Optionally upgrade with Flask PNG (async, non-blocking)
             try {
-                const resp = await fetch('http://localhost:5000/heatmap', {
+                const resp = await fetch('/heatmap', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ positions }),
@@ -2554,6 +2687,46 @@
         window.addEventListener('DOMContentLoaded', () => {
             const app = new StadiumSimulation();
             window.simulationApp = app;
+            app.setMode('live');
+            app.start();
+
+            async function fetchLiveState() {
+                try {
+                    const res = await fetch('/api/twin_state');
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    if (data && data.scenario) {
+                        window.__TEMPLE_SIMULATION_STATE__ = data;
+                        const s = data.scenario;
+                        const riskEl = document.getElementById('dc-risk-badge');
+                        if (riskEl) {
+                            const sev = s.fusedRisk >= 70 ? 'HIGH' : s.fusedRisk >= 40 ? 'MEDIUM' : 'LOW';
+                            const colors = { HIGH: '#ef4444', MEDIUM: '#f59e0b', LOW: '#22c55e' };
+                            riskEl.textContent = 'RISK: ' + sev + ' (' + Math.round(s.fusedRisk) + '%)';
+                            riskEl.style.background = colors[sev] + '22';
+                            riskEl.style.color = colors[sev];
+                            riskEl.style.border = '1px solid ' + colors[sev] + '55';
+                        }
+                        let ticker = document.getElementById('cg-ticker');
+                        if (!ticker) {
+                            ticker = document.createElement('div');
+                            ticker.id = 'cg-ticker';
+                            ticker.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:999;background:rgba(6,11,20,0.92);border-bottom:1px solid rgba(56,139,253,0.2);padding:6px 18px;display:flex;align-items:center;gap:14px;font-family:monospace;font-size:11px;color:#8aaccc;backdrop-filter:blur(10px);';
+                            document.body.appendChild(ticker);
+                        }
+                        const sev2 = s.fusedRisk >= 70 ? 'HIGH' : s.fusedRisk >= 40 ? 'MEDIUM' : 'LOW';
+                        const c = { HIGH:'#ef4444', MEDIUM:'#f59e0b', LOW:'#22c55e' };
+                        ticker.innerHTML = '<span style="color:#38bdf8;font-weight:700;">CrowdGuard</span>' +
+                            '<span>Problem: <b style="color:' + c[sev2] + '">' + s.problem + '</b></span>' +
+                            '<span>Risk: <b style="color:' + c[sev2] + '">' + Math.round(s.fusedRisk) + '%</b></span>' +
+                            '<span>Flow: ' + s.flowStatus + '</span>' +
+                            '<span>Agents: ' + s.agentTarget + '</span>' +
+                            '<span style="margin-left:auto"><a href="/" style="color:#38bdf8;text-decoration:none;">Dashboard</a></span>';
+                    }
+                } catch (e) { /* standalone */ }
+            }
+            fetchLiveState();
+            setInterval(fetchLiveState, 2000);
         });
     </script>
 </body>

@@ -1,3 +1,14 @@
+"""
+Train small venue-specific risk regressors from synthetic data.
+
+Temple: density / queue stall → risk (original).
+Stadium: directional flow coherence vs radial imbalance → risk.
+Concert: forward surge / pit crush vs lateral spread → risk.
+
+Each generator encodes “normal” vs stressed behaviour; labels are future risk targets.
+The digital twin exporter uses the same conceptual split (baseline vs prediction, riskDeviation).
+"""
+
 from pathlib import Path
 
 import joblib
@@ -24,17 +35,106 @@ def generate_temple_data(samples=5000):
     return pd.DataFrame(data, columns=["density", "speed", "is_dense_queue", "target_risk"])
 
 
-def main():
-    df = generate_temple_data()
-    model = RandomForestRegressor(n_estimators=100, random_state=42)
-    model.fit(
-        df[["density", "speed", "is_dense_queue"]].to_numpy(dtype=np.float32),
-        df["target_risk"].to_numpy(dtype=np.float32),
+def generate_stadium_data(samples=5000):
+    """
+    Directional circulation: coherent tangential flow vs radial drift / gate imbalance.
+    Higher risk when flow is misaligned (low directional_coherence) or exits are overloaded.
+    """
+    rows = []
+    for _ in range(samples):
+        radial_gradient = np.random.uniform(0, 1)
+        directional_coherence = np.random.uniform(0, 1)
+        gate_imbalance = np.random.uniform(0, 1)
+        exit_pressure = np.random.uniform(0, 1)
+
+        risk = 8.0
+        risk += radial_gradient * 26.0
+        risk += (1.0 - directional_coherence) * 34.0
+        risk += gate_imbalance * 20.0
+        risk += exit_pressure * 18.0
+        risk += np.random.normal(0, 3.0)
+        risk = float(min(100, max(0, risk)))
+        rows.append([radial_gradient, directional_coherence, gate_imbalance, exit_pressure, risk])
+
+    return pd.DataFrame(
+        rows,
+        columns=[
+            "radial_gradient",
+            "directional_coherence",
+            "gate_imbalance",
+            "exit_pressure",
+            "target_risk",
+        ],
     )
 
-    output_path = Path(__file__).with_name("temple_predictor.pkl")
+
+def generate_concert_data(samples=5000):
+    """
+    Aggressive forward surge toward stage / pit vs lateral spread-out (normal behaviour).
+    """
+    rows = []
+    for _ in range(samples):
+        forward_velocity = np.random.uniform(0, 1)
+        pit_density = np.random.uniform(0, 1)
+        lateral_spread = np.random.uniform(0, 1)
+        surge_coherence = np.random.uniform(0, 1)
+
+        risk = 8.0
+        risk += forward_velocity * 36.0
+        risk += pit_density * 32.0
+        risk += (1.0 - lateral_spread) * 18.0
+        risk += surge_coherence * 14.0
+        risk += np.random.normal(0, 3.0)
+        risk = float(min(100, max(0, risk)))
+        rows.append([forward_velocity, pit_density, lateral_spread, surge_coherence, risk])
+
+    return pd.DataFrame(
+        rows,
+        columns=["forward_velocity", "pit_density", "lateral_spread", "surge_coherence", "target_risk"],
+    )
+
+
+def _train_and_save(
+    label: str,
+    df: pd.DataFrame,
+    feature_cols: list[str],
+    filename: str,
+) -> Path:
+    model = RandomForestRegressor(n_estimators=100, random_state=42)
+    model.fit(
+        df[feature_cols].to_numpy(dtype=np.float32),
+        df["target_risk"].to_numpy(dtype=np.float32),
+    )
+    output_path = Path(__file__).with_name(filename)
     joblib.dump(model, output_path)
-    print(f"Temple-specific model trained: {output_path}")
+    print(f"{label} model trained: {output_path}")
+    return output_path
+
+
+def main():
+    _train_and_save(
+        "Temple",
+        generate_temple_data(),
+        ["density", "speed", "is_dense_queue"],
+        "temple_predictor.pkl",
+    )
+    _train_and_save(
+        "Stadium",
+        generate_stadium_data(),
+        [
+            "radial_gradient",
+            "directional_coherence",
+            "gate_imbalance",
+            "exit_pressure",
+        ],
+        "stadium_predictor.pkl",
+    )
+    _train_and_save(
+        "Concert",
+        generate_concert_data(),
+        ["forward_velocity", "pit_density", "lateral_spread", "surge_coherence"],
+        "concert_predictor.pkl",
+    )
 
 
 if __name__ == "__main__":

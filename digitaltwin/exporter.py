@@ -1,11 +1,16 @@
 from __future__ import annotations
 
 import json
+import math
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import numpy as np
+
+# Expected “normal operations” baseline used to score deviation from prediction.
+BASELINE_FUSED_RISK = 26.0
+BASELINE_FUTURE_RISK = 28.0
 
 
 def build_temple_simulation_state(
@@ -66,9 +71,81 @@ def build_temple_simulation_state(
     # Demographics
     demo = demographic_summary or summary.get("demographic_distribution", {})
 
+    baseline_agent = int(
+        np.clip(avg_people_count * 1.05 + avg_density * 8.0, 30.0, 220.0)
+    )
+    baseline_dist = _baseline_zone_distribution()
+    baseline_zone_counts: Dict[str, int] = {
+        z: int(round(baseline_agent * r)) for z, r in baseline_dist.items()
+    }
+    _rebalance_counts(baseline_zone_counts, baseline_agent)
+
+    risk_deviation = float(
+        np.clip(
+            abs(latest_fused_risk - BASELINE_FUSED_RISK) * 1.05
+            + abs(latest_future_risk - BASELINE_FUTURE_RISK) * 0.35
+            + (18.0 if latest_flow_status == "chaotic" else 0.0),
+            0.0,
+            100.0,
+        )
+    )
+
+    flow_angle, flow_narrative = _stadium_flow_angle_narrative(
+        latest_problem, latest_flow_status, latest_fused_risk
+    )
+    venue_stadium = {
+        "directionalFlow": {
+            "angleRadians": round(flow_angle, 4),
+            "strength": round(min(1.0, risk_deviation / 100.0), 4),
+            "narrative": flow_narrative,
+        },
+        "circulationBias": float(
+            np.clip(0.38 + latest_fused_risk / 210.0 + (0.12 if latest_flow_status == "chaotic" else 0), 0.2, 0.95)
+        ),
+    }
+    surge = float(
+        np.clip(
+            risk_deviation / 82.0 + (0.18 if latest_flow_status == "chaotic" else 0.05) + latest_fused_risk / 220.0,
+            0.0,
+            1.0,
+        )
+    )
+    venue_concert = {
+        "forwardSurge": round(surge, 4),
+        "lateralSpread": round(float(np.clip(0.48 - risk_deviation / 320.0, 0.12, 0.62)), 4),
+        "pitIntensity": round(float(np.clip(latest_fused_risk / 105.0, 0.0, 1.0)), 4),
+        "narrative": _concert_surge_narrative(surge, latest_problem),
+    }
+
+    behavior_model = {
+        "baseline": {
+            "label": "normal_operations",
+            "fusedRisk": round(BASELINE_FUSED_RISK, 2),
+            "futureRisk": round(BASELINE_FUTURE_RISK, 2),
+            "flowStatus": "smooth",
+            "agentTarget": baseline_agent,
+            "zoneCounts": baseline_zone_counts,
+        },
+        "prediction": {
+            "fusedRisk": round(latest_fused_risk, 2),
+            "futureRisk": round(latest_future_risk, 2),
+            "flowStatus": latest_flow_status,
+            "agentTarget": agent_target,
+            "zoneCounts": dict(zone_counts),
+        },
+        "riskDeviation": round(risk_deviation, 2),
+        "interpretation": _risk_deviation_text(risk_deviation, latest_fused_risk),
+    }
+
     return {
         "source": "prediction_layer",
         "generatedAt": datetime.now().isoformat(),
+        "behaviorModel": behavior_model,
+        "venueSimulation": {
+            "temple": {"mode": "queue_and_sanctuary", "linkedTo": "zoneCounts"},
+            "stadium": venue_stadium,
+            "concert": venue_concert,
+        },
         "scenario": {
             "level": scenario_level,
             "title": _scenario_title(latest_problem, latest_fused_risk),
@@ -132,6 +209,56 @@ def export_temple_simulation_state(
         "json_path": str(json_path),
         "js_path": str(js_path),
     }
+
+
+def _baseline_zone_distribution() -> Dict[str, float]:
+    d = {
+        "entry": 0.18,
+        "queue": 0.30,
+        "courtyard": 0.18,
+        "temple": 0.22,
+        "exit": 0.12,
+    }
+    t = sum(d.values())
+    return {k: v / t for k, v in d.items()}
+
+
+def _stadium_flow_angle_narrative(problem: str, flow_status: str, fused_risk: float) -> Tuple[float, str]:
+    """Primary circulation direction (radians) + short copy for UI."""
+    if problem == "BOTTLENECK":
+        angle = math.pi * 0.85
+        msg = "Directional bias toward queue relief sectors (bottleneck)."
+    elif problem == "HIGH_COMPRESSION":
+        angle = math.pi * 1.15
+        msg = "Circulation steered toward exits / outer concourse (compression)."
+    elif flow_status == "chaotic":
+        angle = math.pi * 0.35 + (fused_risk / 220.0)
+        msg = "Elevated directional shear while flow is chaotic."
+    else:
+        angle = math.pi * 0.2
+        msg = "Baseline clockwise stadium circulation (normal event)."
+
+    return angle, msg
+
+
+def _concert_surge_narrative(surge: float, problem: str) -> str:
+    if surge >= 0.65:
+        return "Aggressive forward surge toward stage / pit — high deviation from normal spread."
+    if surge >= 0.35:
+        return "Moderate forward surge — pockets compress toward the stage axis."
+    if problem == "HIGH_COMPRESSION":
+        return "Compression detected — surge potential building at front zones."
+    return "Forward surge near baseline — mostly lateral movement."
+
+
+def _risk_deviation_text(deviation: float, fused_risk: float) -> str:
+    if deviation < 12:
+        return "Prediction close to normal operating envelope."
+    if deviation < 35:
+        return "Moderate deviation from baseline crowd behaviour; monitor key zones."
+    if deviation < 60:
+        return "Substantial deviation — future risk diverges from typical patterns."
+    return "Severe deviation — predicted conditions far from normal baseline."
 
 
 def _scenario_title(problem: str, fused_risk: float) -> str:

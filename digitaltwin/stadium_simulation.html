@@ -8,9 +8,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Courier New', monospace;
-            background: #060b14;
-            color: #c8d8e8;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b0b0b;
+            color: #f3f3f3;
             overflow: hidden;
             height: 100vh;
         }
@@ -32,9 +32,9 @@
 
         .ui-panel {
             position: absolute;
-            background: rgba(6, 11, 20, 0.88);
-            border: 1px solid rgba(96, 200, 120, 0.25);
-            border-radius: 6px;
+            background: #101010cc;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
             padding: 14px;
             pointer-events: auto;
             backdrop-filter: blur(8px);
@@ -46,9 +46,9 @@
             font-weight: 700;
             font-size: 11px;
             margin-bottom: 10px;
-            color: #5ecf7a;
+            color: #ffffff;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 0;
         }
 
         .stats-grid {
@@ -129,7 +129,7 @@
             transition: all 0.2s ease;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-family: 'Courier New', monospace;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
         button:hover {
@@ -182,13 +182,13 @@
             position: absolute;
             bottom: 16px;
             right: 16px;
-            background: rgba(6, 11, 20, 0.85);
-            border: 1px solid rgba(96, 200, 120, 0.2);
-            border-radius: 6px;
+            background: #101010cc;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
             padding: 10px 14px;
             font-size: 11px;
-            color: #5ecf7a;
-            letter-spacing: 1px;
+            color: #ffffff;
+            letter-spacing: 0;
             text-transform: uppercase;
         }
 
@@ -198,156 +198,20 @@
 
         /* ── Crowd-Control Panel ── */
         .crowd-panel { top: 16px; left: 290px; width: 220px; }
+        .heatmap-panel { top: 255px; right: 16px; width: 320px; }
+        #stadium-heatmap-canvas {
+            width: 100%;
+            height: 320px;
+            display: block;
+            border-radius: 8px;
+            background: #090909;
+        }
 
-        button.stampede-btn {
-            background: rgba(239,68,68,0.12) !important;
-            border-color: rgba(239,68,68,0.55) !important;
-            color: #ef4444 !important;
-        }
-        button.stampede-btn:hover {
-            background: rgba(239,68,68,0.28) !important;
-            border-color: #ef4444 !important;
-            color: #fca5a5 !important;
-        }
-        button.stampede-btn.active {
-            animation: stampede-pulse 0.6s infinite alternate;
-        }
-        @keyframes stampede-pulse {
-            from { box-shadow: 0 0 6px rgba(239,68,68,0.4); }
-            to   { box-shadow: 0 0 18px rgba(239,68,68,0.9); }
-        }
         #heatmap-status {
-            font-size: 10px;
-            margin-top: 6px;
-            color: #4a6a5a;
-            text-align: center;
-        }
-
-        /* ── Decision / Alert Panel ── */
-        .alert-panel {
-            bottom: 16px;
-            right: 16px;
-            width: 360px;
-            display: flex;
-            flex-direction: column;
-        }
-        .alert-panel .ui-panel-title {
-            font-size: 13px;
-            letter-spacing: 3px;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        /* pulsing dot next to title */
-        .dc-live-dot {
-            width: 9px; height: 9px;
-            border-radius: 50%;
-            background: #5ecf7a;
-            display: inline-block;
-            animation: livePulse 1.2s infinite;
-            flex-shrink: 0;
-        }
-        .dc-live-dot.red { background: #ef4444; }
-        @keyframes livePulse {
-            0%,100% { opacity:1; transform:scale(1); }
-            50%      { opacity:0.4; transform:scale(0.7); }
-        }
-        .alert-log {
-            overflow-y: auto;
-            max-height: 280px;
-            margin-top: 6px;
-        }
-        .alert-log::-webkit-scrollbar { width: 4px; }
-        .alert-log::-webkit-scrollbar-thumb { background: rgba(94,207,122,0.35); border-radius: 2px; }
-
-        /* ── Alert entries — much bigger ── */
-        .alert-entry {
-            padding: 9px 11px;
-            border-radius: 5px;
-            margin-bottom: 7px;
-            font-size: 12px;
-            line-height: 1.6;
-            border-left: 4px solid #5ecf7a;
-            background: rgba(94,207,122,0.06);
-            animation: fadeInAlert 0.35s ease;
-        }
-        @keyframes fadeInAlert { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
-        .alert-entry.warn   { border-color: #f59e0b; background: rgba(245,158,11,0.10); }
-        .alert-entry.danger {
-            border-color: #ef4444;
-            background: rgba(239,68,68,0.13);
-            box-shadow: 0 0 12px rgba(239,68,68,0.18);
-        }
-        .alert-entry.danger.flash {
-            animation: fadeInAlert 0.35s ease, dangerFlash 0.7s ease 0.35s 2;
-        }
-        @keyframes dangerFlash {
-            0%,100% { background: rgba(239,68,68,0.13); }
-            50%      { background: rgba(239,68,68,0.30); }
-        }
-        .alert-entry.police {
-            border-color: #a78bfa;
-            background: rgba(167,139,250,0.12);
-            box-shadow: 0 0 12px rgba(167,139,250,0.2);
-        }
-        .alert-title {
-            font-weight: 700;
-            font-size: 13px;
-            letter-spacing: 0.8px;
-            margin-bottom: 3px;
-        }
-        .alert-msg   { font-size: 12px; color: #c8d8e8; }
-        .alert-time  { font-size: 10px; color: #4a6a5a; float: right; margin-top: 2px; }
-
-        /* ── Risk badge ── */
-        .risk-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-left: auto;
-        }
-        .risk-low    { background:rgba(34,197,94,0.15);  color:#22c55e; border:1px solid rgba(34,197,94,0.3); }
-        .risk-medium { background:rgba(245,158,11,0.18); color:#f59e0b; border:1px solid rgba(245,158,11,0.35); }
-        .risk-high   {
-            background:rgba(239,68,68,0.22);
-            color:#ef4444;
-            border:1px solid rgba(239,68,68,0.5);
-            animation: riskPulse 0.8s infinite alternate;
-        }
-        @keyframes riskPulse {
-            from { box-shadow: 0 0 4px rgba(239,68,68,0.3); }
-            to   { box-shadow: 0 0 14px rgba(239,68,68,0.8); }
-        }
-
-        /* ── Zone density grid ── */
-        .dc-zone-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5px; margin-top:10px; margin-bottom:4px; }
-        .dc-zone-cell {
-            background: rgba(94,207,122,0.05);
-            border: 1px solid rgba(94,207,122,0.14);
-            border-radius: 4px;
-            padding: 6px 5px;
-            text-align: center;
-            transition: background 0.4s, border-color 0.4s;
-        }
-        .dc-zone-cell.hot  { background:rgba(239,68,68,0.12); border-color:rgba(239,68,68,0.4); }
-        .dc-zone-cell.warm { background:rgba(245,158,11,0.10); border-color:rgba(245,158,11,0.35); }
-        .dcz-name { font-size:10px; color:#6b8a7a; margin-bottom:2px; }
-        .dcz-val  { font-weight:700; font-size:15px; }
-
-        /* ── Divider label ── */
-        .alert-section-label {
-            font-size: 10px;
-            color: #3a5a4a;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin: 8px 0 4px;
-            border-top: 1px solid rgba(94,207,122,0.1);
-            padding-top: 6px;
+            font-size: 11px;
+            margin-top: 8px;
+            color: #a8c4b4;
+            text-align: left;
         }
     </style>
 </head>
@@ -418,33 +282,28 @@
                 </div>
                 <div class="button-group">
                     <button onclick="clearAll()">Clear Crowd</button>
-                    <button class="stampede-btn" id="btn-stampede" onclick="triggerStampede()">🚨 Stampede</button>
+                    <button id="btn-stampede" onclick="triggerStampede()">Stampede</button>
                 </div>
-                <div class="ui-panel-title" style="margin-top:12px;">🌡 Heatmap</div>
-                <div class="button-group">
-                    <button id="btn-heatmap-toggle" onclick="toggleHeatmap()">Enable Heatmap</button>
-                </div>
-                <div id="heatmap-status">Heatmap: OFF</div>
             </div>
 
-            <div class="ui-panel alert-panel">
-                <div class="ui-panel-title">
-                    <span class="dc-live-dot" id="dc-live-dot"></span>
-                    🧠 DECISION CONTROL
-                    <span id="dc-risk-badge" class="risk-badge risk-low">RISK: LOW</span>
-                </div>
-                <div class="dc-zone-grid" id="dc-zone-grid"></div>
-                <div class="alert-section-label">▶ ALERT LOG</div>
-                <div class="alert-log" id="alert-log">
-                    <div class="alert-entry"><div class="alert-title">✅ SYSTEM READY</div><div class="alert-msg">Monitoring all gates…</div></div>
-                </div>
+            <div class="ui-panel heatmap-panel">
+                <div class="ui-panel-title">Crowd Heatmap</div>
+                <canvas id="stadium-heatmap-canvas" width="320" height="320"></canvas>
+                <div id="heatmap-status">Live density view of the simulated stadium crowd.</div>
             </div>
 
             <div class="stadium-badge">M. Chinnaswamy Stadium · Bengaluru</div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./three.min.js"
+  }
+}
+</script>
+<script src="./three.min.js"></script>
 
     <script>
     // ==================== SceneManager.js ====================
@@ -1067,10 +926,13 @@
             this.crowdGroup = new THREE.Group();
             this.scene.add(this.crowdGroup);
 
+            this.bodyBaseY = 1.2;
+            this.headOffsetY = 1.5;
+
             // Body capsule geometry (slightly oval)
-            this.bodyGeo = new THREE.CylinderGeometry(0.28, 0.32, 1.65, 6);
+            this.bodyGeo = new THREE.CylinderGeometry(0.45, 0.52, 2.35, 8);
             // Head sphere
-            this.headGeo = new THREE.SphereGeometry(0.22, 6, 5);
+            this.headGeo = new THREE.SphereGeometry(0.34, 8, 6);
 
             this.MAX_PEOPLE = 1000;
 
@@ -1138,35 +1000,36 @@
             const zone = this.zones.get(zoneId);
             if (!zone) return;
 
-            const PITCH_R = 50;
+            const PITCH_R = 50; // hard exclusion radius (slightly larger than visual pitch)
 
             let pos;
             if (zone.type === 'stand') {
-                const arcSpan  = zone.endAngle - zone.startAngle;
+                // Spawn within the arc bounds of the stand
+                const arcSpan = zone.endAngle - zone.startAngle;
                 const randAngle = zone.startAngle + Math.random() * arcSpan;
-                const randR    = zone.innerR + 1 + Math.random() * ((zone.outerR - zone.innerR) - 2);
-                // Spread Y across ALL tiers so upper rows fill up
-                const tierCount = zone.tierCount || 1;
-                const tierIdx   = Math.floor(Math.random() * tierCount); // pick random tier
-                const tierY     = tierIdx * 4.2 + 0.85 + Math.random() * 1.5;
+                const randR = zone.innerR + 1 + Math.random() * ((zone.outerR - zone.innerR) - 2);
+                const tierY = (zone.tierCount || 1) * Math.random() * 2.5 + 0.85;
                 pos = new THREE.Vector3(
                     Math.cos(randAngle) * randR,
                     tierY,
                     Math.sin(randAngle) * randR
                 );
             } else if (zone.type === 'gate') {
-                const gateR = 88, concourseR = 65;
-                const r     = concourseR + Math.random() * (gateR - concourseR);
+                // Spawn on entry path (between gate and concourse)
+                const gateR = 88;
+                const concourseR = 65;
+                const r = concourseR + Math.random() * (gateR - concourseR);
+                const spread = 2.5;
                 pos = new THREE.Vector3(
-                    Math.cos(zone.angle) * r + (Math.random() - 0.5) * 2.5,
-                    0.85,
-                    Math.sin(zone.angle) * r + (Math.random() - 0.5) * 2.5
+                    Math.cos(zone.angle) * r + (Math.random() - 0.5) * spread,
+                    this.bodyBaseY,
+                    Math.sin(zone.angle) * r + (Math.random() - 0.5) * spread
                 );
             } else {
                 // Corridor: spread along concourse ring
                 const concAngle = zone.angle + (Math.random() - 0.5) * 0.9;
                 const r = 60 + Math.random() * 4;
-                pos = new THREE.Vector3(Math.cos(concAngle) * r, 0.85, Math.sin(concAngle) * r);
+                pos = new THREE.Vector3(Math.cos(concAngle) * r, this.bodyBaseY, Math.sin(concAngle) * r);
             }
 
             // Enforce pitch exclusion – push out if inside pitch radius
@@ -1189,19 +1052,34 @@
                 behaviour = roll < 0.7 ? 'seated' : roll < 0.9 ? 'idle' : 'circular';
             }
 
-            // Assign target stand for 'toStand' behaviour
+            // Assign target stand for 'toStand' behaviour (nearest stand zone)
             let targetStandAngle = zone.angle !== undefined ? zone.angle : Math.atan2(pos.z, pos.x);
-            // Stands span r=63–87; pick randomly across full depth so upper tiers fill
-            let targetStandR = 65 + Math.random() * 22;
+            let targetStandR = 75;
             if (zone.type === 'gate' || zone.type === 'corridor') {
+                // pick a stand angle based on gate angle
                 targetStandAngle = zone.angle;
-                targetStandR = 65 + Math.random() * 22;
+                targetStandR = 72 + Math.random() * 10;
             }
 
             const speedMap = { idle: 0.015, circular: 0.055, entering: 0.05, toStand: 0.06, seated: 0.005 };
             const speed = (speedMap[behaviour] || 0.02) + (Math.random() - 0.5) * 0.01;
 
-            const col = this.palette[Math.floor(Math.random() * this.palette.length)].clone();
+            let col = new THREE.Color(0xffffff);
+            let femaleRatio = 0.49;
+            let maleRatio = 0.48;
+            if (window.__TEMPLE_SIMULATION_STATE__ && window.__TEMPLE_SIMULATION_STATE__.demographics) {
+                const d = window.__TEMPLE_SIMULATION_STATE__.demographics;
+                const total = (d.male || 0) + (d.female || 0);
+                if (total > 0) {
+                    maleRatio = d.male / total;
+                    femaleRatio = d.female / total;
+                }
+            }
+            const genderRoll = Math.random();
+            if (genderRoll < femaleRatio) col = new THREE.Color(0xf472b6); // Pink for female
+            else if (genderRoll < femaleRatio + maleRatio) col = new THREE.Color(0x60a5fa); // Blue for male
+            else col = new THREE.Color(0xa78bfa); // Purple for other
+            
             col.offsetHSL(Math.random() * 0.06 - 0.03, Math.random() * 0.15 - 0.075, Math.random() * 0.15 - 0.075);
 
             const person = {
@@ -1271,7 +1149,7 @@
                         towardCenter.z += person.wobble * Math.cos(this.time * 1.8);
                         person.position.x += towardCenter.x * effectiveSpeed;
                         person.position.z += towardCenter.z * effectiveSpeed;
-                        person.position.y = 0.85;
+                        person.position.y = this.bodyBaseY;
                     }
 
                 } else if (person.behaviour === 'toStand') {
@@ -1289,7 +1167,7 @@
                     } else {
                         person.position.x += (dx / dist) * effectiveSpeed + person.wobble * Math.sin(this.time);
                         person.position.z += (dz / dist) * effectiveSpeed + person.wobble * Math.cos(this.time);
-                        person.position.y = 0.85;
+                        person.position.y = this.bodyBaseY;
                     }
 
                 } else if (person.behaviour === 'circular') {
@@ -1301,14 +1179,14 @@
                     person.position.z += (tz - person.position.z) * 0.06;
                     person.position.x += Math.sin(this.time * 1.2 + person.bobPhase) * 0.012;
                     person.position.z += Math.cos(this.time * 1.1 + person.bobPhase) * 0.012;
-                    person.position.y = 0.85;
+                    person.position.y = this.bodyBaseY;
 
                 } else {
                     // Idle – very slow drift
                     if (Math.random() < 0.01) person.angle += (Math.random() - 0.5) * 0.7;
                     person.position.x += Math.cos(person.angle) * effectiveSpeed * 0.25;
                     person.position.z += Math.sin(person.angle) * effectiveSpeed * 0.25;
-                    person.position.y = 0.85;
+                    person.position.y = this.bodyBaseY;
                 }
 
                 // ---- Hard pitch exclusion ----
@@ -1372,7 +1250,7 @@
 
                 // Head matrix (offset up)
                 const hm = new THREE.Matrix4();
-                hm.setPosition(person.position.x, person.position.y + 1.05, person.position.z);
+                hm.setPosition(person.position.x, person.position.y + this.headOffsetY, person.position.z);
                 this.headMesh.setMatrixAt(i, hm);
             }
 
@@ -1395,6 +1273,188 @@
         }
     }
 
+    // ==================== StadiumHeatmap.js ====================
+    class StadiumHeatmap {
+        constructor(canvasId, statusId) {
+            this.canvas = document.getElementById(canvasId);
+            this.status = document.getElementById(statusId);
+            this.ctx = this.canvas ? this.canvas.getContext('2d') : null;
+            this.bounds = { minX: -105, maxX: 105, minZ: -105, maxZ: 105 };
+        }
+
+        render(people, zones) {
+            if (!this.ctx || !this.canvas) return;
+
+            const ctx = this.ctx;
+            const { width, height } = this.canvas;
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = '#090909';
+            ctx.fillRect(0, 0, width, height);
+
+            this._drawGroundPlan(zones);
+            this._drawPeople(people);
+            this._drawLabels(zones);
+
+            if (this.status) {
+                this.status.textContent = `Live density view · ${people.length} people`;
+            }
+        }
+
+        _layout() {
+            const pad = 14;
+            const canvasW = this.canvas.width - pad * 2;
+            const canvasH = this.canvas.height - pad * 2;
+            const worldW = this.bounds.maxX - this.bounds.minX;
+            const worldD = this.bounds.maxZ - this.bounds.minZ;
+            const scale = Math.min(canvasW / worldW, canvasH / worldD);
+            const width = worldW * scale;
+            const height = worldD * scale;
+            return {
+                left: (this.canvas.width - width) / 2,
+                top: (this.canvas.height - height) / 2,
+                width,
+                height,
+                worldW,
+                worldD,
+                scale,
+            };
+        }
+
+        _project(x, z) {
+            const layout = this._layout();
+            return {
+                x: layout.left + ((x - this.bounds.minX) / layout.worldW) * layout.width,
+                y: layout.top + layout.height - (((z - this.bounds.minZ) / layout.worldD) * layout.height),
+            };
+        }
+
+        _radius(worldRadius) {
+            return worldRadius * this._layout().scale;
+        }
+
+        _drawCircle(radius, fill, stroke = null, lineWidth = 1) {
+            const ctx = this.ctx;
+            const center = this._project(0, 0);
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, this._radius(radius), 0, Math.PI * 2);
+            if (fill) {
+                ctx.fillStyle = fill;
+                ctx.fill();
+            }
+            if (stroke) {
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = lineWidth;
+                ctx.stroke();
+            }
+        }
+
+        _drawArcSector(innerR, outerR, startAngle, endAngle, fill, stroke = null) {
+            const ctx = this.ctx;
+            const center = this._project(0, 0);
+            const inner = this._radius(innerR);
+            const outer = this._radius(outerR);
+            const start = -endAngle;
+            const end = -startAngle;
+
+            ctx.beginPath();
+            ctx.arc(center.x, center.y, outer, start, end);
+            ctx.arc(center.x, center.y, inner, end, start, true);
+            ctx.closePath();
+
+            if (fill) {
+                ctx.fillStyle = fill;
+                ctx.fill();
+            }
+            if (stroke) {
+                ctx.strokeStyle = stroke;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+        }
+
+        _drawRadialPath(angle, innerR, outerR, width, fill) {
+            const ctx = this.ctx;
+            const a = this._project(Math.cos(angle) * innerR, Math.sin(angle) * innerR);
+            const b = this._project(Math.cos(angle) * outerR, Math.sin(angle) * outerR);
+            ctx.strokeStyle = fill;
+            ctx.lineWidth = this._radius(width);
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(a.x, a.y);
+            ctx.lineTo(b.x, b.y);
+            ctx.stroke();
+        }
+
+        _drawGroundPlan(zones) {
+            const ctx = this.ctx;
+            const layout = this._layout();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(layout.left, layout.top, layout.width, layout.height);
+
+            this._drawCircle(101, null, 'rgba(255, 255, 255, 0.18)', 1);
+            this._drawCircle(64, 'rgba(255, 255, 255, 0.035)', 'rgba(255, 255, 255, 0.12)', 1);
+            this._drawCircle(60, '#090909', 'rgba(255, 255, 255, 0.10)', 1);
+            this._drawCircle(48, 'rgba(85, 170, 105, 0.13)', 'rgba(120, 220, 140, 0.28)', 1);
+
+            for (const [, zone] of zones) {
+                if (zone.type === 'stand' && !zone.parentStand) {
+                    this._drawArcSector(
+                        zone.innerR,
+                        zone.outerR,
+                        zone.startAngle,
+                        zone.endAngle,
+                        'rgba(90, 140, 255, 0.10)',
+                        'rgba(130, 170, 255, 0.22)'
+                    );
+                } else if (zone.type === 'corridor') {
+                    this._drawRadialPath(zone.angle, 60, 92, 4.5, 'rgba(255, 255, 255, 0.12)');
+                } else if (zone.type === 'gate') {
+                    this._drawRadialPath(zone.angle, 75, 100, 5.5, 'rgba(100, 255, 150, 0.12)');
+                }
+            }
+        }
+
+        _drawPeople(people) {
+            const riskRadius = people.length > 700 ? 9 : 7;
+            for (const person of people) {
+                const point = this._project(person.position.x, person.position.z);
+                const radius = riskRadius + Math.min(8, (person.density || 0) * 8);
+                const gradient = this.ctx.createRadialGradient(
+                    point.x, point.y, 0,
+                    point.x, point.y, radius
+                );
+                gradient.addColorStop(0, 'rgba(255, 245, 170, 0.38)');
+                gradient.addColorStop(0.45, 'rgba(255, 135, 45, 0.24)');
+                gradient.addColorStop(1, 'rgba(255, 40, 0, 0)');
+                this.ctx.fillStyle = gradient;
+                this.ctx.beginPath();
+                this.ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        _drawLabels(zones) {
+            const ctx = this.ctx;
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.78)';
+            ctx.font = '10px Arial';
+
+            for (const [zoneId, zone] of zones) {
+                if (zone.type === 'gate' || zone.type === 'corridor') {
+                    const p = this._project(zone.position.x, zone.position.z);
+                    ctx.fillText(zoneId.replace('Corridor', 'Corr '), p.x + 3, p.y - 3);
+                }
+            }
+
+            for (const [zoneId, zone] of zones) {
+                if (zone.type === 'stand' && !zone.parentStand) {
+                    const p = this._project(zone.position.x, zone.position.z);
+                    ctx.fillText(zoneId.replace('Stand', ''), p.x - 12, p.y);
+                }
+            }
+        }
+    }
+
     // ==================== DataConnector.js ====================
     class DataConnector {
         constructor(onDataReceived) {
@@ -1402,11 +1462,75 @@
             this.isRunning      = false;
             this.updateInterval = 2000;
             this.intervalId     = null;
+            this._lastCrowdSnapshotKey = null;
+            this._mockSeeded = false;
+        }
+
+        _crowdSnapshotKey(state) {
+            if (!state || !state.scenario) return '';
+            const z = state.zoneCounts || {};
+            const s = state.scenario;
+            const vs = state.venueSimulation && state.venueSimulation.stadium;
+            const df = vs && vs.directionalFlow;
+            return [
+                z.entry | 0, z.queue | 0, z.courtyard | 0, z.temple | 0, z.exit | 0,
+                Number((s.fusedRisk ?? 0).toFixed(2)),
+                String(s.problem || ''),
+                String(s.flowStatus || ''),
+                s.agentTarget | 0,
+                df ? Number((df.strength ?? 0).toFixed(3)) : '',
+                df ? Number((df.angleRadians ?? df.angle ?? 0).toFixed(3)) : '',
+            ].join('|');
+        }
+
+        /** Map pipeline zones to stadium gates with directional flow bias (venueSimulation.stadium). */
+        _buildStadiumZonesFromState(state) {
+            const counts = state.zoneCounts || {};
+            const gateTotal = (counts.entry || 0) + (counts.queue || 0);
+            const corrTotal = counts.courtyard || 0;
+            const standTotal = counts.temple || 0;
+            const base = Math.floor(gateTotal / 8) || 0;
+            const vs = state.venueSimulation && state.venueSimulation.stadium;
+            const GATE_IDS = ['GateA', 'GateB', 'GateC', 'GateD', 'GateE', 'GateF', 'GateG', 'GateH'];
+            let gates = [];
+            if (vs && vs.directionalFlow && gateTotal > 0) {
+                const df = vs.directionalFlow;
+                const angle = (df.angleRadians != null ? df.angleRadians : df.angle) || 0;
+                const str = Math.min(1, Math.max(0, df.strength || 0));
+                const w = [];
+                for (let i = 0; i < 8; i++) {
+                    const ga = (i / 8) * Math.PI * 2;
+                    const align = (Math.cos(ga - angle) + 1) / 2;
+                    w.push(1 + str * (align - 0.5) * 1.45);
+                }
+                const ws = w.reduce((a, b) => a + b, 0);
+                GATE_IDS.forEach((id, i) => {
+                    gates.push({ id, people: Math.max(0, Math.floor(gateTotal * w[i] / ws)) });
+                });
+                let diff = gateTotal - gates.reduce((s, z) => s + z.people, 0);
+                let idx = 0;
+                while (diff !== 0 && idx < 80) {
+                    const j = idx % 8;
+                    if (diff > 0) { gates[j].people++; diff--; }
+                    else if (gates[j].people > 0) { gates[j].people--; diff++; }
+                    idx++;
+                }
+            } else {
+                GATE_IDS.forEach((id) => gates.push({ id, people: base }));
+            }
+            const corr = Math.floor(corrTotal / 4) || 0;
+            const stand = Math.floor(standTotal / 4) || 0;
+            return gates.concat([
+                { id: 'Corridor1', people: corr }, { id: 'Corridor2', people: corr },
+                { id: 'Corridor3', people: corr }, { id: 'Corridor4', people: corr },
+                { id: 'Pavilion', people: stand }, { id: 'AStand', people: stand },
+                { id: 'BStand', people: stand }, { id: 'CStand', people: stand },
+            ]);
         }
 
         startLiveMode() {
             this.isRunning = true;
-            this.intervalId = setInterval(() => this.fetchMockData(), this.updateInterval);
+            this.intervalId = setInterval(() => this.fetchRealData(), this.updateInterval);
         }
 
         startDemoMode() {
@@ -1417,6 +1541,34 @@
         stop() {
             this.isRunning = false;
             if (this.intervalId) { clearInterval(this.intervalId); this.intervalId = null; }
+        }
+
+        fetchRealData() {
+            const state = window.__TEMPLE_SIMULATION_STATE__;
+            if (!state) {
+                if (!this._mockSeeded) {
+                    this._mockSeeded = true;
+                    this.fetchMockData();
+                }
+                return;
+            }
+
+            const zoneRows = this._buildStadiumZonesFromState(state);
+
+            const realMappedData = {
+                timestamp: Date.now(),
+                zones: zoneRows,
+                metadata: { source: 'Python-AI-Backend', confidence: 0.99, venue: 'stadium' },
+                demographics: state.demographics,
+                stampede: state.stampede,
+                fusedRisk: state.scenario?.fusedRisk || 0
+            };
+
+            const snap = this._crowdSnapshotKey(state);
+            if (snap !== this._lastCrowdSnapshotKey) {
+                this._lastCrowdSnapshotKey = snap;
+                this.onDataReceived(realMappedData);
+            }
         }
 
         fetchMockData() {
@@ -1470,6 +1622,7 @@
             this.sceneManager = new SceneManager(this.container);
             this.stadiumModel = new StadiumModel(this.sceneManager.getScene());
             this.crowdManager = new CrowdManager(this.sceneManager.getScene(), this.stadiumModel.getZones());
+            this.heatmap = new StadiumHeatmap('stadium-heatmap-canvas', 'heatmap-status');
             this.dataConnector = new DataConnector((data) => this.onDataReceived(data));
 
             this.isRunning   = false;
@@ -1498,6 +1651,7 @@
                 this.crowdManager.renderInstances();
                 this.updateStats();
                 this.updateUI();
+                this.heatmap.render(this.crowdManager.getPeople(), this.stadiumModel.getZones());
                 this.sceneManager.render();
             };
             animate();
@@ -1507,6 +1661,7 @@
             this.currentMode = mode;
             document.getElementById('btn-live-mode').classList.toggle('active', mode === 'live');
             document.getElementById('btn-demo-mode').classList.toggle('active', mode === 'demo');
+            if (mode === 'live') this.dataConnector._lastCrowdSnapshotKey = null;
             if (this.isRunning) { this.dataConnector.stop(); this.start(); }
         }
 
@@ -1534,6 +1689,18 @@
             this.crowdManager.updateCrowdData(data);
         }
 
+        /** UI density scale (not venue fire-code capacity — those are huge vs sim agent counts). */
+        _effectiveZoneCap(zone) {
+            if (!zone) return 300;
+            const t = zone.type;
+            if (t === 'gate') return Math.min(zone.capacity || 400, 340);
+            if (t === 'corridor') return Math.min(zone.capacity || 700, 520);
+            if (t === 'stand') return Math.min(zone.capacity || 2000, 880);
+            if (t === 'standing') return Math.min(zone.capacity || 1200, 500);
+            if (t === 'stage') return Math.min(zone.capacity || 200, 120);
+            return Math.min(zone.capacity || 500, 420);
+        }
+
         updateStats() {
             const people = this.crowdManager.getPeople();
             this.stats.totalPeople = people.length;
@@ -1542,16 +1709,19 @@
             this.stats.zoneStats.clear();
 
             for (const [zoneId, zone] of zones) {
-                const pop     = people.filter(p => p.zoneId === zoneId).length;
-                const density = Math.min(1, pop / zone.capacity);
+                const pop = people.filter(p => p.zoneId === zoneId).length;
+                const cap = this._effectiveZoneCap(zone);
+                const density = Math.min(1, pop / cap);
                 if (pop > 0) { activeZones++; totalDensity += density; }
                 this.stats.zoneStats.set(zoneId, {
-                    population: pop, capacity: zone.capacity,
+                    population: pop, capacity: cap,
                     density, densityPercent: Math.round(density * 100)
                 });
             }
-            this.stats.avgDensity = this.crowdManager.people.length / 1000;
-            sendDensityToBackend(this);
+            const maxPop = this.crowdManager.MAX_PEOPLE || 1000;
+            const overall = Math.min(1, people.length / maxPop);
+            this.stats.avgDensity = overall;
+            this.stats.zoneAvgDensity = activeZones > 0 ? totalDensity / activeZones : 0;
         }
 
         updateUI() {
@@ -1562,12 +1732,32 @@
 
             const zoneList = document.getElementById('zone-list');
             let html = '';
+
+            // Add the AI Real-World Demographics and Stampede Panel Injection
+            if (window.__TEMPLE_SIMULATION_STATE__) {
+                 const st = window.__TEMPLE_SIMULATION_STATE__;
+                 const stampede = st.stampede || {};
+                 const d = st.demographics || {};
+                 html += `<div style="background: rgba(255,40,40,0.1); padding: 8px; border: 1px solid rgba(255,40,40,0.3); border-radius: 4px; margin-bottom: 15px;">
+                     <h3 style="color:#ff6666; font-size:12px; margin-bottom:5px;">🚨 REAL WORLD AI ALERTS</h3>
+                     <p style="color:#ddd; font-size:11px; margin-bottom:3px;">Male: ${d.male || 0} | Female: ${d.female || 0}</p>
+                     <p style="color:#ddd; font-size:11px;">Active Stampede: <b style="color:${stampede.active ? '#ff3333' : '#66cc66'}">${stampede.active ? 'YES' : 'NO'}</b> (${stampede.latestFallenCount || 0} fallen)</p>
+                 </div>`;
+                 
+                 // Auto-trigger the 3D panic mode if stampede is active!
+                 if (stampede.active && !window._stampedeActive) {
+                     triggerStampede();
+                 } else if (!stampede.active && window._stampedeActive) {
+                     triggerStampede();
+                 }
+            }
+
             for (const [zoneId, stat] of this.stats.zoneStats) {
                 if (stat.population > 0) {
                     const dc = stat.density > 0.7 ? '#ef4444' : stat.density > 0.4 ? '#f59e0b' : '#22c55e';
                     html += `<div class="zone-item">
                         <span class="zone-label">${zoneId}</span>
-                        <span class="zone-count">${stat.population}</span>
+                        <span class="zone-count">${Math.round(stat.population)}</span>
                         <span class="zone-density" style="background:${dc}22;color:${dc}">${stat.densityPercent}%</span>
                     </div>`;
                 }
@@ -1576,23 +1766,6 @@
 
             document.getElementById('density-fill').style.width = Math.round(this.stats.avgDensity * 100) + '%';
         }
-    }
-
-    // ==================== Backend Sync ====================
-    let lastUpdateTime = 0;
-    function sendDensityToBackend(sim) {
-        const now = Date.now();
-        if (now - lastUpdateTime < 2000) return;
-        lastUpdateTime = now;
-        const density     = sim.stats?.avgDensity || 0;
-        const totalPeople = sim.stats?.totalPeople || 0;
-        fetch("https://cilantro-enviable-paralegal.ngrok-free.dev/update", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ density, totalPeople })
-        })
-        .then(() => console.log("DENSITY SENT:", density, "PEOPLE:", totalPeople))
-        .catch(err => console.log("UPDATE ERROR:", err));
     }
 
     // ==================== Crowd Control Functions ====================
@@ -1609,7 +1782,8 @@
         app.reset();
         if (window._stampedeActive) {
             window._stampedeActive = false;
-            document.getElementById('btn-stampede').classList.remove('active');
+            const stampedeBtn = document.getElementById('btn-stampede');
+            if (stampedeBtn) stampedeBtn.classList.remove('active');
             clearInterval(window._stampedeInterval);
         }
     }
@@ -1617,32 +1791,14 @@
     function fillStadium() {
         const app = window.simulationApp;
         if (!app) return;
-
-        // Gates — moderate entry flow
         ['GateA','GateB','GateC','GateD','GateE','GateF','GateG','GateH'].forEach(g => {
-            app.crowdManager.injectPeople(g, 80 + Math.floor(Math.random() * 80));
+            app.crowdManager.injectPeople(g, 100 + Math.floor(Math.random() * 100));
         });
-
-        // Corridors — heavy foot traffic
         ['Corridor1','Corridor2','Corridor3','Corridor4'].forEach(c => {
-            app.crowdManager.injectPeople(c, 200 + Math.floor(Math.random() * 200));
+            app.crowdManager.injectPeople(c, 400 + Math.floor(Math.random() * 400));
         });
-
-        // Main stands — fill generously so upper tiers show
-        app.crowdManager.injectPeople('Pavilion', 220 + Math.floor(Math.random() * 180));
-        app.crowdManager.injectPeople('AStand',   180 + Math.floor(Math.random() * 150));
-        app.crowdManager.injectPeople('BStand',   180 + Math.floor(Math.random() * 150));
-        app.crowdManager.injectPeople('CStand',   160 + Math.floor(Math.random() * 130));
-
-        // Also seed per-tier section zones so upper rows get filled
-        const tierZones = [];
-        for (let s = 0; s < 4; s++) {
-            for (let t = 0; t < 3; t++) {
-                tierZones.push(`Section${s}-Tier${t}`);
-            }
-        }
-        tierZones.forEach(tz => {
-            app.crowdManager.injectPeople(tz, 60 + Math.floor(Math.random() * 80));
+        ['Pavilion','AStand','BStand','CStand'].forEach(s => {
+            app.crowdManager.injectPeople(s, 150 + Math.floor(Math.random() * 150));
         });
     }
 
@@ -1659,7 +1815,7 @@
         const btn = document.getElementById('btn-stampede');
 
         if (!window._stampedeActive) {
-            btn.classList.remove('active');
+            if (btn) btn.classList.remove('active');
             clearInterval(window._stampedeInterval);
             app.crowdManager.people.forEach(p => {
                 if (p._stampedeMode) {
@@ -1671,7 +1827,7 @@
             return;
         }
 
-        btn.classList.add('active');
+        if (btn) btn.classList.add('active');
         _doStampedeInject(app);
 
         app.crowdManager.people.forEach(p => {
@@ -1706,562 +1862,64 @@
         });
     }
 
-    // ==================== Heatmap Overlay ====================
-    // Pure JS port of heatmap.py — no Flask needed.
-    // Also tries Flask if available for GPU-quality output.
-
-    const HM_SIZE   = 600;   // canvas resolution
-    // Stadium world spans roughly ±100 units → use 220 world units for full coverage incl. stands
-    const HM_WORLD  = 220;
-    const HM_SCALE  = HM_SIZE / HM_WORLD;   // px per world unit
-    const HM_OFFSET = HM_SIZE / 2;          // world 0 → canvas centre
-
-    window._heatmapEnabled  = false;
-    window._heatmapPlane    = null;
-    window._heatmapTexture  = null;
-    window._heatmapCanvas   = null;
-    window._heatmapCtx      = null;
-    window._heatmapInterval = null;
-
-    // Precomputed JET colour map (256 entries) matching cv2.COLORMAP_JET
-    const _JET = (() => {
-        const lut = [];
-        for (let i = 0; i < 256; i++) {
-            const v = i / 255;
-            let r, g, b;
-            if (v < 0.125)      { r = 0;            g = 0;              b = 0.5 + v * 4; }
-            else if (v < 0.375) { r = 0;            g = (v - 0.125)*4;  b = 1; }
-            else if (v < 0.625) { r = (v-0.375)*4;  g = 1;              b = 1-(v-0.375)*4; }
-            else if (v < 0.875) { r = 1;            g = 1-(v-0.625)*4;  b = 0; }
-            else                { r = 1-(v-0.875)*4; g = 0;             b = 0; }
-            lut.push([Math.round(r*255), Math.round(g*255), Math.round(b*255)]);
-        }
-        return lut;
-    })();
-
-    // Mirrors generate_heatmap() from heatmap.py exactly:
-    // 1. draw filled circles → 2. Gaussian blur → 3. normalise → 4. apply JET → 5. overlay
-    function _generateHeatmapJS(positions) {
-        const S   = HM_SIZE;
-        const ctx = window._heatmapCtx;
-
-        // --- Step 1: density accumulation on a Float32 grid ---
-        const density = new Float32Array(S * S);
-        const RADIUS  = Math.round(28 * HM_SCALE / 2.5); // influence radius scaled to canvas
-
-        for (const [px, py] of positions) {
-            const cx = Math.round(px), cy = Math.round(py);
-            const rSq = RADIUS * RADIUS;
-            for (let dy = -RADIUS; dy <= RADIUS; dy++) {
-                const iy = cy + dy;
-                if (iy < 0 || iy >= S) continue;
-                for (let dx = -RADIUS; dx <= RADIUS; dx++) {
-                    if (dx*dx + dy*dy > rSq) continue;
-                    const ix = cx + dx;
-                    if (ix < 0 || ix >= S) continue;
-                    density[iy * S + ix] += 1;
-                }
-            }
-        }
-
-        // --- Step 2: simple box blur (approximates Gaussian, fast in JS) ---
-        const blurred = new Float32Array(S * S);
-        const BW = Math.round(18 * HM_SCALE / 2.5) | 1; // blur width (odd)
-        const BH = BW;
-        // horizontal pass
-        const tmp = new Float32Array(S * S);
-        const hw = BW >> 1;
-        for (let y = 0; y < S; y++) {
-            let sum = 0, count = 0;
-            for (let x = 0; x < BW; x++) { sum += density[y*S+x]; count++; }
-            for (let x = 0; x < S; x++) {
-                tmp[y*S+x] = sum / count;
-                if (x + hw + 1 < S) { sum += density[y*S + x + hw + 1]; count++; }
-                if (x - hw >= 0)    { sum -= density[y*S + x - hw];     count--; }
-            }
-        }
-        // vertical pass
-        const hh = BH >> 1;
-        for (let x = 0; x < S; x++) {
-            let sum = 0, count = 0;
-            for (let y = 0; y < BH; y++) { sum += tmp[y*S+x]; count++; }
-            for (let y = 0; y < S; y++) {
-                blurred[y*S+x] = sum / count;
-                if (y + hh + 1 < S) { sum += tmp[(y+hh+1)*S+x]; count++; }
-                if (y - hh >= 0)    { sum -= tmp[(y-hh)*S+x];   count--; }
-            }
-        }
-
-        // --- Step 3: normalise to 0–255 ---
-        let maxV = 0;
-        for (let i = 0; i < blurred.length; i++) if (blurred[i] > maxV) maxV = blurred[i];
-        if (maxV === 0) {
-            ctx.clearRect(0, 0, S, S);
-            return;
-        }
-
-        // --- Step 4+5: apply JET colourmap and write to canvas ImageData ---
-        const imgData = ctx.createImageData(S, S);
-        const data    = imgData.data;
-        for (let i = 0; i < S * S; i++) {
-            const norm = blurred[i] / maxV;           // 0–1
-            if (norm < 0.04) {                         // skip near-zero → transparent
-                data[i*4+3] = 0;
-                continue;
-            }
-            const idx = Math.min(255, Math.round(norm * 255));
-            const [r, g, b] = _JET[idx];
-            data[i*4]   = r;
-            data[i*4+1] = g;
-            data[i*4+2] = b;
-            // Alpha: boost visibility, especially for dense spots
-            data[i*4+3] = Math.round(Math.min(220, norm * 255 * 1.6));
-        }
-        ctx.putImageData(imgData, 0, 0);
-    }
-
-    function _initHeatmapPlane() {
-        const app = window.simulationApp;
-        if (!app) return;
-        if (window._heatmapPlane) { window._heatmapPlane.visible = true; return; }
-
-        const canvas    = document.createElement('canvas');
-        canvas.width    = HM_SIZE;
-        canvas.height   = HM_SIZE;
-        window._heatmapCanvas = canvas;
-        window._heatmapCtx    = canvas.getContext('2d');
-
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.anisotropy = 4;
-        window._heatmapTexture = tex;
-
-        // Plane sized to cover full stadium incl. upper stands (world ±110)
-        const geo = new THREE.PlaneGeometry(HM_WORLD, HM_WORLD);
-        const mat = new THREE.MeshBasicMaterial({
-            map: tex,
-            transparent: true,
-            opacity: 0.72,
-            depthWrite: false,
-            depthTest: false,
-            blending: THREE.AdditiveBlending
-        });
-        const plane = new THREE.Mesh(geo, mat);
-        plane.rotation.x = -Math.PI / 2;
-        plane.position.y = 5;   // float above stands
-        plane.renderOrder = 999;
-        app.sceneManager.getScene().add(plane);
-        window._heatmapPlane = plane;
-    }
-
-    // Converts people positions to canvas pixels and renders heatmap
-    function renderHeatmapJS() {
-        const app = window.simulationApp;
-        if (!app || !window._heatmapEnabled) return;
-
-        const people = app.crowdManager.getPeople();
-
-        const positions = people.map(p => [
-            p.position.x * HM_SCALE + HM_OFFSET,
-            p.position.z * HM_SCALE + HM_OFFSET
-        ]);
-
-        window._heatmapCtx.clearRect(0, 0, HM_SIZE, HM_SIZE);
-        _generateHeatmapJS(positions);
-        window._heatmapTexture.needsUpdate = true;
-
-        // Extract heatmap density for DC layer
-        _extractHeatmapDensityForDC();
-
-        document.getElementById('heatmap-status').textContent =
-            `Heatmap: ON (JS) — ${people.length} pts`;
-    }
-
-    // Try Flask first, fall back to JS renderer silently
-    async function sendToHeatmap() {
-        const app = window.simulationApp;
-        if (!app || !window._heatmapEnabled) return;
-
-        const people = app.crowdManager.getPeople();
-        const positions = people.map(p => [
-            Math.round(p.position.x * HM_SCALE + HM_OFFSET),
-            Math.round(p.position.z * HM_SCALE + HM_OFFSET)
-        ]);
-
-        // Always render JS version immediately (no lag)
-        window._heatmapCtx.clearRect(0, 0, HM_SIZE, HM_SIZE);
-        _generateHeatmapJS(positions);
-        window._heatmapTexture.needsUpdate = true;
-        _extractHeatmapDensityForDC();
-        document.getElementById('heatmap-status').textContent =
-            `Heatmap: ON — ${people.length} pts`;
-
-        // Optionally upgrade with Flask PNG (async, non-blocking)
-        try {
-            const resp = await fetch('https://cilantro-enviable-paralegal.ngrok-free.dev/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ positions }),
-                signal: AbortSignal.timeout(2000)
-            });
-            if (resp.ok) {
-                const blob = await resp.blob();
-                const url  = URL.createObjectURL(blob);
-                const img  = new Image();
-                img.onload = () => {
-                    window._heatmapCtx.clearRect(0, 0, HM_SIZE, HM_SIZE);
-                    window._heatmapCtx.drawImage(img, 0, 0, HM_SIZE, HM_SIZE);
-                    window._heatmapTexture.needsUpdate = true;
-                    URL.revokeObjectURL(url);
-                    document.getElementById('heatmap-status').textContent =
-                        `Heatmap: ON (Flask) — ${people.length} pts`;
-                };
-                img.src = url;
-            }
-        } catch (_) { /* Flask not running — JS renderer already did the job */ }
-    }
-
-    // ── DC integration: sample heatmap canvas to get zone densities ──
-    // Divides stadium into a polar grid and reads average pixel brightness
-    window._hmDensityMap = {};
-
-    function _extractHeatmapDensityForDC() {
-        const ctx = window._heatmapCtx;
-        if (!ctx) return;
-        const S = HM_SIZE;
-
-        // Sample 8 radial sectors × 2 radial bands = 16 cells
-        const sectors = 8;
-        const bands   = [
-            { name:'gate',     rMin: 0.75, rMax: 0.92 },   // gate/outer ring
-            { name:'corridor', rMin: 0.50, rMax: 0.75 },   // concourse
-            { name:'stand',    rMin: 0.28, rMax: 0.50 },   // inner stands
-        ];
-        const result = {};
-        const cx = S / 2, cy = S / 2;
-        const maxR = S / 2;
-
-        for (let s = 0; s < sectors; s++) {
-            const aStart = (s / sectors) * Math.PI * 2;
-            const aEnd   = ((s + 1) / sectors) * Math.PI * 2;
-
-            for (const band of bands) {
-                // Sample ~60 points in this sector+band
-                let totalBrightness = 0, samples = 0;
-                for (let k = 0; k < 60; k++) {
-                    const angle = aStart + Math.random() * (aEnd - aStart);
-                    const r     = (band.rMin + Math.random() * (band.rMax - band.rMin)) * maxR;
-                    const px    = Math.round(cx + Math.cos(angle) * r);
-                    const py    = Math.round(cy + Math.sin(angle) * r);
-                    if (px < 0 || px >= S || py < 0 || py >= S) continue;
-                    const imgData = ctx.getImageData(px, py, 1, 1).data;
-                    // Use alpha channel as density proxy
-                    totalBrightness += imgData[3] / 255;
-                    samples++;
-                }
-                const key = `${band.name}_s${s}`;
-                result[key] = samples > 0 ? totalBrightness / samples : 0;
-            }
-        }
-        window._hmDensityMap = result;
-    }
-
-    function toggleHeatmap() {
-        window._heatmapEnabled = !window._heatmapEnabled;
-        const btn    = document.getElementById('btn-heatmap-toggle');
-        const status = document.getElementById('heatmap-status');
-
-        if (window._heatmapEnabled) {
-            btn.textContent = 'Disable Heatmap';
-            btn.classList.add('active');
-            status.textContent = 'Heatmap: ON…';
-            _initHeatmapPlane();
-            sendToHeatmap();
-            window._heatmapInterval = setInterval(sendToHeatmap, 1200);
-        } else {
-            btn.textContent = 'Enable Heatmap';
-            btn.classList.remove('active');
-            status.textContent = 'Heatmap: OFF';
-            clearInterval(window._heatmapInterval);
-            if (window._heatmapPlane) window._heatmapPlane.visible = false;
-            window._hmDensityMap = {};
-        }
-    }
-
-    // ==================== Decision Control Layer ====================
-
-    const DC = {
-        riskHistory:      [],
-        lastProblem:      null,
-        repeatCount:      0,
-        problemStartTime: 0,
-        lastCallTime:     0,
-        evalInterval:     null,
-
-        ALL_ZONES: ['GateA','GateB','GateC','GateD','GateE','GateF',
-                    'Corridor1','Corridor2','Corridor3','Corridor4'],
-
-        // ── Helpers ────────────────────────────────────────────────
-
-        canCall() {
-            const now = Date.now();
-            if (now - this.lastCallTime > 30000) { this.lastCallTime = now; return true; }
-            return false;
-        },
-
-        callPolice(location, risk) {
-            this.addAlert('🚔 POLICE ALERT',
-                `Location: <b>${location}</b> | Risk: <b>${risk}%</b>. Dispatching units immediately.`, 'police', true);
-        },
-
-        getRiskTrend(currentRisk) {
-            this.riskHistory.push(currentRisk);
-            if (this.riskHistory.length > 20) this.riskHistory.shift();
-            if (this.riskHistory.length < 2) return 'stable';
-            const last = this.riskHistory[this.riskHistory.length - 1];
-            const prev = this.riskHistory[this.riskHistory.length - 2];
-            return last > prev ? 'increasing' : last < prev ? 'decreasing' : 'stable';
-        },
-
-        getBestExit(zoneDensity, currentLocation) {
-            // Only suggest gates as exits
-            let best = null, bestVal = Infinity;
-            for (const [k, v] of Object.entries(zoneDensity)) {
-                if (k !== currentLocation && k.startsWith('Gate') && v < bestVal) {
-                    bestVal = v; best = k;
-                }
-            }
-            return best || 'nearest gate';
-        },
-
-        // isPersistent with override for high-risk situations
-        isPersistent(problem, risk) {
-            const now = Date.now();
-            // High-risk and stampede situations bypass the 5s filter
-            if (risk > 70 || window._stampedeActive) return true;
-            if (problem !== this.lastProblem) {
-                this.problemStartTime = now;
-                this.lastProblem      = problem;
-                return false;
-            }
-            return (now - this.problemStartTime) > 5000;
-        },
-
-        addAlert(title, message, type = 'info', flash = false) {
-            const log = document.getElementById('alert-log');
-            if (!log) return;
-            const ts  = new Date().toTimeString().slice(0, 8);
-            const cls = type === 'warn' ? 'warn' : type === 'danger' ? 'danger' : type === 'police' ? 'police' : '';
-            const flashCls = flash ? ' flash' : '';
-            const el  = document.createElement('div');
-            el.className = `alert-entry ${cls}${flashCls}`;
-            el.innerHTML = `
-                <span class="alert-time">${ts}</span>
-                <div class="alert-title">${title}</div>
-                <div class="alert-msg">${message}</div>`;
-            log.prepend(el);
-            while (log.children.length > 40) log.removeChild(log.lastChild);
-        },
-
-        updateRiskBadge(risk, problem) {
-            const badge = document.getElementById('dc-risk-badge');
-            const dot   = document.getElementById('dc-live-dot');
-            if (!badge) return;
-            if (risk > 70 || window._stampedeActive) {
-                badge.className = 'risk-badge risk-high';
-                badge.textContent = `🔴 RISK: ${risk}%`;
-                if (dot) { dot.className = 'dc-live-dot red'; }
-            } else if (risk > 40) {
-                badge.className = 'risk-badge risk-medium';
-                badge.textContent = `🟡 RISK: ${risk}%`;
-                if (dot) dot.className = 'dc-live-dot';
-            } else {
-                badge.className = 'risk-badge risk-low';
-                badge.textContent = `🟢 RISK: ${risk}%`;
-                if (dot) dot.className = 'dc-live-dot';
-            }
-        },
-
-        updateZoneGrid(zoneDensity) {
-            const grid = document.getElementById('dc-zone-grid');
-            if (!grid) return;
-            grid.innerHTML = Object.entries(zoneDensity).map(([zone, density]) => {
-                const pct    = Math.round(density * 100);
-                const col    = pct > 70 ? '#ef4444' : pct > 40 ? '#f59e0b' : '#5ecf7a';
-                const cellCls = pct > 70 ? 'hot' : pct > 40 ? 'warm' : '';
-                const short  = zone.replace('Corridor','Corr');
-                return `<div class="dc-zone-cell ${cellCls}">
-                    <div class="dcz-name">${short}</div>
-                    <div class="dcz-val" style="color:${col}">${pct}%</div>
-                </div>`;
-            }).join('');
-        },
-
-        // ── Classify — checks ALL zones + stampede state ─────────────
-
-        classifyProblem(maxDensity, avgDensity, totalPeople, maxZone) {
-            // If stampede is explicitly active, trust it
-            if (window._stampedeActive) return 'panic';
-
-            // Corridor overload = stampede-like crush
-            if (maxZone && maxZone.startsWith('Corridor') && maxDensity > 0.75) return 'panic';
-
-            if (maxDensity > 0.90) return 'fallen_person';
-            if (maxDensity > 0.75) return 'panic';
-            if (maxDensity > 0.55) return 'bottleneck';
-            if (avgDensity > 0.35 || totalPeople > 700) return 'slow';
-            return 'normal';
-        },
-
-        // ── Main event handler ───────────────────────────────────────
-
-        handleEvent(problem, location, risk, zoneDensity) {
-            const trend = this.getRiskTrend(risk);
-
-            if (!this.isPersistent(problem, risk)) return;
-
-            // Reset repeat counter when problem type changes
-            if (problem !== this._lastEmittedProblem) {
-                this.repeatCount = 0;
-                this._lastEmittedProblem = problem;
-            } else {
-                this.repeatCount++;
-                // Allow high-risk to always fire; suppress only for normal/slow
-                if (this.repeatCount > 3 && risk < 50) return;
-            }
-
-            const bestExit = this.getBestExit(zoneDensity, location);
-
-            if (problem === 'normal') {
-                if (this.repeatCount === 0)
-                    this.addAlert('✅ STATUS', 'Everything okay. Crowd moving normally.', 'info');
-
-            } else if (problem === 'slow') {
-                this.addAlert('⚠ CONGESTION', `Movement slowing near <b>${location}</b>. Keep walking.`, 'warn');
-
-            } else if (problem === 'bottleneck') {
-                this.addAlert('🚧 BOTTLENECK DETECTED',
-                    `Heavy crowd at <b>${location}</b>.<br>Redirect to: <b>${bestExit}</b>`, 'warn');
-
-            } else if (problem === 'panic') {
-                this.addAlert('😱 PANIC / STAMPEDE',
-                    `Crowd out of control near <b>${location}</b>.<br>Stay calm — move to <b>${bestExit}</b>`, 'danger', true);
-
-            } else if (problem === 'fallen_person') {
-                this.addAlert('🆘 EMERGENCY — PERSON DOWN',
-                    `Fallen person reported at <b>${location}</b>.<br>Clear space IMMEDIATELY.`, 'danger', true);
-            }
-
-            if (risk > 80 || window._stampedeActive) {
-                this.addAlert('🔴 HIGH RISK ALERT',
-                    `Emergency at <b>${location}</b>. Move slowly to <b>${bestExit}</b>.`, 'danger', true);
-                if (this.canCall()) this.callPolice(location, risk);
-            }
-
-            if (trend === 'increasing' && risk > 45) {
-                this.addAlert('📈 TREND: WORSENING',
-                    `Density rising fast. Deploy staff to <b>${location}</b>.`, 'warn');
-            }
-        },
-
-        // ── Top-level dispatcher ─────────────────────────────────────
-
-        decisionControl(problem, location, risk, zoneDensity) {
-            this.updateRiskBadge(risk, problem);
-            this.updateZoneGrid(zoneDensity);
-            this.handleEvent(problem, location, risk, zoneDensity);
-        },
-
-        // ── Build density across ALL zones (gates + corridors) ───────
-
-        buildZoneDensity(app) {
-            const people  = app.crowdManager.getPeople();
-            const zones   = app.stadiumModel.getZones();
-            const density = {};
-
-            for (const zId of this.ALL_ZONES) {
-                const zone = zones.get(zId);
-                if (!zone) continue;
-                const pop = people.filter(p => p.zoneId === zId).length;
-                density[zId] = Math.min(1, pop / (zone.capacity || 300));
-            }
-            return density;
-        },
-
-        // ── Evaluate — called every 2s ───────────────────────────────
-
-        evaluate() {
-            const app = window.simulationApp;
-            if (!app) return;
-
-            const zoneDensity = this.buildZoneDensity(app);
-            const vals        = Object.values(zoneDensity);
-            if (vals.length === 0) return;
-
-            const totalPeople = app.crowdManager.getCount();
-
-            // ── Blend heatmap pixel data into density if available ──
-            const hmMap = window._hmDensityMap || {};
-            const hmVals = Object.values(hmMap);
-            const hmMaxDensity  = hmVals.length ? Math.max(...hmVals) : 0;
-            const hmAvgDensity  = hmVals.length ? hmVals.reduce((a,b)=>a+b,0)/hmVals.length : 0;
-
-            // Find hottest heatmap sector and map to nearest gate label
-            let hmHotZone = null;
-            if (hmVals.length) {
-                const [hmHotKey] = Object.entries(hmMap).sort((a,b)=>b[1]-a[1])[0];
-                // e.g. "gate_s3" → sector 3 → map to gate index
-                const sectorMatch = hmHotKey.match(/s(\d+)/);
-                if (sectorMatch) {
-                    const sIdx = parseInt(sectorMatch[1]);
-                    const gateNames = ['GateA','GateB','GateC','GateD','GateE','GateF','GateG','GateH'];
-                    hmHotZone = gateNames[sIdx % gateNames.length];
-                }
-            }
-
-            // Fuse zone-based density with heatmap density (weighted average)
-            const effectiveDensity = window._stampedeActive
-                ? Object.fromEntries(Object.entries(zoneDensity).map(([k,v])=>[k, Math.min(1, v+0.5)]))
-                : zoneDensity;
-
-            const eVals      = Object.values(effectiveDensity);
-            const maxDensity = Math.max(Math.max(...eVals), hmMaxDensity);
-            const avgDensity = (eVals.reduce((a,b)=>a+b,0)/eVals.length * 0.6) + (hmAvgDensity * 0.4);
-
-            const risk = Math.min(100, Math.round(
-                window._stampedeActive
-                    ? Math.max(85, maxDensity * 100)
-                    : maxDensity * 100
-            ));
-
-            // Hottest zone: prefer heatmap sector if it shows more density
-            const zoneHot = Object.entries(effectiveDensity).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'GateA';
-            const hotZone = (hmMaxDensity > Math.max(...eVals) && hmHotZone) ? hmHotZone : zoneHot;
-
-            const problem = this.classifyProblem(maxDensity, avgDensity, totalPeople, hotZone);
-            this.decisionControl(problem, hotZone, risk, zoneDensity);
-        },
-
-        start() {
-            if (this.evalInterval) return;
-            this.evalInterval = setInterval(() => this.evaluate(), 2000);
-        },
-
-        stop() {
-            clearInterval(this.evalInterval);
-            this.evalInterval = null;
-        }
-    };
-
-    // Auto-start once app is ready
-    document.addEventListener('DOMContentLoaded', () => {
-        setTimeout(() => DC.start(), 1500);
-    });
-
     // ==================== Main ====================
     window.addEventListener('DOMContentLoaded', () => {
         const app = new StadiumSimulation();
         window.simulationApp = app;
+        
+        // Auto-start the live AI integration feed
+        app.setMode('live');
+        app.start();
+
+        // Refresh from CrowdGuard API when served via python app.py (DataConnector reads __TEMPLE_SIMULATION_STATE__)
+        async function fetchLiveState() {
+            try {
+                const res = await fetch('/api/twin_state');
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data && data.scenario) {
+                    window.__TEMPLE_SIMULATION_STATE__ = data;
+                    const s = data.scenario;
+                    const riskEl = document.getElementById('dc-risk-badge');
+                    if (riskEl) {
+                        const sev = s.fusedRisk >= 70 ? 'HIGH' : s.fusedRisk >= 40 ? 'MEDIUM' : 'LOW';
+                        const colors = { HIGH: '#ef4444', MEDIUM: '#f59e0b', LOW: '#22c55e' };
+                        riskEl.textContent = `RISK: ${sev} (${Math.round(s.fusedRisk)}%)`;
+                        riskEl.style.background = colors[sev] + '22';
+                        riskEl.style.color      = colors[sev];
+                        riskEl.style.border     = `1px solid ${colors[sev]}55`;
+                    }
+                    let ticker = document.getElementById('cg-ticker');
+                    if (!ticker) {
+                        ticker = document.createElement('div');
+                        ticker.id = 'cg-ticker';
+                        ticker.style.cssText = `
+                            position:fixed;top:0;left:0;right:0;z-index:999;
+                            background:rgba(6,11,20,0.92);
+                            border-bottom:1px solid rgba(56,139,253,0.2);
+                            padding:6px 18px;display:flex;align-items:center;gap:14px;
+                            font-family:monospace;font-size:11px;color:#8aaccc;
+                            backdrop-filter:blur(10px);
+                        `;
+                        document.body.appendChild(ticker);
+                    }
+                    const sev2 = s.fusedRisk >= 70 ? 'HIGH' : s.fusedRisk >= 40 ? 'MEDIUM' : 'LOW';
+                    const c = { HIGH:'#ef4444', MEDIUM:'#f59e0b', LOW:'#22c55e' };
+                    ticker.innerHTML = `
+                        <span style="color:#38bdf8;font-weight:700;">👁 CrowdGuard</span>
+                        <span>Problem: <b style="color:${c[sev2]}">${s.problem}</b></span>
+                        <span>Risk: <b style="color:${c[sev2]}">${Math.round(s.fusedRisk)}%</b></span>
+                        <span>Flow: ${s.flowStatus}</span>
+                        <span>Agents: ${s.agentTarget}</span>
+                        <span style="margin-left:auto;color:#5a7a9a">↩ <a href="/" style="color:#38bdf8;text-decoration:none;">Dashboard</a></span>
+                    `;
+                }
+            } catch (e) { /* file:// or no API */ }
+        }
+        fetchLiveState();
+        setInterval(fetchLiveState, 2000);
     });
     </script>
+    <script src="./temple_prediction_state.js"></script>
 </body>
 </html>

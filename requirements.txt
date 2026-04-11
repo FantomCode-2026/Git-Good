@@ -19,6 +19,9 @@ scipy>=1.10.0
 # Numerical Computing
 numpy>=1.24.0
 
+# Dashboard server (app.py)
+flask>=3.0.0
+
 # Utilities
 loguru>=0.7.0
 tqdm>=4.66.0

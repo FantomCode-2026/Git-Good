@@ -4,6 +4,7 @@ Provides CLI interface and orchestrates the complete pipeline
 """
 
 import argparse
+import os
 import sys
 import webbrowser
 import cv2
@@ -29,8 +30,14 @@ from pipeline.behavior_profile import DEFAULT_PROFILE
 from prediction_layer import PredictionLayerBridge
 from utils.visualization import Visualizer, VideoWriter
 from utils.metrics import CrowdMetrics, MetricsAggregator
+from utils.dashboard_push import (
+    DashboardPushMixin,
+    dashboard_origin_from_url,
+    ingest_alerts_bulk_to_dashboard,
+)
 
-class CrowdBehaviorSystem:
+
+class CrowdBehaviorSystem(DashboardPushMixin):
     """
     Main system orchestrating the entire crowd behavior analysis pipeline
     """
@@ -70,7 +77,8 @@ class CrowdBehaviorSystem:
         
         # Initialize metrics aggregator
         self.metrics_aggregator = MetricsAggregator()
-        
+        self._init_dashboard_push()
+
         # State variables
         self.frame_count = 0
         self.total_frames = 0
@@ -375,6 +383,8 @@ class CrowdBehaviorSystem:
             metrics=self.metrics,
         )
 
+        self._maybe_push_dashboard_evaluation(prediction_result)
+
         # ── Layer E: feed result into Control Engine (non-blocking) ──
         if hasattr(self, '_control_engine') and self._control_engine is not None:
             try:
@@ -454,6 +464,7 @@ class CrowdBehaviorSystem:
                 'density': density_score
             }
             self.metrics_aggregator.add_alert(alert)
+            self._maybe_push_dashboard_alert(alert)
             logger.warning(f"Frame {frame_number}: {anomaly_desc}")
 
         if prediction_result['fused_risk'] >= prediction_threshold:
@@ -472,6 +483,7 @@ class CrowdBehaviorSystem:
                     'problem': prediction_result['problem']
                 }
                 self.metrics_aggregator.add_alert(alert)
+                self._maybe_push_dashboard_alert(alert)
                 self.last_prediction_alert_frame = frame_number
                 logger.warning(f"Frame {frame_number}: {prediction_desc}")
         
@@ -486,6 +498,7 @@ class CrowdBehaviorSystem:
                     'fall_prob': behavior['fall_prob']
                 }
                 self.metrics_aggregator.add_alert(alert)
+                self._maybe_push_dashboard_alert(alert)
                 logger.warning(f"Frame {frame_number}: Person {track_id} - {behavior['behavior_label']} "
                              f"(anomaly: {behavior['anomaly_score']:.2f})")
 
@@ -499,6 +512,7 @@ class CrowdBehaviorSystem:
                     'stampede_boost': fall_risk.get('stampede_boost', 0.0),
                 }
                 self.metrics_aggregator.add_alert(alert)
+                self._maybe_push_dashboard_alert(alert)
                 logger.warning(
                     f"Frame {frame_number}: Person {track_id} high fall risk "
                     f"({fall_risk['fall_probability']:.2f}, stampede_boost={fall_risk.get('stampede_boost', 0.0):.2f})"
@@ -513,6 +527,7 @@ class CrowdBehaviorSystem:
                 'description': f"STAMPEDE: {stampede_fallen_count} agents fallen",
             }
             self.metrics_aggregator.add_alert(alert)
+            self._maybe_push_dashboard_alert(alert)
             logger.critical(
                 f"Frame {frame_number}: STAMPEDE ACTIVE — {stampede_fallen_count} agent(s) fallen"
             )
@@ -753,13 +768,22 @@ class CrowdBehaviorSystem:
             return value.item()
         return value
     
-    def save_report(self, report_path: str, summary: Dict):
+    def save_report(
+        self,
+        report_path: str,
+        summary: Dict,
+        *,
+        open_dashboard_url: Optional[str] = "http://127.0.0.1:5000/",
+    ):
         """
         Save analysis report to JSON file
         
         Args:
             report_path: Path to save report
             summary: Summary statistics dictionary
+            open_dashboard_url: If set, opens the CrowdGuard dashboard (e.g.
+                http://127.0.0.1:5001/). Run `python app.py` on that host/port.
+                Twins are available from the dashboard. Pass None to skip opening a tab.
         """
         report = {
             'timestamp': datetime.now().isoformat(),
@@ -776,6 +800,16 @@ class CrowdBehaviorSystem:
             json.dump(report, f, indent=2)
         
         logger.info(f"Report saved to {report_path}")
+
+        # If the Flask app was not running during the run (no live POSTs succeeded),
+        # push report alerts in one batch so the dashboard shows them when the browser opens.
+        sync_origin = dashboard_origin_from_url(open_dashboard_url or "")
+        if not sync_origin and getattr(self, "_dashboard_base_url", None):
+            sync_origin = self._dashboard_base_url
+        if sync_origin and not getattr(self, "_dashboard_push_ok", False):
+            if ingest_alerts_bulk_to_dashboard(sync_origin, report["alerts"]):
+                self._dashboard_push_ok = True
+                logger.info("Synced report alerts to CrowdGuard dashboard at {}", sync_origin)
         
         # Also export metrics to CSV
         csv_path = str(report_path).replace('.json', '_metrics.csv')
@@ -795,19 +829,19 @@ class CrowdBehaviorSystem:
             f"{digital_twin_export['js_path']}"
         )
 
-        digital_twin_pages = [
-            config.paths.base_dir / "digitaltwin" / "temple_simulation (3).html",
-            config.paths.base_dir / "digitaltwin" / "digital-twin-stadium-enhanced.html",
-        ]
-        for page in digital_twin_pages:
-            try:
-                if page.exists():
-                    webbrowser.open(page.resolve().as_uri())
-                    logger.info(f"Opened digital twin: {page}")
-                else:
-                    logger.warning(f"Digital twin page not found: {page}")
-            except Exception as exc:
-                logger.warning(f"Failed to open digital twin {page}: {exc}")
+        if open_dashboard_url:
+            origin = open_dashboard_url.rstrip("/")
+            urls = (f"{origin}/",)
+            for url in urls:
+                try:
+                    webbrowser.open(url)
+                    logger.info(f"Opened: {url}")
+                except Exception as exc:
+                    logger.warning(f"Failed to open {url}: {exc}")
+            logger.info(
+                "If pages do not load, start the server: python app.py "
+                "(match --dashboard_port / --port)"
+            )
     
     def reset(self):
         """Reset system state for new video"""
@@ -816,6 +850,7 @@ class CrowdBehaviorSystem:
         self.fall_probability_state = {}
         self._track_profiles = {}
         self.last_prediction_alert_frame = None
+        self._reset_dashboard_push_state()
         self.tracker.reset()
         self.sequence_manager.reset()
         self.metrics.reset()
@@ -857,7 +892,30 @@ def main():
     parser.add_argument('--device', type=str, default='auto',
                        choices=['auto', 'cpu', 'cuda', 'mps'],
                        help='Computation device')
-    
+    parser.add_argument(
+        '--dashboard_port',
+        type=int,
+        default=5000,
+        help='Port for the dashboard URL opened after export (default: 5000)',
+    )
+    parser.add_argument(
+        '--no_open_browser',
+        action='store_true',
+        help='Do not open the dashboard in a browser after export',
+    )
+    parser.add_argument(
+        '--no_dashboard_push',
+        action='store_true',
+        help='Disable HTTP push to the Flask dashboard (default: push enabled; run python app.py)',
+    )
+    parser.add_argument(
+        '--dashboard_url',
+        type=str,
+        default=None,
+        help='Dashboard base URL for push (default: http://127.0.0.1:PORT from --dashboard_port). '
+        'Overrides CROWDGUARD_DASHBOARD_URL when set.',
+    )
+
     args = parser.parse_args()
     
     # Update configuration
@@ -909,7 +967,15 @@ def main():
         logger.info("Starting Crowd Behavior Analysis System")
         device_override = None if args.device == 'auto' else args.device
         system = CrowdBehaviorSystem(config_override, device_override=device_override)
-        
+
+        if not args.no_dashboard_push:
+            push_url = (
+                (args.dashboard_url or "").strip()
+                or (os.environ.get("CROWDGUARD_DASHBOARD_URL") or "").strip()
+                or f"http://127.0.0.1:{args.dashboard_port}"
+            )
+            system.configure_dashboard_push(push_url)
+
         # Generate output paths if not provided
         input_path = Path(args.video)
         if not input_path.exists():
@@ -933,8 +999,13 @@ def main():
             args.max_frames,
         )
         
-        # Save report
-        system.save_report(str(report_path), summary)
+        # Save report (opens dashboard after export unless disabled)
+        dash_url = (
+            None
+            if args.no_open_browser
+            else f"http://127.0.0.1:{args.dashboard_port}/"
+        )
+        system.save_report(str(report_path), summary, open_dashboard_url=dash_url)
         
         # Print summary
         logger.info("=" * 50)

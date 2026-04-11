@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-11T02:17:35.802903",
+  "timestamp": "2026-04-11T06:08:32.973080",
   "config": {
     "model": {
       "yolo_model_name": "yolov8n.pt",
@@ -38,20 +38,20 @@
       "feature_batch_size": 64
     },
     "paths": {
-      "base_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good",
-      "data_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\data",
-      "sample_videos_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\data\\sample_videos",
-      "output_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs",
-      "logs_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\logs",
-      "videos_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\videos",
-      "reports_dir": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\outputs\\reports",
+      "base_dir": "/Users/chaitanya/projects/Git-Good",
+      "data_dir": "/Users/chaitanya/projects/Git-Good/data",
+      "sample_videos_dir": "/Users/chaitanya/projects/Git-Good/data/sample_videos",
+      "output_dir": "/Users/chaitanya/projects/Git-Good/outputs",
+      "logs_dir": "/Users/chaitanya/projects/Git-Good/outputs/logs",
+      "videos_dir": "/Users/chaitanya/projects/Git-Good/outputs/videos",
+      "reports_dir": "/Users/chaitanya/projects/Git-Good/outputs/reports",
       "yolo_weights": null,
       "resnet_weights": null,
       "transformer_weights": null,
-      "pose_landmarker_task": "C:\\Users\\Admin\\Downloads\\crowdsense\\Git-Good\\pose_landmarker.task"
+      "pose_landmarker_task": "/Users/chaitanya/projects/Git-Good/pose_landmarker.task"
     },
     "visualization": {
-      "show_display": false,
+      "show_display": true,
       "save_output_video": true,
       "save_annotated_frames": false,
       "bbox_color_normal": [
@@ -146,37 +146,37 @@
     }
   },
   "summary": {
-    "total_frames": 50,
-    "avg_people_count": 33.0,
+    "total_frames": 114,
+    "avg_people_count": 30.105263157894736,
     "max_people_count": 37,
-    "avg_density": 0.48695003858024694,
-    "max_density": 0.5713236239711934,
+    "avg_density": 0.4441122115506101,
+    "max_density": 0.5685956790123456,
     "avg_anomaly_score": 0.0,
-    "avg_predicted_future_risk": 35.08966831970215,
-    "max_predicted_future_risk": 61.84206573486328,
-    "avg_fused_risk": 54.76441732546238,
-    "max_fused_risk": 72.58322254825845,
+    "avg_predicted_future_risk": 28.18858571843097,
+    "max_predicted_future_risk": 62.23503406524658,
+    "avg_fused_risk": 50.30335462734194,
+    "max_fused_risk": 74.81304020821497,
     "total_alerts": 0,
     "alerts_by_type": {},
-    "processed_frames": 50,
-    "source_frames_read": 150,
+    "processed_frames": 114,
+    "source_frames_read": 341,
     "frame_stride": 3,
-    "total_processing_time": 155.96971797943115,
-    "avg_fps": 0.3205750491040438,
+    "total_processing_time": 82.72505855560303,
+    "avg_fps": 1.3780588613711982,
     "prediction_layer": {
-      "latest_future_risk": 19.988843574523926,
-      "latest_fused_risk": 47.71221959371554,
+      "latest_future_risk": 19.360723152160645,
+      "latest_fused_risk": 47.244446300757076,
       "latest_problem": "OPPOSING_FLOW",
       "latest_flow_status": "chaotic",
       "model_loaded": true
     },
     "demographic_distribution": {
-      "male": 26,
-      "female": 3,
+      "male": 21,
+      "female": 7,
       "unknown": 0
     },
     "stampede_events": 0
   },
   "alerts": [],
-  "device": "cpu"
+  "device": "mps"
 }

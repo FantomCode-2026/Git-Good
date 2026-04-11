@@ -10,7 +10,7 @@ chrome_options.add_argument('--no-sandbox')
 chrome_options.add_argument('--disable-dev-shm-usage')
 
 driver = webdriver.Chrome(options=chrome_options)
-driver.get(f'http://localhost:{PORT}/digitaltwin/temple_simulation%20(3).html')
+driver.get(f'http://localhost:{PORT}/digitaltwin/temple_simulation.html')
 time.sleep(2)
 
 try:
